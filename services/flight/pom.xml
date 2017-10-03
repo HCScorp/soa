@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.unice.polytech.esb.services</groupId>
-    <artifactId>document</artifactId>
+    <groupId>fr.unice.polytech.hcs.services</groupId>
+    <artifactId>flight</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>ESB :: Services :: Document</name>
+    <name>HCS :: Services :: Flight</name>
 
     <parent>
-        <groupId>fr.unice.polytech.esb</groupId>
+        <groupId>fr.unice.polytech.hcs</groupId>
         <artifactId>services</artifactId>
         <version>1.0</version>
     </parent>
@@ -34,7 +34,7 @@
     </dependencies>
 
     <build>
-        <finalName>tcs-service-document</finalName>
+        <finalName>hcs-service-flight</finalName>
     </build>
 
 </project>

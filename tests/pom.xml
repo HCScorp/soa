@@ -9,10 +9,10 @@
     <artifactId>tests</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-    <name>ESB :: Tests</name>
+    <name>HCS :: Tests</name>
 
     <parent>
-        <groupId>fr.unice.polytech.esb</groupId>
+        <groupId>fr.unice.polytech.hcs</groupId>
         <artifactId>root</artifactId>
         <version>1.0</version>
     </parent>

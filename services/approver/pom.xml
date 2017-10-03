@@ -3,14 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.unice.polytech.esb.services</groupId>
-    <artifactId>resource</artifactId>
+    <groupId>fr.unice.polytech.hcs.services</groupId>
+    <artifactId>approver</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>ESB :: Services :: REST</name>
+    <name>HCS :: Services :: Approver</name>
 
     <parent>
-      <groupId>fr.unice.polytech.esb</groupId>
+      <groupId>fr.unice.polytech.hcs</groupId>
       <artifactId>services</artifactId>
       <version>1.0</version>
     </parent>
@@ -24,7 +24,7 @@
     </dependencies>
 
     <build>
-      <finalName>tcs-service-rest</finalName>
+      <finalName>hcs-service-approver</finalName>
     </build>
 
 </project>

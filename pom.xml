@@ -6,11 +6,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unice.polytech.esb</groupId>
+    <groupId>fr.unice.polytech.hcs</groupId>
     <artifactId>root</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-    <name>ESB :: (Micro)Services and Integration</name>
+    <name>HCS :: (Micro)Services and Integration</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,7 +1,8 @@
 #!/bin/sh
 
-PUSH=true
-#PUSH=false
+# Push docker images: $ PUSH=false ./build.sh
+
+PUSH=${PUSH:-false}
 
 build() { # $1: directory, $2: image_name
   cd $1
@@ -14,6 +15,8 @@ build() { # $1: directory, $2: image_name
 mvn -q clean package
 
 # Build docker images
-build rpc       petitroll/tcs-rpc
-build resource  petitroll/tcs-rest
-build document  petitroll/tcs-doc
+build approver  hcsoa/approver
+build car       hcsoa/car
+build flight    hcsoa/flight
+build hotel     hcsoa/hotel
+build mail      hcsoa/mail

@@ -3,13 +3,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.unice.polytech.esb.tests</groupId>
+    <groupId>fr.unice.polytech.hcs.tests</groupId>
     <artifactId>acceptation</artifactId>
-    <name>ESB :: Tests :: Acceptation</name>
+    <name>HCS :: Tests :: Acceptation</name>
     <version>1.0</version>
 
     <parent>
-        <groupId>fr.unice.polytech.esb</groupId>
+        <groupId>fr.unice.polytech.hcs</groupId>
         <artifactId>tests</artifactId>
         <version>1.0</version>
     </parent>
