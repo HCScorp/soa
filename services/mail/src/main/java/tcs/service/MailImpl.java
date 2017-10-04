@@ -7,14 +7,13 @@ import javax.jws.WebService;
 
 
 @WebService(targetNamespace   = "http://informatique.polytech.unice.fr/soa1/cookbook/",
-		    portName          = "ExternalTaxComputerPort",
-		    serviceName       = "ExternalTaxComputerService",
+		    portName          = "MailPort",
+		    serviceName       = "MailService",
 		    endpointInterface = "tcs.service.MailService")
 public class MailImpl implements MailService {
 
 	public MailStatus Send(MailRequest request) {
-        // some mail to send
-
+		System.out.println("The mail has been sent !");
         MailStatus status = new MailStatus();
         status.setCode(200);
         status.setCause("Ok");
