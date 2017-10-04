@@ -1,7 +1,7 @@
 package hotel.data;
 
 import hotel.data.filter.FilterBuilder;
-import hotel.data.filter.SorterBuilder;
+import hotel.data.sorter.SorterBuilder;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 

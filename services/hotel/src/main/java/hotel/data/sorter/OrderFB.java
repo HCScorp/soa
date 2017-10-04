@@ -1,4 +1,4 @@
-package hotel.data.filter;
+package hotel.data.sorter;
 
 import hotel.data.HotelQueryBuilder;
 import org.bson.Document;

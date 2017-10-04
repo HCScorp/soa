@@ -1,5 +1,6 @@
-package hotel.data.filter;
+package hotel.data.sorter;
 
+import hotel.data.sorter.OrderFB;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.junit.jupiter.api.Test;
