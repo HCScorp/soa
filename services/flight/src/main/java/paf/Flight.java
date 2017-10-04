@@ -5,8 +5,8 @@ import org.json.JSONObject;
 
 public class Flight {
     private String destination;
-    private String begingTravel;
-    private String endTravel;
+    private String beging;
+    private String end;
     private CATEGORY category;
 
 
@@ -17,15 +17,15 @@ public class Flight {
     }
 
     Flight(JSONObject jsonObject) {
-        this.begingTravel = jsonObject.getString("beging");
-        this.endTravel = jsonObject.getString("end");
+        this.beging = jsonObject.getString("beging");
+        this.end = jsonObject.getString("end");
         this.destination = jsonObject.getString("beging");
         this.category = CATEGORY.valueOf(jsonObject.getString("category"));
     }
 
     JSONObject toJson() {
-        return new JSONObject().put("beging", this.begingTravel)
-                .put("end", this.endTravel)
+        return new JSONObject().put("beging", this.beging)
+                .put("end", this.end)
                 .put("category", this.category.toString())
                 .put("destination", this.destination);
     }
