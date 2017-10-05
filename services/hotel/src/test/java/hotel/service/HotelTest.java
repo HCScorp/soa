@@ -4,8 +4,10 @@ import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,21 +20,15 @@ class HotelTest {
     void beforeAll() {
         negrescoBson = new Document();
         negrescoBson.put("name", "Negresco");
-        negrescoBson.put("night_price", 300);
-        Calendar cal = Calendar.getInstance();
-        cal.set(2017, Calendar.DECEMBER, 24);
-        negrescoBson.put("full_booked_days", Collections.singletonList(cal.getTime()));
         negrescoBson.put("city", "Nice");
         negrescoBson.put("zip_code", "06000");
         negrescoBson.put("address", "37, promenade des Anglais");
+        negrescoBson.put("night_price", 300);
+        negrescoBson.put("full_booked_days", Collections.singletonList(new Document("date", LocalDate.of(2017, 12, 24).toString())));
 
-        negresco = new Hotel();
-        negresco.name = "Negresco";
-        negresco.nightPrice = 300;
-        negresco.fullBookedDays = Collections.singletonList(cal.getTime());
-        negresco.city =  "Nice";
-        negresco.zipCode =  "06000";
-        negresco.address =  "37, promenade des Anglais";
+        negresco = new Hotel(
+                "Negresco", "Nice", "06000", "37, promenade des Anglais",
+                300, Collections.singletonList(LocalDate.of(2017, 12, 24)));
     }
 
     @Test

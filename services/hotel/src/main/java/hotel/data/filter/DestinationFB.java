@@ -13,6 +13,10 @@ public class DestinationFB implements FilterBuilder<Bson> {
 
     @Override
     public Bson buildFilter(Document bson) {
+        if (!bson.containsKey("destination")) {
+            return null;
+        }
+
         return eq("city", bson.getString("destination"));
     }
 }

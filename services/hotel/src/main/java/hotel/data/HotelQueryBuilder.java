@@ -7,6 +7,7 @@ import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.*;
@@ -31,10 +32,12 @@ public class HotelQueryBuilder {
 
         query.filter = and(FILTER_BUILDERS.stream()
                 .map(fb -> fb.buildFilter(searchCriterion))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 
         query.sorter = orderBy(SORTER_BUILDERS.stream()
                 .map(fb -> fb.buildSorter(searchCriterion))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 
         return query;

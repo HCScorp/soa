@@ -14,9 +14,9 @@ public class HotelQueryHandler {
         this.query = query;
     }
 
-    public  List<Document> performOn(MongoCollection<Document> db) {
+    public List<Document> performOn(MongoCollection<Document> collection) {
         List<Document> result = new LinkedList<>();
-        db.find(query.filter).sort(query.sorter).iterator().forEachRemaining(result::add);
+        collection.find(query.filter).sort(query.sorter).iterator().forEachRemaining(result::add);
         return result;
     }
 }

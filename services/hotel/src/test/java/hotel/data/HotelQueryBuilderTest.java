@@ -1,5 +1,6 @@
 package hotel.data;
 
+import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HotelQueryBuilderTest {
 
-    void test(){
+    void queryBuilderTest(){
         List<Date> stayDates = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date(0));
@@ -43,7 +44,10 @@ public class HotelQueryBuilderTest {
 
         Query query = HotelQueryBuilder.buildQuery(input);
 
-        assertEquals(query.filter.toString(), expectedFilter.toString());
-        assertEquals(query.sorter.toString(), expectedSorter.toString());
+        assertEquals(query.filter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                expectedFilter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
+
+        assertEquals(query.sorter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                expectedSorter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
     }
 }

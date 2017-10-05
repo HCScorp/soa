@@ -1,49 +1,52 @@
 package hotel.data.filter;
 
 
+import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.mongodb.client.model.Filters.nin;
+import static com.mongodb.client.model.Filters.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class DateFBTest {
     @Test
-    void filterFormatTest() {
-        List<Date> stayDates = new ArrayList<>();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date(0));
+    void dateFilterTest() {
+        List<LocalDate> stayDates = Arrays.asList(
+                LocalDate.of(2017, 12, 21),
+                LocalDate.of(2017, 12, 22),
+                LocalDate.of(2017, 12, 23)
+        );
 
-        cal.set(2017, Calendar.DECEMBER, 21);
-        stayDates.add(cal.getTime());
-        cal.set(2017, Calendar.DECEMBER, 22);
-        stayDates.add(cal.getTime());
-        cal.set(2017, Calendar.DECEMBER, 23);
-        stayDates.add(cal.getTime());
+        Bson expected = not(elemMatch("full_booked_days",
+                in("date", stayDates.stream()
+                        .map(LocalDate::toString)
+                        .collect(Collectors.toList()))));
 
-        Bson expected = nin("fullBookedDays", stayDates);
-
-
-        Calendar calInput = Calendar.getInstance();
-        calInput.setTime(new Date(0));
         Document input = new Document();
 
-        calInput.set(2017, Calendar.DECEMBER, 21);
-        input.put("date_from", calInput.getTime());
-
-        calInput.set(2017, Calendar.DECEMBER, 24);
-        input.put("date_to", calInput.getTime());
+        input.put("date_from", LocalDate.of(2017, 12, 21).toString());
+        input.put("date_to", LocalDate.of(2017, 12, 24).toString());
 
         DateFB dateFB = new DateFB();
 
         assertEquals(
-                expected.toString(),
-                dateFB.buildFilter(input).toString());
+                expected.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                dateFB.buildFilter(input).toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
+    }
+
+    @Test
+    void dateFilterNullTest() {
+        Document input = new Document();
+        input.put("date_to", LocalDate.of(2017, 2, 10).toString());
+
+        DateFB dateFB = new DateFB();
+
+        assertNull(dateFB.buildFilter(input));
     }
 }
