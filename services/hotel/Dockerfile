@@ -6,7 +6,7 @@ MAINTAINER Sébastien Mosser (mosser@i3s.unice.fr)
 
 WORKDIR /usr/local/tomee/
 
-COPY ./target/hcs-service-hotel.war ./webapps/.
+COPY ./target/hotel-service-document.war ./webapps/.
 
 ## Configuring the network.properties file (default values are provided)
 ENV db_host=localhost

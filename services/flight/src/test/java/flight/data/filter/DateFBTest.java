@@ -1,4 +1,4 @@
-package hotel.data.filter;
+package flight.data.filter;
 
 
 import com.mongodb.MongoClient;
@@ -7,8 +7,6 @@ import org.bson.conversions.Bson;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,21 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class DateFBTest {
     @Test
     void dateFilterTest() {
-        List<LocalDate> stayDates = Arrays.asList(
-                LocalDate.of(2017, 12, 21),
-                LocalDate.of(2017, 12, 22),
-                LocalDate.of(2017, 12, 23)
-        );
-
-        Bson expected = not(elemMatch("fullBookedDays",
-                in("date", stayDates.stream()
-                        .map(LocalDate::toString)
-                        .collect(Collectors.toList()))));
+        Bson expected = eq("date", LocalDate.of(2017, 12, 21).toString());
 
         Document input = new Document();
 
-        input.put("dateFrom", LocalDate.of(2017, 12, 21).toString());
-        input.put("dateTo", LocalDate.of(2017, 12, 24).toString());
+        input.put("date", LocalDate.of(2017, 12, 21).toString());
 
         DateFB dateFB = new DateFB();
 
@@ -43,7 +31,7 @@ class DateFBTest {
     @Test
     void dateFilterNullTest() {
         Document input = new Document();
-        input.put("dateTo", LocalDate.of(2017, 2, 10).toString());
+        input.put("notDate", LocalDate.of(2017, 2, 10).toString());
 
         DateFB dateFB = new DateFB();
 

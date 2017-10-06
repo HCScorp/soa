@@ -1,12 +1,11 @@
 FROM tomee:8-jre-7.0.3-plus
 MAINTAINER Sébastien Mosser (mosser@i3s.unice.fr)
 
-# Build with : docker build -t petitroll/tcs-doc .
-# Publish with: docker push petitroll/tcs-doc
+# TODO
 
 WORKDIR /usr/local/tomee/
 
-COPY ./target/hcs-service-flight.war ./webapps/.
+COPY ./target/flight-service-document.war ./webapps/.
 
 ## Configuring the network.properties file (default values are provided)
 ENV db_host=localhost

@@ -1,18 +1,14 @@
 package hotel.data.filter;
 
-import hotel.data.HotelQueryBuilder;
+import hotel.data.exception.IllegalFilterValueException;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import static com.mongodb.client.model.Filters.*;
 
 public class DestinationFB implements FilterBuilder<Bson> {
-    static {
-        HotelQueryBuilder.addFilter(new DestinationFB());
-    }
-
     @Override
-    public Bson buildFilter(Document bson) {
+    public Bson buildFilter(Document bson) throws IllegalFilterValueException {
         if (!bson.containsKey("destination")) {
             return null;
         }

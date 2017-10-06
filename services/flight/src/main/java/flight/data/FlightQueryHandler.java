@@ -1,4 +1,4 @@
-package hotel.data;
+package flight.data;
 
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -6,11 +6,11 @@ import org.bson.Document;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HotelQueryHandler {
+public class FlightQueryHandler {
 
     private final Query query;
 
-    public HotelQueryHandler(Query query) {
+    public FlightQueryHandler(Query query) {
         this.query = query;
     }
 

@@ -32,28 +32,28 @@ public class Hotel {
 
     public Hotel(Document bson) {
         this.name = bson.getString("name");
-        this.nightPrice = bson.getInteger("night_price");
-        this.fullBookedDays = ((List<Document>) bson.get("full_booked_days")).stream()
+        this.nightPrice = bson.getInteger("nightPrice");
+        this.fullBookedDays = ((List<Document>) bson.get("fullBookedDays")).stream()
                 .map(d -> d.getString("date"))
                 .map(LocalDate::parse)
                 .collect(Collectors.toList());
 
         this.city = bson.getString("city");
-        this.zipCode = bson.getString("zip_code");
+        this.zipCode = bson.getString("zipCode");
         this.address = bson.getString("address");
     }
 
     public Document toBson() {
         Document result = new Document();
         result.put("name", name);
-        result.put("night_price", nightPrice);
-        result.put("full_booked_days", fullBookedDays.stream()
+        result.put("nightPrice", nightPrice);
+        result.put("fullBookedDays", fullBookedDays.stream()
                 .map(LocalDate::toString)
                 .map(d -> new Document("date", d))
                 .collect(Collectors.toList()));
 
         result.put("city", city);
-        result.put("zip_code", zipCode);
+        result.put("zipCode", zipCode);
         result.put("address", address);
         return result;
     }

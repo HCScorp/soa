@@ -21,10 +21,10 @@ class HotelTest {
         negrescoBson = new Document();
         negrescoBson.put("name", "Negresco");
         negrescoBson.put("city", "Nice");
-        negrescoBson.put("zip_code", "06000");
+        negrescoBson.put("zipCode", "06000");
         negrescoBson.put("address", "37, promenade des Anglais");
-        negrescoBson.put("night_price", 300);
-        negrescoBson.put("full_booked_days", Collections.singletonList(new Document("date", LocalDate.of(2017, 12, 24).toString())));
+        negrescoBson.put("nightPrice", 300);
+        negrescoBson.put("fullBookedDays", Collections.singletonList(new Document("date", LocalDate.of(2017, 12, 24).toString())));
 
         negresco = new Hotel(
                 "Negresco", "Nice", "06000", "37, promenade des Anglais",

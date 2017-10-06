@@ -3,51 +3,48 @@ package hotel.data;
 import com.mongodb.MongoClient;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.nin;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.elemMatch;
+import static com.mongodb.client.model.Filters.in;
 import static com.mongodb.client.model.Sorts.ascending;
 import static com.mongodb.client.model.Sorts.orderBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HotelQueryBuilderTest {
 
-    void queryBuilderTest(){
-        List<Date> stayDates = new ArrayList<>();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date(0));
-        cal.set(2017, Calendar.DECEMBER, 21);
-        stayDates.add(cal.getTime());
-        cal.set(2017, Calendar.DECEMBER, 22);
-        stayDates.add(cal.getTime());
-        cal.set(2017, Calendar.DECEMBER, 23);
-        stayDates.add(cal.getTime());
+    @Test
+    void queryBuilderTest() {
+        List<LocalDate> stayDates = Arrays.asList(
+                LocalDate.of(2017, 12, 21),
+                LocalDate.of(2017, 12, 22),
+                LocalDate.of(2017, 12, 23)
+        );
 
-        Bson expectedFilter = and(eq("city", "Nice"), nin("fullBookedDays", stayDates));
-        Bson expectedSorter = orderBy(ascending("night_price"));
+        Bson expectedFilter = and(not(elemMatch("fullBookedDays",
+                in("date", stayDates.stream()
+                        .map(LocalDate::toString)
+                        .collect(Collectors.toList())))), eq("city", "Nice"));
+        Bson expectedSorter = orderBy(ascending("nightPrice"));
 
         Document input = new Document();
         input.put("order", "ascending");
         input.put("destination", "Nice");
-        Calendar calInput = Calendar.getInstance();
-        calInput.setTime(new Date(0));
-        calInput.set(2017, Calendar.DECEMBER, 21);
-        input.put("date_from", calInput.getTime());
-        calInput.set(2017, Calendar.DECEMBER, 24);
-        input.put("date_to", calInput.getTime());
+        input.put("dateFrom", LocalDate.of(2017, 12, 21).toString());
+        input.put("dateTo", LocalDate.of(2017, 12, 24).toString());
 
         Query query = HotelQueryBuilder.buildQuery(input);
 
-        assertEquals(query.filter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
-                expectedFilter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
+        assertEquals(expectedFilter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                query.filter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry())
+        );
 
-        assertEquals(query.sorter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
-                expectedSorter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
+        assertEquals(expectedSorter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                query.sorter.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
     }
 }

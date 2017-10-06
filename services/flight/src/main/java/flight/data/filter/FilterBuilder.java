@@ -1,6 +1,6 @@
-package hotel.data.filter;
+package flight.data.filter;
 
-import hotel.data.exception.IllegalFilterValueException;
+import flight.data.exception.IllegalFilterValueException;
 import org.bson.Document;
 
 public interface FilterBuilder<T> {

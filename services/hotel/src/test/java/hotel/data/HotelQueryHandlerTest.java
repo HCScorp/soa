@@ -50,11 +50,11 @@ public class HotelQueryHandlerTest {
         );
 
         Query query = new Query(
-                not(elemMatch("full_booked_days",
+                not(elemMatch("fullBookedDays",
                         in("date", stayDates.stream()
                                 .map(LocalDate::toString)
                                 .collect(Collectors.toList())))),
-                orderBy(ascending("night_price")));
+                orderBy(ascending("nightPrice")));
 
         HotelQueryHandler queryHandler = new HotelQueryHandler(query);
         List<Document> result = queryHandler.performOn(hotels);

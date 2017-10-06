@@ -1,6 +1,6 @@
-package hotel.data.sorter;
+package flight.data.sorter;
 
-import hotel.data.exception.IllegalSorterValueException;
+import flight.data.exception.IllegalSorterValueException;
 import org.bson.Document;
 
 public interface SorterBuilder<T> {

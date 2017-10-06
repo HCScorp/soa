@@ -1,15 +1,12 @@
-package hotel.data.sorter;
+package flight.data.sorter;
 
 import com.mongodb.MongoClient;
-import hotel.data.exception.IllegalSorterValueException;
+import flight.data.exception.IllegalSorterValueException;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.junit.jupiter.api.Test;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Sorts.ascending;
-import static com.mongodb.client.model.Sorts.orderBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,7 +15,7 @@ class PriceOrderFBTest {
 
     @Test
     void priceOrderSorterTest() {
-        Bson expected = ascending("nightPrice");
+        Bson expected = ascending("price");
 
         Document input = new Document();
         input.put("order", "ascending");
