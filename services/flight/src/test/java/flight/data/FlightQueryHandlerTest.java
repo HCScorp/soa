@@ -7,6 +7,7 @@ import flight.service.Flight;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -21,42 +22,39 @@ public class FlightQueryHandlerTest {
 
     private Fongo client;
     private MongoDatabase db;
-    private MongoCollection<Document> hotels;
+    private MongoCollection<Document> flights;
 
     @Test
     void queryHandlerTest() {
-//        client = new Fongo("mongo server handler test");
-//        db = client.getDatabase("hotel");
-//        db.drop();
-//        hotels = db.getCollection("hotels");
-//
-//        Hotel negresco = new Flight();
-//        hotels.insertOne(negresco.toBson());
-//
-//        List<LocalDate> fBookedDays = Arrays.asList(
-//                LocalDate.of(2017, 7, 14),
-//                LocalDate.of(2017, 8, 15)
-//        );
-//        Hotel meridien = new Flight("Le Méridien", "Nice", "06046", "1, promenade des Anglais", 200, fBookedDays);
-//        hotels.insertOne(meridien.toBson());
-//
-//        List<LocalDate> stayDates = Arrays.asList(
-//                LocalDate.of(2017, 12, 22),
-//                LocalDate.of(2017, 12, 23),
-//                LocalDate.of(2017, 12, 24)
-//        );
-//
-//        Query query = new Query(
-//                not(elemMatch("fullBookedDays",
-//                        in("date", stayDates.stream()
-//                                .map(LocalDate::toString)
-//                                .collect(Collectors.toList())))),
-//                orderBy(ascending("nightPrice")));
-//
-//        FlightQueryHandler queryHandler = new FlightQueryHandler(query);
-//        List<Document> result = queryHandler.performOn(hotels);
-//
-//        assertEquals(1, result.size());
-//        assertEquals(meridien, new Hotel(result.get(0)));
+        client = new Fongo("mongo server handler test");
+        db = client.getDatabase("flight");
+        db.drop();
+        flights = db.getCollection("flights");
+
+        Flight parisNice = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 24), 50,
+                Flight.JourneyType.DIRECT, Duration.ofHours(1), Flight.Category.ECO, "Air France");
+        Flight parisNice2 = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 21), 45,
+                Flight.JourneyType.DIRECT, Duration.ofMinutes(85), Flight.Category.ECO, "Air France");
+        Flight parisNice3 = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 21), 40,
+                Flight.JourneyType.DIRECT, Duration.ofMinutes(80), Flight.Category.ECO, "EasyJet");
+        Flight parisNewYork = new Flight("Paris", "New-York", LocalDate.of(2017, 8, 15), 156,
+                Flight.JourneyType.INDIRECT, Duration.ofHours(11), Flight.Category.FIRST, "Iberia");
+        flights.insertMany(Arrays.asList(parisNice.toBson(), parisNice2.toBson(), parisNice3.toBson(), parisNewYork.toBson()));
+
+        Query query = new Query(
+                and(eq("origin", "Paris"),
+                        eq("destination", "Nice"),
+                        eq("date", LocalDate.of(2017, 12, 21).toString()),
+                        eq("journeyType", Flight.JourneyType.DIRECT.toString()),
+                        eq("category", Flight.Category.ECO.toString())),
+                orderBy(ascending("price")));
+
+
+        FlightQueryHandler queryHandler = new FlightQueryHandler(query);
+        List<Document> result = queryHandler.performOn(flights);
+
+        assertEquals(2, result.size());
+        assertEquals(parisNice3, new Flight(result.get(0)));
+        assertEquals(parisNice2, new Flight(result.get(result.size()-1)));
     }
 }
