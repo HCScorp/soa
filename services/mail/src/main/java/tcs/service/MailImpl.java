@@ -14,7 +14,7 @@ public class MailImpl implements MailService {
 
 	public MailStatus Send(MailRequest request) {
 		System.out.println("The mail has been sent !");
-        MailStatus status = new MailStatus();
+		MailStatus status = new MailStatus();
         status.setCode(200);
         status.setCause("Ok");
 
