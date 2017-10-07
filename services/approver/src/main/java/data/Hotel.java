@@ -1,7 +1,12 @@
 package data;
 
+import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Hotel {
 
@@ -27,6 +32,19 @@ public class Hotel {
         this.fullBookedDays = fullBookedDays;
     }
 
+    public Hotel(Document bson) {
+        this.name = bson.getString("name");
+        this.nightPrice = bson.getInteger("nightPrice");
+        this.fullBookedDays = ((List<Document>) bson.get("fullBookedDays")).stream()
+                .map(d -> d.getString("date"))
+                .map(LocalDate::parse)
+                .collect(Collectors.toList());
+
+        this.city = bson.getString("city");
+        this.zipCode = bson.getString("zipCode");
+        this.address = bson.getString("address");
+    }
+
 
     public String getName() {
         return name;
@@ -50,6 +68,23 @@ public class Hotel {
 
     public List<LocalDate> getFullBookedDays() {
         return fullBookedDays;
+    }
+
+    public JSONObject toJSON(){
+        JSONObject o = new JSONObject();
+
+        o.put("name", name);
+        o.put("city", city);
+        o.put("zipCode", zipCode);
+        o.put("address", address);
+        o.put("nightPrice", nightPrice);
+
+        JSONArray a = new JSONArray();
+        fullBookedDays.forEach(f -> a.put(f.toString()));
+
+        o.put("fullBookedDays", a);
+
+        return o;
     }
 
     @Override

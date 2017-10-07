@@ -1,5 +1,8 @@
 package data;
 
+import org.bson.Document;
+import org.json.JSONObject;
+
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -44,6 +47,17 @@ public class Flight {
         this.airline = airline;
     }
 
+    public Flight(Document bson) {
+        this.origin = bson.getString("origin");
+        this.destination = bson.getString("destination");
+        this.date = LocalDate.parse(bson.getString("date"));
+        this.price = bson.getInteger("price");
+        this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
+        this.duration = Duration.ofMinutes(bson.getLong("duration"));
+        this.category = Category.valueOf(bson.getString("category"));
+        this.airline = bson.getString("airline");
+    }
+
     public String getOrigin() {
         return origin;
     }
@@ -74,6 +88,21 @@ public class Flight {
 
     public String getAirline() {
         return airline;
+    }
+
+    public JSONObject toJSON(){
+        JSONObject o = new JSONObject();
+
+        o.put("origin", origin);
+        o.put("destination", destination);
+        o.put("date", date);
+        o.put("price", price);
+        o.put("journeyType", journeyType);
+        o.put("duration", duration);
+        o.put("category", category);
+        o.put("airline", airline);
+
+        return o;
     }
 
     @Override

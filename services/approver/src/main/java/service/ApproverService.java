@@ -2,33 +2,57 @@ package service;
 
 import data.BusinessTravelRequest;
 import data.BusinessTravelRequestStatus;
+import data.database.BTRHandler;
+import data.database.DB;
+import data.database.exception.BTRNotFound;
+import org.bson.Document;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/btr")
 @Produces(MediaType.APPLICATION_JSON)
 public class ApproverService {
 
-    // May be useful to return a status (search how to return specific http code)
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createNewBTR(JSONObject btr) {
-        //insert btr in database
+    public Response createNewBTR(String input) {
+        BTRHandler.insert(Document.parse(input));
+        return Response.status(200).build();
     }
 
     @Path("/{id}")
     @GET
-    public BusinessTravelRequest getBTR(@PathParam("id") int id){
-        // search in database for the btr with the id given
-        return new BusinessTravelRequest();
+    public Response getBTR(@PathParam("id") int id){
+        BusinessTravelRequest btr = null;
+
+        try {
+            btr = BTRHandler.get(id);
+        } catch (BTRNotFound btrNotFound) {
+            JSONObject resp = new JSONObject();
+            resp.put("Cause", btrNotFound.cause());
+            return Response.status(404).entity(resp.toString()).build();
+        }
+
+        return Response.ok().entity(btr.toJSON().toString()).build();
     }
 
     @Path("/{id}")
     @PUT
-    public void changeStatus(@PathParam("id") int id, BusinessTravelRequestStatus status){
-        //retrieve btr id in database
-        // change its status if possible/allowed
+    public Response changeStatus(@PathParam("id") int id, String status){
+        BusinessTravelRequestStatus s = BusinessTravelRequestStatus.valueOf(status);
+
+        try {
+            BTRHandler.update(id, "status", s.toString());
+        } catch (BTRNotFound btrNotFound) {
+            JSONObject resp = new JSONObject();
+            resp.put("Cause", btrNotFound.cause());
+            return Response.status(404).entity(resp.toString()).build();
+        }
+
+        return Response.status(200).build();
     }
 }

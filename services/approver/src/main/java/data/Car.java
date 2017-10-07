@@ -1,7 +1,12 @@
 package data;
 
+import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Car {
 
@@ -23,6 +28,16 @@ public class Car {
         this.bookedDays = bookedDays;
     }
 
+    public Car(Document bson) {
+        this.company = bson.getString("company");
+        this.city = bson.getString("city");
+        this.model = bson.getString("model");
+        this.numberPlate = bson.getString("numberPlate");
+        this.bookedDays = ((List<Document>) bson.get("bookedDays")).stream()
+                .map(d -> d.getString("date"))
+                .map(LocalDate::parse)
+                .collect(Collectors.toList());
+    }
 
     public String getCompany() {
         return company;
@@ -42,6 +57,20 @@ public class Car {
 
     public String getNumberPlate() {
         return numberPlate;
+    }
+
+    public JSONObject toJSON(){
+        JSONObject o = new JSONObject();
+        o.put("company", company);
+        o.put("city", city);
+        o.put("model", model);
+        o.put("numberPlate", numberPlate);
+        JSONArray bd = new JSONArray();
+        bookedDays.forEach(bd::put);
+
+        o.put("bookedDays", bd);
+
+        return o;
     }
 
     @Override
