@@ -1,10 +1,9 @@
-package service;
+package approver.service;
 
-import data.BusinessTravelRequest;
-import data.BusinessTravelRequestStatus;
-import data.database.BTRHandler;
-import data.database.DB;
-import data.database.exception.BTRNotFound;
+import approver.data.BusinessTravelRequest;
+import approver.data.BusinessTravelRequestStatus;
+import approver.data.database.BTRHandler;
+import approver.data.database.exception.BTRNotFound;
 import org.bson.Document;
 import org.json.JSONObject;
 
