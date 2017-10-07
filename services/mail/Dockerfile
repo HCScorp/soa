@@ -6,7 +6,7 @@ MAINTAINER Sébastien Mosser (mosser@i3s.unice.fr)
 
 WORKDIR /usr/local/tomee/
 
-COPY ./target/mail-service-rpc.war ./webapps/.
+COPY ./target/mail-approver.service-rpc.war ./webapps/.
 
 HEALTHCHECK --interval=5s CMD curl --fail http://localhost:8080/ || exit 1
 

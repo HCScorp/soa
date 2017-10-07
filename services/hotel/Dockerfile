@@ -16,7 +16,7 @@ RUN apt-get  update \
       && apt-get --no-install-recommends install -y openjdk-8-jdk \
       && rm -rf /var/lib/apt/lists/*
 
-COPY ./target/hotel-service-document.war ./webapps/.
+COPY ./target/hotel-approver.service-document.war ./webapps/.
 
 COPY ./start_in_docker.sh start.sh
 RUN ["chmod", "u+x", "./start.sh"]

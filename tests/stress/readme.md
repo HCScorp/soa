@@ -16,11 +16,11 @@ We also configure the maven build phase to trigger the Scala compiler, and the G
 
 ## Writing a Stress test
 
-A stress test is a plan Scala program, modelling how the service must be stressed. We start by defining an `httpConf` variable that configures the target. Here, we are targeting the `Registry` service, sending and receiving `son` data.
+A stress test is a plan Scala program, modelling how the approver.service must be stressed. We start by defining an `httpConf` variable that configures the target. Here, we are targeting the `Registry` approver.service, sending and receiving `son` approver.data.
 
 
 ```scala
-val httpConf = http.baseURL("http://localhost:9080/tcs-service-document/")
+val httpConf = http.baseURL("http://localhost:9080/tcs-approver.service-document/")
 		.acceptHeader("application/json")
 		.header("Content-Type", "application/json")
 ```
@@ -44,7 +44,7 @@ val stressSample = scenario("Registering Citizens")
 		}
 ```  
 
-The scenario uses two helper methods `buildRegister` and `buildRetrieve` that creates the JSON requests expected by the service. For example, the `buildRetrieve` method read the `ssn` value in the session, and create the String to be returned (Scala returns by default the last result of the last expression)
+The scenario uses two helper methods `buildRegister` and `buildRetrieve` that creates the JSON requests expected by the approver.service. For example, the `buildRetrieve` method read the `ssn` value in the session, and create the String to be returned (Scala returns by default the last result of the last expression)
 
 ```scala
 def buildRetrieve(session: Session): String = {

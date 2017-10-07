@@ -77,7 +77,7 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <finalName>hotel-service-document</finalName>
+        <finalName>hotel-approver.service-document</finalName>
     </build>
 
 </project>

@@ -3,8 +3,8 @@
 ## Network
 
   - Assumes a MongoDB database available on `tcs-database:21017`;
-  - Receives `POST` request on the `tcs-service-document/registry` endpoint;
-  - produces and consumes `application/json` data only;
+  - Receives `POST` request on the `tcs-approver.service-document/registry` endpoint;
+  - produces and consumes `application/json` approver.data only;
   - answers `200` if everything went well, `400` elsewhere.
 
 ## Operations 

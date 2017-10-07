@@ -56,7 +56,7 @@ services:
   database:
     image: mongo:3.0
     volumes:
-      - "./mongo_data:/data/db"
+      - "./mongo_data:/approver.data/db"
 
   cadvisor:
     image: petitroll/cadvisor

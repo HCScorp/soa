@@ -77,7 +77,7 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <finalName>flight-service-document</finalName>
+        <finalName>flight-approver.service-document</finalName>
     </build>
 
 </project>

@@ -6,7 +6,7 @@
 
 ## Case study: The Tax Computation Service
 
-We consider here a simple case study, the _Tax Computation Service_. The key idea is simple: creating a service-based architecture to support the computation of income taxes for a relatively small country (_i.e._, Norway, 5 millions inhabitants).
+We consider here a simple case study, the _Tax Computation Service_. The key idea is simple: creating a approver.service-based architecture to support the computation of income taxes for a relatively small country (_i.e._, Norway, 5 millions inhabitants).
 
 ### Personas & Stories
 
@@ -28,9 +28,9 @@ We consider here a simple case study, the _Tax Computation Service_. The key ide
 ### Phase #1: Deploying services
 
   * Service development
-    * [x] [Creating the Tax Computation System as an RPC service](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/rpc/README.md);
-    * [x] [Creating the Anonymous Generator as a Resource service](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/resource/README.md);
-    * [x] [Creating the Citizen Registry as a Document service](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/document/readme.md).
+    * [x] [Creating the Tax Computation System as an RPC approver.service](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/rpc/README.md);
+    * [x] [Creating the Anonymous Generator as a Resource approver.service](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/resource/README.md);
+    * [x] [Creating the Citizen Registry as a Document approver.service](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/document/readme.md).
   * Service deployment
     * [x] [Using containers to deploy services](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/deployment/Docker.md);
     * [x] [Composing containers into a global system](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/deployment/README.md).
@@ -51,8 +51,8 @@ We consider here a simple case study, the _Tax Computation Service_. The key ide
 
   * Service Development: 
     * Application server: [TomEE+](http://openejb.apache.org/apache-tomee.html)
-    * REST-based service stack: JAX-RS
-    * SOAP-based service stack: JAX-WS
+    * REST-based approver.service stack: JAX-RS
+    * SOAP-based approver.service stack: JAX-WS
   * Integration: 
     * Enterprise Service Bus: [Apache Service Mix](http://servicemix.apache.org/) (7.0.1)
     * Message Broker: [Apache ActiveMQ](http://activemq.apache.org/)

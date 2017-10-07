@@ -42,7 +42,7 @@ azrael:deployment mosser$ docker-compose down
 
 ### Port redirection
 
-The previously defined composition does not deploy properly: the two containers expose a service on the very same port (`8080`), leading to a port conflict. To avoid this, one needs to redirect ports inside the composition. For example, the `tcs-computation` container will be bound to port `9090`, thus a request to `localhost:9090` will be transparently redirected to `tcs-computation:8080` by the docker engine. 
+The previously defined composition does not deploy properly: the two containers expose a approver.service on the very same port (`8080`), leading to a port conflict. To avoid this, one needs to redirect ports inside the composition. For example, the `tcs-computation` container will be bound to port `9090`, thus a request to `localhost:9090` will be transparently redirected to `tcs-computation:8080` by the docker engine. 
 
 ```yaml
 services:
@@ -62,16 +62,16 @@ services:
 
 ### File system interaction
 
-Containers are isolated from the host machine (to a given extent). But sometimes, the container must access to the physical filesystem, for example to store data in a resilient way.  
+Containers are isolated from the host machine (to a given extent). But sometimes, the container must access to the physical filesystem, for example to store approver.data in a resilient way.  
 
-To do so, we rely on Docker _volumes_. The container relies on a given volume, mapping a local directory to a directory that exists inside the container. For example, in the following snippet, the MongoDB database is deployed with a binding that links `./mongo_data` on the host to the `/data/db` directory inside the container.
+To do so, we rely on Docker _volumes_. The container relies on a given volume, mapping a local directory to a directory that exists inside the container. For example, in the following snippet, the MongoDB database is deployed with a binding that links `./mongo_data` on the host to the `/approver.data/db` directory inside the container.
 
 ```yaml
 database:
     container_name: tcs-database
     image: mongo:3.0
     volumes:
-      - "./mongo_data:/data/db"
+      - "./mongo_data:/approver.data/db"
     ports:
       - "27017:27017"
 ```
@@ -96,7 +96,7 @@ __Remarks__: This approach does not implies that the database will be _up and ru
 
 Containers are isolated from each others. Accessing `localhost` refers to the local system deployed inside the container. Inside a composition, Docker deploys each container with a network name equals to the container name. Thus, for a container to refer to another container `my-awesome-container`, one needs to use this logical name.
 
-For example, the `registry` service refers to the MongoDB instance hosted in the `database` container using this logical name when connecting to the database.
+For example, the `registry` approver.service refers to the MongoDB instance hosted in the `database` container using this logical name when connecting to the database.
 
 ```
 private static MongoCollection getCitizens() {
@@ -105,19 +105,19 @@ private static MongoCollection getCitizens() {
 }
 ```
 
-__Remarks__: referring to hostnames in an hardcoded way is obviously a bad practice. One should deploy a script that configure it at deployment time. To do so, look at the DockerFile associated to the `Registry` service. It replaces the `ENTRYPOINT` by an homemade script, `start_in_docker.sh`. 
+__Remarks__: referring to hostnames in an hardcoded way is obviously a bad practice. One should deploy a script that configure it at deployment time. To do so, look at the DockerFile associated to the `Registry` approver.service. It replaces the `ENTRYPOINT` by an homemade script, `start_in_docker.sh`. 
 
 ```
 ENTRYPOINT ["./start.sh"]
 ```
 
-When starting, the script reads two environment variables `db_host` and `db_port`, and update a config file (`network.properties`) in the service war file to use the right configuration. This configuration must be done when the service starts, and cannot be done at build-time (which would be equivalent to hard-code the hostname inside the image).
+When starting, the script reads two environment variables `db_host` and `db_port`, and update a config file (`network.properties`) in the approver.service war file to use the right configuration. This configuration must be done when the approver.service starts, and cannot be done at build-time (which would be equivalent to hard-code the hostname inside the image).
 
 ```bash
 mkdir -p ./WEB-INF/classes/
 echo "databaseHostName=$db_host" > ./WEB-INF/classes/network.properties
 echo "databasePort=$db_port" >> ./WEB-INF/classes/network.properties
-jar uvf ./webapps/tcs-service-document.war ./WEB-INF/classes/network.properties
+jar uvf ./webapps/tcs-approver.service-document.war ./WEB-INF/classes/network.properties
 ```
 
 
