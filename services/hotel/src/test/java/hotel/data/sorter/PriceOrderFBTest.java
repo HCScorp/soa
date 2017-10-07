@@ -6,13 +6,8 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.junit.jupiter.api.Test;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Sorts.ascending;
-import static com.mongodb.client.model.Sorts.orderBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PriceOrderFBTest {
 
@@ -21,7 +16,7 @@ class PriceOrderFBTest {
         Bson expected = ascending("nightPrice");
 
         Document input = new Document();
-        input.put("order", "ascending");
+        input.put("order", "ASCENDING");
 
         PriceOrderFB priceOrderFB = new PriceOrderFB();
 
@@ -32,12 +27,11 @@ class PriceOrderFBTest {
 
     @Test
     void priceOrderSorterNullTest() {
-        Document input = new Document();
-        input.put("notOrder", "ascending");
+        Bson expected = ascending("nightPrice");
 
-        PriceOrderFB priceOrderFB = new PriceOrderFB();
-
-        assertNull(priceOrderFB.buildSorter(input));
+        assertEquals(
+                expected.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                new PriceOrderFB().buildSorter(new Document()).toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
     }
 
     @Test

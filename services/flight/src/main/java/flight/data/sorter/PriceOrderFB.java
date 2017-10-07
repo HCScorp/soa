@@ -11,13 +11,13 @@ public class PriceOrderFB implements SorterBuilder<Bson> {
     @Override
     public Bson buildSorter(Document bson) {
         if (!bson.containsKey("order")) {
-            return null;
+            return ascending("price");
         }
 
         String order = bson.getString("order");
-        if (order.equalsIgnoreCase("ascending")) {
+        if (order.equalsIgnoreCase("ASCENDING")) {
             return ascending("price");
-        } else if (order.equalsIgnoreCase("descending")) {
+        } else if (order.equalsIgnoreCase("DESCENDING")) {
             return descending("price");
         } else {
             throw new IllegalSorterValueException("incorrect 'order' value");
