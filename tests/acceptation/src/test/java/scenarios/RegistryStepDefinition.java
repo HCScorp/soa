@@ -21,7 +21,7 @@ public class RegistryStepDefinition {
 
     private JSONObject call(JSONObject request) {
         String raw =
-                WebClient.create("http://" + host + ":" + port + "/tcs-approver.service-document/registry")
+                WebClient.create("http://" + host + ":" + port + "/tcs-service-document/registry")
                         .accept(MediaType.APPLICATION_JSON_TYPE)
                         .header("Content-Type", MediaType.APPLICATION_JSON)
                         .post(request.toString(), String.class);

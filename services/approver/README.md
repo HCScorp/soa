@@ -1,4 +1,4 @@
-# Creating a Resource approver.service
+# Creating a Resource service
 
   * Author: Sébastien Mosser [(email)](mosser@i3s.unice.fr)
   * Version: 2017.09
@@ -6,7 +6,7 @@
 
 ## Creating the Maven project
 
-We implement this approver.service using the Java language, and use Maven to support the project description. The descriptor is located in the `pom.xml` file, and inherits its content from the global one described in the `approver.service` directory (mainly the application server configuration).  The file system hierarchy is the following:
+We implement this service using the Java language, and use Maven to support the project description. The descriptor is located in the `pom.xml` file, and inherits its content from the global one described in the `service` directory (mainly the application server configuration).  The file system hierarchy is the following:
 
 ```
 azrael:resource mosser$ tree .
@@ -16,19 +16,19 @@ azrael:resource mosser$ tree .
 └── src
     └── main
         ├── java
-        │   └── # approver.service code goes here
+        │   └── # service code goes here
         └── webapp
             └── WEB-INF
                 └── web.xml
 ```
 
-## Developing the approver.service
+## Developing the service
 
-The `Generator` approver.service is use to make tax computation anonymous. It creates counters, and generate unique identifiers based on these counters. The system is transient, _i.e._, there is no database associated to the system. 
+The `Generator` service is use to make tax computation anonymous. It creates counters, and generate unique identifiers based on these counters. The system is transient, _i.e._, there is no database associated to the system. 
 
-### Implementing the approver.service
+### Implementing the service
 
-The approver.service produces `application/json` approver.data. It defines several routes under the `generator` prefix, to create generators, get all available generators, generate a new identifier or delete a generator.
+The service produces `application/json` data. It defines several routes under the `generator` prefix, to create generators, get all available generators, generate a new identifier or delete a generator.
 
 ```java
 @Path("/generators")
@@ -53,11 +53,11 @@ public class GeneratorService {
 }
 ``` 
 
-The approver.service is implemented in the [GeneratorService](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/resource/src/main/java/gen/GeneratorService.java) class.
+The service is implemented in the [GeneratorService](https://github.com/polytechnice-si/5A-Microservices-Integration/blob/master/services/resource/src/main/java/gen/GeneratorService.java) class.
 
-## Starting the approver.service
+## Starting the service
 
-  * Compiling: `mvn clean package` will create the file `target/tcs-approver.service-rest.war`
+  * Compiling: `mvn clean package` will create the file `target/tcs-service-rest.war`
   * Running: `mvn tomee:run` will deploy the created `war` inside a TomEE+ server, available on `localhost:8080`
-  * The approver.service is available at [http://localhost:8080/tcs-approver.service-rest/generators](http://localhost:8080/tcs-service-rest/generators)
+  * The service is available at [http://localhost:8080/tcs-service-rest/generators](http://localhost:8080/tcs-service-rest/generators)
 

@@ -1,4 +1,4 @@
-package approver.data;
+package data;
 
 import org.bson.Document;
 import org.json.JSONArray;
@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BusinessTravelRequest {
+    // May be missing some fields
 
-    private int id;
     private BusinessTravelRequestStatus status = BusinessTravelRequestStatus.WAITING;
     private List<Flight> flights;
     private List<Hotel> hotels;
@@ -23,8 +23,6 @@ public class BusinessTravelRequest {
     }
 
     public BusinessTravelRequest(Document document){
-        id = document.getInteger("id");
-
         flights = ((List<Document>)document.get("flights"))
                 .stream()
                 .map(Flight::new)
@@ -54,9 +52,6 @@ public class BusinessTravelRequest {
 
     public List<Car> getCars() { return cars; }
     public void setCars(List<Car> cars) { this.cars = cars; }
-
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
 
     public JSONObject toJSON(){
         JSONObject o = new JSONObject();

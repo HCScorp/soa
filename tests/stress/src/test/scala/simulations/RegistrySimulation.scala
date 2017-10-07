@@ -14,7 +14,7 @@ class RegistrySimulation extends Simulation {
 
   val httpConf =
     http
-      .baseURL("http://localhost:9080/tcs-approver.service-document/")
+      .baseURL("http://localhost:9080/tcs-service-document/")
       .acceptHeader("application/json")
       .header("Content-Type", "application/json")
 

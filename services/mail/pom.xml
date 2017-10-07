@@ -16,7 +16,7 @@
       </parent>
 
       <build>
-        <finalName>mail-approver.service-rpc</finalName>
+        <finalName>mail-service-rpc</finalName>
       </build>
 
   </project>

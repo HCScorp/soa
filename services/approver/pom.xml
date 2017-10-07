@@ -82,7 +82,7 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <finalName>approver-approver.service-rest</finalName>
+        <finalName>approver-service-rest</finalName>
     </build>
 
 </project>

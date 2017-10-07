@@ -56,7 +56,7 @@
                 <configuration>
                     <disableCompiler>true</disableCompiler>
                     <configFolder>src/test/resources</configFolder>
-                    <dataFolder>src/test/resources/approver.data</dataFolder>
+                    <dataFolder>src/test/resources/data</dataFolder>
                     <resultsFolder>src/test/results</resultsFolder>
                     <simulationsFolder>src/test/simulations</simulationsFolder>
                     <runMultipleSimulations>true</runMultipleSimulations>

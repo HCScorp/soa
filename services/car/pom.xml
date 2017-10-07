@@ -77,7 +77,7 @@
                 </dependencies>
             </plugin>
         </plugins>
-        <finalName>car-approver.service-document</finalName>
+        <finalName>car-service-document</finalName>
     </build>
 
 </project>

@@ -1,4 +1,4 @@
-package approver.data;
+package data;
 
 import org.bson.Document;
 import org.json.JSONObject;

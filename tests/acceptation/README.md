@@ -7,13 +7,13 @@
   
 ## Acceptance Scenarios
 
-An acceptance scenario is defined as a sequence of approver.service call that achieve a given business goal. A classical way of defining an acceptance scenario is to use the _Gherkin_ language, which relies on a _Given / When / Then_ pattern. A scenario defines:
+An acceptance scenario is defined as a sequence of service call that achieve a given business goal. A classical way of defining an acceptance scenario is to use the _Gherkin_ language, which relies on a _Given / When / Then_ pattern. A scenario defines:
 
   1. An initial context (a sequence of _Given_ sentences)
   2. A triggering action (a sequence of _When_ sentences)
   3. Assumptions to validates (a sequence of _Then_ sentences).
 
-For example, the following scenario address the `Registry` approver.service :
+For example, the following scenario address the `Registry` service :
 
 ```gherkin
 Given an empty registry deployed on localhost:9080
@@ -90,13 +90,13 @@ Each feature can be repetitive with respect to the context definition. Gherkin d
 
 ```gherkin
 Background:
-	Given The TCS approver.service deployed on localhost:9090
+	Given The TCS service deployed on localhost:9090
 
 Scenario: Paying taxes using the "simple" method
 	Given a taxpayer identified as 111-555-111
 		And an income of 12000 kroner
 	When the simple computation method is selected
-		And the approver.service is called
+		And the service is called
 	Then the computed tax amount is 2400.0
 		And the answer is associated to 111-555-111
 		And the computation date is set

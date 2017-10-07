@@ -78,7 +78,7 @@ public class TaxComputationStepDefinition {
         URL wsdl = TaxComputationStepDefinition.class.getResource("ExternalTaxComputerService.wsdl");
         ExternalTaxComputerService factory = new ExternalTaxComputerService(wsdl);
         TaxComputation ws = factory.getExternalTaxComputerPort();
-        String address = "http://"+this.host+":"+this.port+"/tcs-approver.service-rpc/ExternalTaxComputerService";
+        String address = "http://"+this.host+":"+this.port+"/tcs-service-rpc/ExternalTaxComputerService";
         ((BindingProvider) ws).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, address);
         return ws;
     }
