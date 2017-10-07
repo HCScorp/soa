@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.Sorts.ascending;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PriceOrderFBTest {
@@ -18,7 +17,7 @@ class PriceOrderFBTest {
         Bson expected = ascending("price");
 
         Document input = new Document();
-        input.put("order", "ascending");
+        input.put("order", "ASCENDING");
 
         PriceOrderFB priceOrderFB = new PriceOrderFB();
 
@@ -29,12 +28,11 @@ class PriceOrderFBTest {
 
     @Test
     void priceOrderSorterNullTest() {
-        Document input = new Document();
-        input.put("notOrder", "ascending");
-
-        PriceOrderFB priceOrderFB = new PriceOrderFB();
-
-        assertNull(priceOrderFB.buildSorter(input));
+        Bson expected = ascending("price");
+        
+        assertEquals(
+                expected.toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()),
+                new PriceOrderFB().buildSorter(new Document()).toBsonDocument(Document.class, MongoClient.getDefaultCodecRegistry()));
     }
 
     @Test

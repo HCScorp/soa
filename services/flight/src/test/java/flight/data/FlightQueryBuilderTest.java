@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Sorts.ascending;
@@ -39,7 +36,7 @@ public class FlightQueryBuilderTest {
         input.put("maxTravelTime", Duration.ofHours(2).toMinutes());
         input.put("category", Flight.Category.ECO.toString());
         input.put("airline", "Air France");
-        input.put("order", "ascending");
+        input.put("order", "ASCENDING");
 
         Query query = FlightQueryBuilder.buildQuery(input);
 
