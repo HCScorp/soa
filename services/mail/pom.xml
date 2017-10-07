@@ -15,9 +15,8 @@
           <version>1.0</version>
       </parent>
 
-
       <build>
-        <finalName>hcs-service-mail</finalName>
+        <finalName>mail-service-rpc</finalName>
       </build>
 
   </project>
