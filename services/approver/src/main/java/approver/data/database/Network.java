@@ -1,4 +1,4 @@
-package data.database;
+package approver.data.database;
 
 import java.util.Properties;
 import java.io.IOException;

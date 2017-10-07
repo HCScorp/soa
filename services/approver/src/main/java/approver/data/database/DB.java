@@ -1,4 +1,4 @@
-package data.database;
+package approver.data.database;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;

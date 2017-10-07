@@ -1,7 +1,7 @@
-package data.database;
+package approver.data.database;
 
-import data.BusinessTravelRequest;
-import data.database.exception.BTRNotFound;
+import approver.data.BusinessTravelRequest;
+import approver.data.database.exception.BTRNotFound;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
