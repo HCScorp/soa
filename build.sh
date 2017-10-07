@@ -3,6 +3,7 @@
 PUSH=${PUSH:-false}
 COMPOSE=true
 
+command -v mvn > /dev/null 2>&1 || { echo >&2 "I require 'mvn' but it's not installed. Aborting."; exit 1; }
 command -v docker-compose > /dev/null 2>&1 || { echo >&2 "It would be better to install 'docker-compose'."; COMPOSE=false; }
 
 build() { # $1: directory, $2: image_name
