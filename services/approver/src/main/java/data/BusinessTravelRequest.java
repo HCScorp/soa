@@ -1,8 +1,5 @@
 package data;
 
-import hotel.service.Hotel;
-import paf.Flight;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.List;

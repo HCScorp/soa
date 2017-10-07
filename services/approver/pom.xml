@@ -21,26 +21,6 @@
         <artifactId>json</artifactId>
         <version>20170516</version>
       </dependency>
-        <dependency>
-            <groupId>fr.unice.polytech.hcs.services</groupId>
-            <artifactId>flight</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.unice.polytech.hcs.services</groupId>
-            <artifactId>hotel</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.unice.polytech.hcs.services</groupId>
-            <artifactId>car</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.unice.polytech.hcs.services</groupId>
-            <artifactId>car</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>

@@ -1,6 +1,7 @@
 package service;
 
 import data.BusinessTravelRequest;
+import data.BusinessTravelRequestStatus;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -26,5 +27,8 @@ public class ApproverService {
 
     @Path("/{id}")
     @PUT
-    public void changeStatus(@PathParam("id") int id)
+    public void changeStatus(@PathParam("id") int id, BusinessTravelRequestStatus status){
+        //retrieve btr id in database
+        // change its status if possible/allowed
+    }
 }
