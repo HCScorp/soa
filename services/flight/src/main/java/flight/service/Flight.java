@@ -60,16 +60,15 @@ public class Flight {
     }
 
     public Document toBson() {
-        Document result = new Document();
-        result.put("origin", origin);
-        result.put("destination", destination);
-        result.put("date", date.toString());
-        result.put("price", price);
-        result.put("journeyType", journeyType.toString());
-        result.put("duration", duration.toMinutes());
-        result.put("category", category.toString());
-        result.put("airline", airline);
-        return result;
+        return new Document()
+                .append("origin", origin)
+                .append("destination", destination)
+                .append("date", date.toString())
+                .append("price", price)
+                .append("journeyType", journeyType.toString())
+                .append("duration", duration.toMinutes())
+                .append("category", category.toString())
+                .append("airline", airline);
     }
 
     public String getOrigin() {

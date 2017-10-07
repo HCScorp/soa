@@ -11,7 +11,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Sorts.ascending;
@@ -49,12 +48,11 @@ public class FlightQueryHandlerTest {
                         eq("category", Flight.Category.ECO.toString())),
                 orderBy(ascending("price")));
 
-
         FlightQueryHandler queryHandler = new FlightQueryHandler(query);
         List<Document> result = queryHandler.performOn(flights);
 
         assertEquals(2, result.size());
         assertEquals(parisNice3, new Flight(result.get(0)));
-        assertEquals(parisNice2, new Flight(result.get(result.size()-1)));
+        assertEquals(parisNice2, new Flight(result.get(result.size() - 1)));
     }
 }

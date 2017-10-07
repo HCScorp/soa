@@ -44,18 +44,15 @@ public class Hotel {
     }
 
     public Document toBson() {
-        Document result = new Document();
-        result.put("name", name);
-        result.put("nightPrice", nightPrice);
-        result.put("fullBookedDays", fullBookedDays.stream()
-                .map(LocalDate::toString)
-                .map(d -> new Document("date", d))
-                .collect(Collectors.toList()));
-
-        result.put("city", city);
-        result.put("zipCode", zipCode);
-        result.put("address", address);
-        return result;
+        return new Document()
+                .append("name", name)
+                .append("nightPrice", nightPrice)
+                .append("fullBookedDays", fullBookedDays.stream()
+                        .map(LocalDate::toString)
+                        .map(d -> new Document("date", d))
+                        .collect(Collectors.toList()))
+                .append("city", city)
+                .append("zipCode", zipCode).append("address", address);
     }
 
     public String getName() {
