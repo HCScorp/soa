@@ -1,81 +1,63 @@
-# Citizen Registry Document API
+# Hotel Document API
 
 ## Network
 
-  - Assumes a MongoDB database available on `tcs-database:21017`;
-  - Receives `POST` request on the `tcs-service-document/registry` endpoint;
+  - Assumes a MongoDB database available on `hotel-database:21017`;
+  - Receives `POST` request on the `hotel-service-document/hotel` endpoint;
   - produces and consumes `application/json` data only;
   - answers `200` if everything went well, `400` elsewhere.
 
-## Operations 
+## Operation : search hotels
 
-The services follows a document approach, and handle the following events:
+The services follows a document approach, and handle only one operation: search hotels.
+Therefore, the message content can only be the following search criterion (all optional):
 
-  - `REGISTER`: registers a citizen;
-  - `RETRIEVE`: get a citizen based on his/her social security number.
-  - `DELETE`: deletes a citizen;
-  - `LIST`: lists citizens with matching a given regular expression;
-  - `DUMP`: lists all citizens;
-  - `PURGE`: delete the contents of the registry (use with caution);
+Input: search criterion
+ + city 		: string
+ + dateFrom 	: string	(formatted as year-month-day, e.g. 2017-12-21)
+ + dateTo 		: string 	(formatted as year-month-day, e.g. 2017-12-25)
+ + order		: string 	(can be ASCENDING or DESCENDING, ASCENDING by default)
 
+Output: list of hotels ordered by price
 
-### Registering a citizen
+An hotel contains the following fields:
+ + name 		: string
+ + city 	 	: string
+ + zipCode 		: string
+ + address		: string
+ + nightPrice	: integer	(in euro)
 
+### Example
+
+Input:
 ```json
 {
-  "event": "REGISTER",
-  "citizen": {
-    "last_name": "Doe",
-    "first_name": "John",
-    "ssn": "1234567890",
-    "zip_code": "06543",
-    "address": "nowhere, middle of",
-    "birth_year": "1970"
-  }
+  "city": "Nice",
+  "dateFrom": "2017-12-21",
+  "dateTo": "2017-12-25",
+  "dateTo": "2017-12-25",
+  "order": "ASCENDING"
 }
 ```
 
-### Retrieve a given citizen
-
+Output:
 ```json
 {
-  "event": "RETRIEVE",
-  "ssn": "1234567890"
-}
-```
-
-
-### Remove a citizen
-
-```json
-{
-  "event": "DELETE",
-  "ssn": "1234567890"
-}
-```
-
-### Find citizens with a given name
-
-```json
-{
-  "event": "LIST",
-  "filter": "D.*"
-}
-```
-
-### Get all citizens registered
-
-```json
-{
-  "event": "DUMP"
-}
-```
-
-### Purge the database (remove all contents!)
-
-```json
-{
-  "event": "PURGE",
-  "use_with": "caution"
+  "result": [
+	{
+	  "name": "Le Méridien",
+      "city": "Nice",
+      "zipCode": "06046",
+	  "address": "1, promenade des Anglais",
+      "nightPrice": 200
+	},
+	{
+	  "name": "Négresco",
+      "city": "Nice",
+      "zipCode": "06000",
+	  "address": "37, promenade des Anglais",
+      "nightPrice": 300
+	}
+  ]
 }
 ```

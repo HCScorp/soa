@@ -1,21 +1,20 @@
 package car.service;
 
+import car.data.CarQueryBuilder;
+import car.data.CarQueryHandler;
+import car.data.DB;
+import car.data.Query;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.mongodb.client.MongoCollection;
-import car.data.DB;
-import car.data.CarQueryBuilder;
-import car.data.CarQueryHandler;
-import car.data.Query;
-import org.bson.Document;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.List;
 
 @Path("/car")
@@ -48,7 +47,8 @@ public class CarService {
             //
 
             // Format output to JSON
-            JSONArray result = new JSONArray(resultBson.stream().map(Document::toJson));
+            JSONObject result = new JSONObject();
+            result.put("cars", new JSONArray(resultBson.stream().map(Car::convertToWebResult).toArray()));
 
             // Build and send response with JSON
             return Response.ok().entity(result.toString(INDENT_FACTOR)).build();

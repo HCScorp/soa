@@ -34,7 +34,7 @@ public class HotelQueryBuilderTest {
 
         Document input = new Document();
         input.put("order", "ascending");
-        input.put("destination", "Nice");
+        input.put("city", "Nice");
         input.put("dateFrom", LocalDate.of(2017, 12, 21).toString());
         input.put("dateTo", LocalDate.of(2017, 12, 24).toString());
 

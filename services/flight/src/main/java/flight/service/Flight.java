@@ -4,8 +4,6 @@ import org.bson.Document;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class Flight {
 

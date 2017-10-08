@@ -1,81 +1,79 @@
-# Citizen Registry Document API
+# Flight Document API
 
 ## Network
 
-  - Assumes a MongoDB database available on `tcs-database:21017`;
-  - Receives `POST` request on the `tcs-service-document/registry` endpoint;
+  - Assumes a MongoDB database available on `flight-database:21017`;
+  - Receives `POST` request on the `flight-service-document/flight` endpoint;
   - produces and consumes `application/json` data only;
   - answers `200` if everything went well, `400` elsewhere.
 
-## Operations 
+## Operation : search flights
 
-The services follows a document approach, and handle the following events:
+The services follows a document approach, and handle only one operation: search flights.
+Therefore, the message content can only be the following search criterion (all optional):
 
-  - `REGISTER`: registers a citizen;
-  - `RETRIEVE`: get a citizen based on his/her social security number.
-  - `DELETE`: deletes a citizen;
-  - `LIST`: lists citizens with matching a given regular expression;
-  - `DUMP`: lists all citizens;
-  - `PURGE`: delete the contents of the registry (use with caution);
+Input: search criterion
+ + origin 		 : string
+ + destination 	 : string
+ + date 		 : string 	(formatted as year-month-day, e.g. 2017-12-25)
+ + journeyType 	 : string 	(can be DIRECT or INDIRECT)
+ + maxTravelTime : integer 	(in minutes)
+ + category 	 : string 	(can be ECO, ECO_PREMIUM, BUSINESS, FIRST)
+ + airline 		 : string
+ + order		 : string 	(can be ASCENDING or DESCENDING, ASCENDING by default)
 
+Output: list of flights ordered by prices
 
-### Registering a citizen
+A flight contains the following fields:
+ + origin 		 : string
+ + destination 	 : string
+ + date 		 : string 	(formatted as year-month-day, e.g. 2017-12-25)
+ + price 	 	 : integer 	(in euro)
+ + journeyType 	 : string 	(can be DIRECT or INDIRECT)
+ + duration 	 : integer 	(in minutes)
+ + category 	 : string 	(can be ECO, ECO_PREMIUM, BUSINESS, FIRST)
+ + airline 		 : string
 
+### Example
+
+Input:
 ```json
 {
-  "event": "REGISTER",
-  "citizen": {
-    "last_name": "Doe",
-    "first_name": "John",
-    "ssn": "1234567890",
-    "zip_code": "06543",
-    "address": "nowhere, middle of",
-    "birth_year": "1970"
-  }
+  "origin": "Nice",
+  "destination": "Paris",
+  "date": "2017-8-14",
+  "journeyType": "DIRECT",
+  "maxTravelTime": 120,
+  "category": "ECO",
+  "airline": "Air France",
+  "order": "ASCENDING"
 }
 ```
 
-### Retrieve a given citizen
-
+Output:
 ```json
 {
-  "event": "RETRIEVE",
-  "ssn": "1234567890"
-}
-```
-
-
-### Remove a citizen
-
-```json
-{
-  "event": "DELETE",
-  "ssn": "1234567890"
-}
-```
-
-### Find citizens with a given name
-
-```json
-{
-  "event": "LIST",
-  "filter": "D.*"
-}
-```
-
-### Get all citizens registered
-
-```json
-{
-  "event": "DUMP"
-}
-```
-
-### Purge the database (remove all contents!)
-
-```json
-{
-  "event": "PURGE",
-  "use_with": "caution"
+  "result": [
+	{
+	  "origin": "Nice",
+      "destination": "Paris",
+	  "date": "2017-8-14",
+	  "price": "89",
+	  "journeyType": "DIRECT",
+	  "duration": 92,
+	  "category": "ECO",
+      "airline": "Air France"
+	},
+	{
+	  "origin": "Nice",
+      "destination": "Paris",
+	  "date": "2017-8-14",
+	  "price": "63",
+	  "journeyType": "DIRECT",
+	  "duration": 105,
+	  "category": "ECO",
+      "airline": "EasyJet"
+	}
+  ]
 }
 ```

@@ -1,12 +1,5 @@
 package flight.service;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.mongodb.client.MongoCollection;
 import flight.data.DB;
 import flight.data.FlightQueryBuilder;
@@ -16,6 +9,12 @@ import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/flight")
@@ -48,7 +47,8 @@ public class FlightService {
             //
 
             // Format output to JSON
-            JSONArray result = new JSONArray(resultBson.stream().map(Document::toJson));
+            JSONObject result = new JSONObject();
+            result.put("flights", new JSONArray(resultBson.stream().map(Document::toJson).toArray()));
 
             // Build and send response with JSON
             return Response.ok().entity(result.toString(INDENT_FACTOR)).build();

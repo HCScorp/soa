@@ -16,7 +16,7 @@ class DestinationFBTest {
         Bson expected = eq("city", "Nice");
 
         Document input = new Document();
-        input.put("destination", "Nice");
+        input.put("city", "Nice");
 
         DestinationFB destFB = new DestinationFB();
 
@@ -28,7 +28,7 @@ class DestinationFBTest {
     @Test
     void destinationFilterNullTest() {
         Document input = new Document();
-        input.put("notDestination", "Nice");
+        input.put("notCity", "Nice");
 
         DestinationFB destFB = new DestinationFB();
 

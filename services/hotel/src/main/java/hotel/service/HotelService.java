@@ -1,22 +1,20 @@
 package hotel.service;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.mongodb.client.MongoCollection;
 import hotel.data.DB;
 import hotel.data.HotelQueryBuilder;
 import hotel.data.HotelQueryHandler;
 import hotel.data.Query;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/hotel")
@@ -49,7 +47,8 @@ public class HotelService {
             //
 
             // Format output to JSON
-            JSONArray result = new JSONArray(resultBson.stream().map(Document::toJson));
+            JSONObject result = new JSONObject();
+            result.put("hotels", new JSONArray(resultBson.stream().map(Hotel::convertToWebResult).toArray()));
 
             // Build and send response with JSON
             return Response.ok().entity(result.toString(INDENT_FACTOR)).build();

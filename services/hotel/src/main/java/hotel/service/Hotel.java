@@ -55,6 +55,11 @@ public class Hotel {
                 .append("zipCode", zipCode).append("address", address);
     }
 
+    public static String convertToWebResult(Document hotelBson) {
+        hotelBson.remove("fullBookedDays");
+        return hotelBson.toJson();
+    }
+
     public String getName() {
         return name;
     }
