@@ -45,7 +45,6 @@ class FlightSimulation extends Simulation {
     val date = session("date").as[String]
     val origin = session("origin").as[String]
     val destination = session("destination").as[String]
-    val maxTravelTime = session("destination").as[Int]
 
     raw"""{
       "date" : "$date",
