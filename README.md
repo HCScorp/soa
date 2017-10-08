@@ -18,7 +18,7 @@ We consider here an ecosystem of services dedicated to support an employee when 
 ## Associated services
 
 We had two viable choices for the first three features : create one web service for each or one web service for all.
-We decided to go for one web service for each because they are only related in the way they are requested and we wanted to isolate them by concerns. Each will have its own database so that we keep data isolated by concerns as well. 
+We decided to go for one web service for each because they are only related in the way they are requested and we wanted to isolate them by concerns. Each will have its own database so that we keep data isolated by concerns as well. (to be able to run every needed tests, we only deploy one mongo for every services but in a real life situation, each service would be isolated and have its own mongo instance)
 
 For the two remaining features, we decided to group the submission of a business travel request and the approval because approving a request is the next logical step after a submission so we keep the workflow into one piece.
 Then, we chose to extract the mail system so that we had all the business travel logic on one side and the result communication (mail) on the other side, that can be easily isolated because it has nothing to do with the rest.
@@ -73,7 +73,7 @@ RPC was the least prefered option because there is optional parameters to take i
     * REST-based service stack: JAX-RS
     * SOAP-based service stack: JAX-WS
   * Storage: 
-    * Database: [MongoDB](https://www.mongodb.com) (3.5)
+    * Database: [MongoDB](https://www.mongodb.com) (3.4.9)
   * Deployment: 
     * [Docker Community Engine](https://www.docker.com/community-edition) (17.09.0-ce)
     * [Docker Compose](https://docs.docker.com/compose/) (1.16.1)
