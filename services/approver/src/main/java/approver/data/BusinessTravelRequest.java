@@ -24,6 +24,7 @@ public class BusinessTravelRequest {
 
     public BusinessTravelRequest(Document document){
         id = document.getInteger("id");
+        status = BusinessTravelRequestStatus.valueOf(document.getString("status"));
 
         flights = ((List<Document>)document.get("flights"))
                 .stream()
@@ -35,8 +36,7 @@ public class BusinessTravelRequest {
                 .map(Hotel::new)
                 .collect(Collectors.toList());
 
-
-        cars = ((List<Document>)document.get("car"))
+        cars = ((List<Document>)document.get("cars"))
                 .stream()
                 .map(Car::new)
                 .collect(Collectors.toList());
@@ -60,6 +60,9 @@ public class BusinessTravelRequest {
 
     public JSONObject toJSON(){
         JSONObject o = new JSONObject();
+
+        o.put("id", id);
+
         o.put("status", status.toString());
 
         JSONArray c = new JSONArray();
@@ -79,5 +82,29 @@ public class BusinessTravelRequest {
 
     public Document toBSON(){
         return Document.parse(toJSON().toString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BusinessTravelRequest)) return false;
+
+        BusinessTravelRequest that = (BusinessTravelRequest) o;
+
+        if (getId() != that.getId()) return false;
+        if (getStatus() != that.getStatus()) return false;
+        if (getFlights() != null ? !getFlights().equals(that.getFlights()) : that.getFlights() != null) return false;
+        if (getHotels() != null ? !getHotels().equals(that.getHotels()) : that.getHotels() != null) return false;
+        return getCars() != null ? getCars().equals(that.getCars()) : that.getCars() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getStatus() != null ? getStatus().hashCode() : 0);
+        result = 31 * result + (getFlights() != null ? getFlights().hashCode() : 0);
+        result = 31 * result + (getHotels() != null ? getHotels().hashCode() : 0);
+        result = 31 * result + (getCars() != null ? getCars().hashCode() : 0);
+        return result;
     }
 }

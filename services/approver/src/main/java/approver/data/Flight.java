@@ -53,7 +53,7 @@ public class Flight {
         this.date = LocalDate.parse(bson.getString("date"));
         this.price = bson.getInteger("price");
         this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
-        this.duration = Duration.ofMinutes(bson.getLong("duration"));
+        this.duration = Duration.parse(bson.getString("duration"));
         this.category = Category.valueOf(bson.getString("category"));
         this.airline = bson.getString("airline");
     }

@@ -15,11 +15,11 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class ApproverService {
 
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createNewBTR(String input) {
         BTRHandler.insert(Document.parse(input));
+
         return Response.status(200).build();
     }
 
