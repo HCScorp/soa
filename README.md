@@ -27,9 +27,11 @@ Then, we chose to extract the mail system so that we had all the business travel
 
 ### Flight, Hotel and Car : Document
 
-[Flight API documentation](https://github.com/thomasmunoz13/soa/services/flight/api.md);
-[Hotel API documentation](https://github.com/thomasmunoz13/soa/services/hotel/api.md);
-[Car API documentation](https://github.com/thomasmunoz13/soa/services/car/api.md);
+[Flight API documentation](https://github.com/thomasmunoz13/soa/services/flight/api.md)
+
+[Hotel API documentation](https://github.com/thomasmunoz13/soa/services/hotel/api.md)
+
+[Car API documentation](https://github.com/thomasmunoz13/soa/services/car/api.md)
 
 We decided to use the Document protocol for the Flight, Hotel and Car web services.
 We needed a flexible contract, that can handle a lot of parameters, optionnal or not, and with a high chance of futur changes. 
@@ -44,7 +46,7 @@ Note: the car rental feature is described with minimum amount of search criterio
 
 ## Mail : RPC
 
-[Mail API documentation](https://github.com/thomasmunoz13/soa/services/mail/api.md);
+[Mail API documentation](https://github.com/thomasmunoz13/soa/services/mail/api.md)
 
 For the mail service, we needed something fit for a frozen contract.
 This feature is not about manipulating a resource, it is about performing a simple action: send an email.
@@ -55,7 +57,7 @@ We had a service that takes a fixed amount of parameters that will not change fo
 
 ## Approver : REST
 
-[Approver API documentation](https://github.com/thomasmunoz13/soa/services/approver/api.md);
+[Approver API documentation](https://github.com/thomasmunoz13/soa/services/approver/api.md)
 
 It is easy to see the business travel request as a resource: it can be created (submission), viewed (manager review) updated (manager approval) and deleted (archiving eslewhere).
 This business travel request is unique, identified and reachable by its URI.
