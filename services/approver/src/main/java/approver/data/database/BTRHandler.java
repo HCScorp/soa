@@ -2,45 +2,47 @@ package approver.data.database;
 
 import approver.data.BusinessTravelRequest;
 import approver.data.database.exception.BTRNotFound;
-import com.mongodb.bulk.UpdateRequest;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.result.UpdateResult;
+import com.mongodb.client.MongoCollection;
 import org.bson.Document;
-import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import static com.mongodb.client.model.Filters.eq;
 
 public class BTRHandler {
-    public static DB db = null;
 
-    private static void checkConnection(){
-        if(db == null){
-            db = new DB();
-        }
+    private final MongoCollection<Document> btrCollection;
+
+    public BTRHandler() {
+        this.btrCollection = DB.getBTR();
     }
-    public static BusinessTravelRequest get(int id) throws BTRNotFound {
-        checkConnection();
-        Bson filter = eq("id", id);
 
-        Document result = db.getBTR().find(filter).first();
+    public BTRHandler(MongoCollection<Document> btrCollection) {
+        this.btrCollection = btrCollection;
+    }
 
-        if(result == null || result.isEmpty()){
+    private Document getDocument(ObjectId id) throws BTRNotFound {
+        Document result = btrCollection.find(eq("_id", id)).first();
+
+        if (result == null) {
             throw new BTRNotFound(id);
         }
 
-        return new BusinessTravelRequest(result);
+        return result;
     }
 
-    public static void insert(Document document){
-        checkConnection();
-        db.getBTR().insertOne(document);
+    public BusinessTravelRequest getBTR(ObjectId id) throws BTRNotFound {
+        return new BusinessTravelRequest(getDocument(id));
     }
 
-    public static void update(int id, String field, String value) throws BTRNotFound {
-        checkConnection();
-        Document btr = get(id).toBSON();
-        btr.put(field, value);
+    public ObjectId insert(BusinessTravelRequest btr) {
+        Document bson = btr.toBSON();
+        btrCollection.insertOne(bson);
+        ObjectId id = bson.getObjectId("_id");
+        btr.setId(id);
+        return id;
+    }
 
-        UpdateResult result = db.getBTR().replaceOne(get(id).toBSON(), btr);
+    public void update(ObjectId id, String field, Object value) throws BTRNotFound {
+        btrCollection.updateOne(eq("_id", id), new Document("$set", new Document(field, value)));
     }
 }

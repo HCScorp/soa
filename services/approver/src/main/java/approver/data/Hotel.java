@@ -1,8 +1,6 @@
 package approver.data;
 
 import org.bson.Document;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,7 +43,6 @@ public class Hotel {
         this.address = bson.getString("address");
     }
 
-
     public String getName() {
         return name;
     }
@@ -70,21 +67,16 @@ public class Hotel {
         return fullBookedDays;
     }
 
-    public JSONObject toJSON(){
-        JSONObject o = new JSONObject();
-
-        o.put("name", name);
-        o.put("city", city);
-        o.put("zipCode", zipCode);
-        o.put("address", address);
-        o.put("nightPrice", nightPrice);
-
-        JSONArray a = new JSONArray();
-        fullBookedDays.forEach(f -> a.put(f.toString()));
-
-        o.put("fullBookedDays", a);
-
-        return o;
+    public Document toBson() {
+        return new Document()
+                .append("name", name)
+                .append("nightPrice", nightPrice)
+                .append("fullBookedDays", fullBookedDays.stream()
+                        .map(LocalDate::toString)
+                        .map(d -> new Document("date", d))
+                        .collect(Collectors.toList()))
+                .append("city", city)
+                .append("zipCode", zipCode).append("address", address);
     }
 
     @Override

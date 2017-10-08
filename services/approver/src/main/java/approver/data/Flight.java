@@ -1,7 +1,6 @@
 package approver.data;
 
 import org.bson.Document;
-import org.json.JSONObject;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -53,7 +52,7 @@ public class Flight {
         this.date = LocalDate.parse(bson.getString("date"));
         this.price = bson.getInteger("price");
         this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
-        this.duration = Duration.parse(bson.getString("duration"));
+        this.duration = Duration.ofMinutes(bson.getLong("duration"));
         this.category = Category.valueOf(bson.getString("category"));
         this.airline = bson.getString("airline");
     }
@@ -90,19 +89,16 @@ public class Flight {
         return airline;
     }
 
-    public JSONObject toJSON(){
-        JSONObject o = new JSONObject();
-
-        o.put("origin", origin);
-        o.put("destination", destination);
-        o.put("date", date);
-        o.put("price", price);
-        o.put("journeyType", journeyType);
-        o.put("duration", duration);
-        o.put("category", category);
-        o.put("airline", airline);
-
-        return o;
+    public Document toBson() {
+        return new Document()
+                .append("origin", origin)
+                .append("destination", destination)
+                .append("date", date.toString())
+                .append("price", price)
+                .append("journeyType", journeyType.toString())
+                .append("duration", duration.toMinutes())
+                .append("category", category.toString())
+                .append("airline", airline);
     }
 
     @Override

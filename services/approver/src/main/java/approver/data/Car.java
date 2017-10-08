@@ -1,8 +1,6 @@
 package approver.data;
 
 import org.bson.Document;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,18 +57,16 @@ public class Car {
         return numberPlate;
     }
 
-    public JSONObject toJSON(){
-        JSONObject o = new JSONObject();
-        o.put("company", company);
-        o.put("city", city);
-        o.put("model", model);
-        o.put("numberPlate", numberPlate);
-        JSONArray bd = new JSONArray();
-        bookedDays.forEach(bd::put);
-
-        o.put("bookedDays", bd);
-
-        return o;
+    public Document toBson() {
+        return new Document()
+                .append("company", company)
+                .append("city", city)
+                .append("model", model)
+                .append("numberPlate", numberPlate)
+                .append("bookedDays", bookedDays.stream()
+                        .map(LocalDate::toString)
+                        .map(d -> new Document("date", d))
+                        .collect(Collectors.toList()));
     }
 
     @Override

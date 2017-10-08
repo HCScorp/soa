@@ -21,12 +21,20 @@ class ApproverSimulation extends Simulation {
   val stressSample: ScenarioBuilder =
     scenario("Business travel request management")
       .repeat(16) {
-        exec()
+        exec(session => {
+          session
+            .set("id", "2017-" + (Random.nextInt(5) + 1).toString + "-" + (Random.nextInt(14) + 1).toString)
+            .set("dateTo", "2017-" + (Random.nextInt(5) + 7).toString + "-" + (Random.nextInt(12) + 16).toString)
+            .set("city", Random.nextString(Random.nextInt(10) + 3))
+        })
           .exec(
             http("Submit BTR")
               .post("approver")
               .body(StringBody(session => buildSubmit(session)))
-              .check(status.is(200)))
+              .check(status.is(200))
+              .check(jsonPath("$..token")
+                .ofType[String]
+                .saveAs("token")))
           .pause(1 seconds)
           .exec(
             http("Manager view BTR")
@@ -42,8 +50,6 @@ class ApproverSimulation extends Simulation {
 
   def buildSubmit(session: Session): String = {
     raw"""{
-      "id": 1,
-      "status": "WAITING",
       "cars": [],
       "hotels": []
       "flights": [

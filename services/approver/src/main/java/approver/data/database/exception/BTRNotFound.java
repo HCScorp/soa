@@ -1,18 +1,9 @@
 package approver.data.database.exception;
 
+import org.bson.types.ObjectId;
+
 public class BTRNotFound extends Exception {
-    private int id;
-
-    public BTRNotFound(int id){
-        this.id = id;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-
-    public String cause(){
-        return "Business Travel Request #" + id + " not found in database";
+    public BTRNotFound(ObjectId id) {
+        super("Business Travel Request #" + id.toHexString() + " not found in database");
     }
 }

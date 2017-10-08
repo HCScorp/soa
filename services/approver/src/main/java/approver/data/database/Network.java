@@ -3,7 +3,7 @@ package approver.data.database;
 import java.util.Properties;
 import java.io.IOException;
 
-class Network {
+public class Network {
 
     private static String readProperties(String key) {
         try {
@@ -15,8 +15,8 @@ class Network {
         }
     }
 
-    static final String HOST = readProperties("databaseHostName");
-    static final int PORT = Integer.parseInt(readProperties("databasePort"));
-    static final String DATABASE = "btr";
-    static final String COLLECTION = "btr";
+    public static final String HOST = readProperties("databaseHostName");
+    public static final int PORT = Integer.parseInt(readProperties("databasePort"));
+    public static final String DATABASE = "btrs";
+    public static final String COLLECTION = "btr";
 }

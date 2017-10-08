@@ -1,16 +1,23 @@
 package approver.service;
 
-import approver.data.*;
+import approver.data.BusinessTravelRequest;
+import approver.data.Car;
+import approver.data.Flight;
+import approver.data.Hotel;
 import approver.data.database.BTRHandler;
-import approver.data.database.DB;
+import approver.data.database.Network;
 import approver.data.database.exception.BTRNotFound;
 import com.github.fakemongo.Fongo;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,29 +27,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ApproverServiceTest {
 
     private ApproverService service;
-
-    @BeforeAll
-    public static void initialize(){
-        Fongo f = new Fongo("btr");
-        BTRHandler.db = new DB(f.getDatabase("btr"));
-    }
+    private MongoDatabase db;
+    private MongoCollection<Document> collection;
+    private BTRHandler btrHandler;
 
     @BeforeEach
-    public void setUp(){
-        service = new ApproverService();
+    public void setUp() {
+        Fongo f = new Fongo("Business Travel Request DB");
+        db = f.getDatabase(Network.DATABASE);
+        collection = db.getCollection(Network.COLLECTION);
+        btrHandler = new BTRHandler(collection);
+        service = new ApproverService(btrHandler);
     }
 
     @AfterEach
-    public void cleanUp(){
-        BTRHandler.db.getBTR().drop();
+    public void cleanUp() {
+        collection.drop();
     }
 
-    private BusinessTravelRequest generate(){
+    private BusinessTravelRequest generate() {
         BusinessTravelRequest btr = new BusinessTravelRequest();
-        btr.setId(1);
+
+        btr.setId(new ObjectId());
         btr.getCars().add(new Car("Tesla", "Nuou-Yaurque", "Model XXL", "AL-666-HELL", new ArrayList<>()));
-        btr.getFlights().add(new Flight("LAX", "NYC", LocalDate.now(),
-                100, Flight.JourneyType.DIRECT, Duration.ZERO, Flight.Category.BUSINESS, "Air Mur"));
+        btr.getFlights().add(new Flight("LAX", "NYC", LocalDate.now(), 100,
+                Flight.JourneyType.DIRECT, Duration.ofHours(1), Flight.Category.BUSINESS, "Air Mur"));
         btr.getHotels().add(new Hotel("Hotel #1", "Nuou-Yaurque", "2", "z", 1, new ArrayList<>()));
 
         return btr;
@@ -52,9 +61,10 @@ public class ApproverServiceTest {
     public void insertTest() throws BTRNotFound {
         BusinessTravelRequest oracle = generate();
 
-        service.createNewBTR(oracle.toJSON().toString());
+        Response res = service.createBTR(oracle.toBSON().toJson());
+        oracle.setId(new ObjectId(new JSONObject(res.getEntity().toString()).getString("_id")));
 
-        BusinessTravelRequest insertedBTR = BTRHandler.get(oracle.getId());
+        BusinessTravelRequest insertedBTR = btrHandler.getBTR(oracle.getId());
 
         assertEquals(oracle, insertedBTR);
     }
@@ -62,20 +72,21 @@ public class ApproverServiceTest {
     @Test
     public void updateTest() throws BTRNotFound {
         BusinessTravelRequest oracle = generate();
-        BTRHandler.insert(oracle.toBSON());
+        btrHandler.insert(oracle);
 
-        service.changeStatus(oracle.getId(), BusinessTravelRequestStatus.APPROVED.toString());
-        oracle.setStatus(BusinessTravelRequestStatus.APPROVED);
+        service.updateBTR(oracle.getId().toHexString(), "APPROVE");
+        oracle.setStatus(BusinessTravelRequest.Status.APPROVED);
 
-        assertEquals(oracle, BTRHandler.get(oracle.getId()));
+        assertEquals(oracle, btrHandler.getBTR(oracle.getId()));
     }
 
     @Test
-    public void getTest(){
+    public void getTest() {
         BusinessTravelRequest oracle = generate();
-        BTRHandler.insert(oracle.toBSON());
+        btrHandler.insert(oracle);
 
-        Document result = Document.parse(service.getBTR(oracle.getId()).getEntity().toString());
+        Response res = service.getBTR(oracle.getId().toHexString());
+        Document result = Document.parse(res.getEntity().toString());
         BusinessTravelRequest btr = new BusinessTravelRequest(result);
 
         assertEquals(oracle, btr);

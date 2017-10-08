@@ -1,6 +1,7 @@
 package scenarios;
 
 import com.jcabi.http.Request;
+import com.jcabi.http.Response;
 import com.jcabi.http.request.ApacheRequest;
 import com.jcabi.http.response.RestResponse;
 import cucumber.api.java.en.And;
@@ -8,6 +9,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.json.JSONObject;
 import scenarios.data.BusinessTravelRequest;
 import scenarios.data.BusinessTravelRequestStatus;
 import scenarios.data.Flight;
@@ -39,26 +42,24 @@ public class ApproverStepDefinition {
     @Given("^a flight from (.*) to (.*) for today at (\\d+)€$")
     public void givenAFlight(String origin, String destination, int price) {
         flight = new Flight(origin, destination, LocalDate.now(), price,
-                Flight.JourneyType.DIRECT, Duration.ZERO, Flight.Category.BUSINESS, "Mur Airline");
+                Flight.JourneyType.DIRECT, Duration.ofMinutes(90), Flight.Category.BUSINESS, "Mur Airline");
     }
 
     @And("^a BTR for this flight$")
     public void aBTRForThisFlight(){
         btr = new BusinessTravelRequest();
         btr.getFlights().add(flight);
-        btr.setStatus(BusinessTravelRequestStatus.WAITING);
-        btr.setId(1);
     }
 
     @When("^the btr is submitted$")
     public void theBtrIsSubmitted() throws IOException {
-        submit(btr);
+        btr.setId(submit(btr));
     }
 
     @Then("^the btr is registered$")
     public void theBtrIsRegistered() throws IOException {
         BusinessTravelRequest b  = getBTR(btr.getId());
-        assertEquals(b.getId(), b.getId());
+        assertEquals(btr.getId(), b.getId());
 
     }
 
@@ -70,7 +71,7 @@ public class ApproverStepDefinition {
     @When("^the btr is approved$")
     public void approveBTR() throws IOException {
         btr.setStatus(BusinessTravelRequestStatus.APPROVED);
-        update(btr.getId(), BusinessTravelRequestStatus.APPROVED.toString());
+        update(btr.getId(), "APPROVE");
     }
 
     private BusinessTravelRequest getBTR(int id) throws IOException {
@@ -80,20 +81,20 @@ public class ApproverStepDefinition {
         return new BusinessTravelRequest(Document.parse(resp));
     }
 
-    private void submit(BusinessTravelRequest btr) throws IOException {
+    private ObjectId submit(BusinessTravelRequest btr) throws IOException {
         JsonReader reader = Json.createReader(new StringReader(btr.toJSON().toString()));
         JsonStructure object = reader.readObject();
         reader.close();
-        new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/")
+        Response req = new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/")
                 .method(Request.POST).body().set(object.toString()).back().
                         header("Content-Type", "application/json").fetch();
-
+        return new ObjectId(new JSONObject(req.body()).getString("_id"));
     }
 
-    private void update(int id, String status) throws IOException {
-        new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/" + id)
+    private void update(ObjectId id, String action) throws IOException {
+        new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/" + id.toHexString())
                 .uri()
-                .queryParam("status", status)
+                .queryParam("action", action)
                 .back()
                 .method(Request.PUT)
                 .fetch();
