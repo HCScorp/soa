@@ -14,65 +14,55 @@ We consider here an ecosystem of services dedicated to support an employee when 
  + Propose alternative car rentals at a given place and for a given duration;
  + Submit a business travel (a description of the different tickets and/or hotel nights to buy) to a manager, and wait for approval;
  + Send a summary of an approved business travel by email.
- 
- - quickly describe the interfaces
- - explain your design choices associated to these interfaces.
 
 ## Associated services
-TODO en anglais
 
-Choix de regroupement/séparation des problématique en service
-Pourquoi on a pas regrouper flight, car et hotel ? Pourquoi on fait un mail a part et par intégré au service d'approval ? pourquoi on a réuni la submission avec la gestion de son approvement ?
- 
-Approver:
-(On a regroupé les deux problématiques au sein d’un meme service car le second et la suite du flow du premier, en effet l’approval d’une request utilise la ressource déjà existante, il y accède donc et en créer un summary.)
---> Nous avons regroupé la problématique de soumission d'une requête de business travel avec celle de l'envoi d'un récapitulatif car la seconde est la suite logique de la première, de plus la requête est une ressource qui va être envoyé puis visualisé par le manager et ensuite mise à jour (elle passera de "en attente" à "approuvé" ou "rejeté" par exemple)
-...
+We had two viable choices for the first three features : create one web service for each or one web service for all.
+We decided to go for one web service for each because they are only related in the way they are requested and we wanted to isolate them by concerns. Each will have its own database so that we keep data isolated by concerns as well. 
+
+For the two remaining features, we decided to group the submission of a business travel request and the approval because approving a request is the next logical step after a submission so we keep the workflow into one piece.
+Then, we chose to extract the mail system so that we had all the business travel logic on one side and the result communication (mail) on the other side, that can be easily isolated because it has nothing to do with the rest.
 
 ## Protocol choices
-TODO en anglais
 
-Choix de protocole (REST, Document et RPC)
+### Flight, Hotel and Car : Document
 
+[Flight API documentation](https://github.com/thomasmunoz13/soa/services/flight/api.md);
+[Hotel API documentation](https://github.com/thomasmunoz13/soa/services/hotel/api.md);
+[Car API documentation](https://github.com/thomasmunoz13/soa/services/car/api.md);
 
-### Flight, Hotel and Car
-TODO
- + Contrat flexible : de nombreux paramètres, optionnels ou non, avec une probabilité d'évolution très élevée. On souhaite pouvoir étendre ces paramètres en minimisant l'impact côté client, le message non structuré permet de garder de cette souplesse.
- + 
+We decided to use the Document protocol for the Flight, Hotel and Car web services.
+We needed a flexible contract, that can handle a lot of parameters, optionnal or not, and with a high chance of futur changes. 
+We also needed to be able to extend these parameters with the minimum impact on client side and this was possible with the unstructured message.
 
-RPC n’aurait pas été une bonne solution car ce qu’on souhaite mettre à disposition à vocation à changer régulièrement..
-RPC pas possible puisqu'on pourrait pas mettre autant de paramètre en plus du fait qu'ils soient tous optionnels, il faudrait créer 48564 méthodes c'est pas possible
-REST non plus car une requete GET sera limité en taille d'URL et donc les filtres pourrait a terme etre limité, ou alors faudrait faire une requete POST mais ce serait aller directement en enfer
+We could have used the REST protocol but it was more limited as it uses a GET request to search for flights, hotels or cars and URL have a limited number of characters.
+RPC protocol was not an option because we couldn't have that much optional parameters, we would have been forced to create a huge number of different method. We could update it easily as well because it is static by design.
 
--- Hotel
-Ordered by price viol la condition du REST.
+This was the choice that gave us the least amount of constraint for future extension of each services.
 
-Nécessité d’ordonner les résultats par prix -> Document
-Pas de REST car non adapté 
+Note: the car rental feature is described with minimum amount of search criterion but in a real world it would be exactly the same as the flight service. Same goes for the hotel feature.
 
--- Car
+## Mail : RPC
 
-variabilité
+[Mail API documentation](https://github.com/thomasmunoz13/soa/services/mail/api.md);
 
-REST : pas de contrainte d’ordre de tri des resultats, peu de paramètre et qui ne 
+For the mail service, we needed something fit for a frozen contract.
+This feature is not about manipulating a resource, it is about performing a simple action: send an email.
+Moreover, sending an email is an old process, that has not evolved for dozens of years and that always keep the same parameters, frozen contract).
+This action is the mirror of its implementation in the web service.
 
-Le choix de REST peut se justifier (accès en GET à la ressource location de voiture), mais ce choix nous bloquerai et ne nous permettrait pas de proposer des évolutions comme c’est le cas pour les deux premiers (
-tri par prix, par préférence, etc.)
+We had a service that takes a fixed amount of parameters that will not change for the next twenty years and that is about a simple action, that is why RPC is the most coherent choice for us.
 
-## Mail
-TODO
-On ne manipule pas une ressource, on ne la récupère pas, on ne la met pas à jour, on ne la supprime pas. On effectue une action direct. C'est pourquoi le modèle RPC parait cohérent avec ce service.
+## Approver : REST
 
- + Contrat figé : l'envoi de mail n'a pas évolué depuis des dizaines d'années
- + Met à disposition une action bien précise qui correspond à la procédure d'envoi de mail tel qu'implémenté dans le service
+[Approver API documentation](https://github.com/thomasmunoz13/soa/services/approver/api.md);
 
-Dans le cas ou les actions mises à dispositions acceptent un nombre fixe de paramètre qui ne sera pas améné à changer, le protocole RPC prend tout son sens. Sinon, il faut rechercher une approche plus flexible tel que REST ou Document.
+It is easy to see the business travel request as a resource: it can be created (submission), viewed (manager review) updated (manager approval) and deleted (archiving eslewhere).
+This business travel request is unique, identified and reachable by its URI.
+This is why we chose to use the REST protocol for this service.
 
-## Approver
-TODO
-Pourquoi ? RPC pas adapté car les paramètres peuvent et vont changer (vol, hôtel, voiture, tous sont facultatifs)
-Resources adapté : on va submit une nouvelle ressources, qui sera identifié et qu’on pourra lire par son uri
-
+We could have used the Document protocol but what is the point of using an unstructured message when the business logic is structured and the REST protocol give us adapted tools for that situation.
+RPC was the least prefered option because there is optional parameters to take into account and we would have lost the resource meaning of a business travel request as well.
 
 ## Technological Stack
 
