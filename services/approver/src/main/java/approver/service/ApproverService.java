@@ -41,7 +41,7 @@ public class ApproverService {
 
     @Path("/{id}")
     @PUT
-    public Response changeStatus(@PathParam("id") int id, String status){
+    public Response changeStatus(@PathParam("id") int id, @QueryParam("status") String status){
         BusinessTravelRequestStatus s = BusinessTravelRequestStatus.valueOf(status);
 
         try {

@@ -3,31 +3,38 @@ package scenarios;
 import approver.data.BusinessTravelRequest;
 import approver.data.BusinessTravelRequestStatus;
 import approver.data.Flight;
-import approver.data.database.BTRHandler;
-import approver.data.database.DB;
 import approver.data.database.exception.BTRNotFound;
-import approver.service.ApproverService;
-import com.github.fakemongo.Fongo;
+import com.jcabi.http.Request;
+import com.jcabi.http.request.ApacheRequest;
+import com.jcabi.http.response.RestResponse;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.bson.Document;
 
+import javax.json.Json;
+import javax.json.JsonReader;
+import javax.json.JsonStructure;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
 import java.time.Duration;
 import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 
 public class ApproverStepDefinition {
-    private ApproverService service;
+    private int port;
+    private String host;
+
     private Flight flight;
     private BusinessTravelRequest btr;
 
-    @Given("^The Approver service deployed$")
-    public void theApproverServiceDeployed() {
-        Fongo f = new Fongo("btr");
-        BTRHandler.db = new DB(f.getDatabase("btr"));
-        service = new ApproverService();
+    @Given("^The Approver service deployed on (.*):(\\d+)$")
+    public void theApproverServiceDeployed(String host, int port) {
+        this.host = host;
+        this.port = port;
     }
 
     @Given("^a flight from (.*) to (.*) for today at (\\d+)€$")
@@ -44,25 +51,53 @@ public class ApproverStepDefinition {
     }
 
     @When("^the btr is submitted$")
-    public void theBtrIsSubmitted() {
-        service.createNewBTR(btr.toJSON().toString());
+    public void theBtrIsSubmitted() throws IOException {
+        submit(btr);
     }
 
     @Then("^the btr is registered$")
-    public void theBtrIsRegistered() throws BTRNotFound {
-        assertEquals(1, BTRHandler.db.getBTR().count());
-        assertEquals(btr, BTRHandler.get(btr.getId()));
+    public void theBtrIsRegistered() throws BTRNotFound, IOException {
+        BusinessTravelRequest b  = getBTR(btr.getId());
+
+        assertEquals(btr, b);
 
     }
 
     @And("^its status is (.*)$")
-    public void itsStatusIsAPPROVED(String status) throws BTRNotFound {
-        assertEquals(status, BTRHandler.get(btr.getId()).getStatus().toString());
+    public void itsStatusIsAPPROVED(String status) throws BTRNotFound, IOException {
+        System.out.println("Status " + status);
+        System.out.println(getBTR(btr.getId()).getStatus().toString());
+        assertEquals(status, getBTR(btr.getId()).getStatus().toString());
     }
 
-
     @When("^the btr is approved$")
-    public void approveBTR() {
-        service.changeStatus(btr.getId(), BusinessTravelRequestStatus.APPROVED.toString());
+    public void approveBTR() throws IOException {
+        update(btr.getId(), BusinessTravelRequestStatus.APPROVED.toString());
+    }
+
+    private BusinessTravelRequest getBTR(int id) throws IOException {
+        String resp = new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/" + id)
+                .method(Request.GET).fetch().as(RestResponse.class).assertStatus(HttpURLConnection.HTTP_OK).body();
+
+        return new BusinessTravelRequest(Document.parse(resp));
+    }
+
+    private void submit(BusinessTravelRequest btr) throws IOException {
+        JsonReader reader = Json.createReader(new StringReader(btr.toJSON().toString()));
+        JsonStructure object = reader.readObject();
+        reader.close();
+        new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/")
+                .method(Request.POST).body().set(object.toString()).back().
+                        header("Content-Type", "application/json").fetch();
+
+    }
+
+    private void update(int id, String status) throws IOException {
+        new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/" + id)
+                .uri()
+                .queryParam("status", status)
+                .back()
+                .method(Request.PUT)
+                .fetch();
     }
 }

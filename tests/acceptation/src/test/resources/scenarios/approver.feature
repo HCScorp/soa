@@ -1,7 +1,7 @@
 Feature: Approver
 
   Background:
-    Given The Approver service deployed
+    Given The Approver service deployed on localhost:8080
 
   Scenario: Submitting a BTR for a flight and approving it
 
