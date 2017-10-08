@@ -33,12 +33,12 @@ class ApproverSimulation extends Simulation {
           .pause(1 seconds)
           .exec(
             http("Manager view BTR")
-              .get("approver/" + _ ("id").as[Int])
+              .get("approver/" + _ ("id").as[Int].toString)
               .check(status.is(200)))
           .pause(4 seconds)
           .exec(
             http("Manager approve BTR")
-              .put("approver/" + _ ("id").as[Int])
+              .put("approver/" + _ ("id").as[Int].toString)
               .queryParam("status", "APPROVED")
               .check(status.is(200)))
       }
