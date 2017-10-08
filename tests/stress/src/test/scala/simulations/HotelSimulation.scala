@@ -1,15 +1,15 @@
 package simulations
 
-import scala.language.postfixOps
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.protocol.HttpProtocolBuilder
 
 import scala.concurrent.duration._
+import scala.language.postfixOps
 import scala.util.Random
 
-class CarSimulation extends Simulation {
+class HotelSimulation extends Simulation {
   val httpConf: HttpProtocolBuilder =
     http
       .baseURL("http://localhost:8080/car-service-document/")
@@ -52,6 +52,7 @@ class CarSimulation extends Simulation {
       "city" : "Nice",
       "dateFrom" : "$dateFrom",
       "dateTo" : "$dateTo",
+      "order" : "ASCENDING"
       }
       """"
   }
@@ -63,6 +64,7 @@ class CarSimulation extends Simulation {
       "city" : "$city",
       "dateFrom" : "2017-12-1",
       "dateTo" : "2017-12-18",
+      "order" : "DESCENDING"
       }
       """"
   }
@@ -76,6 +78,7 @@ class CarSimulation extends Simulation {
       "city" : "$city",
       "dateFrom" : "$dateFrom",
       "dateTo" : "$dateTo",
+      "order" : "ASCENDING"
       }
       """"
   }
