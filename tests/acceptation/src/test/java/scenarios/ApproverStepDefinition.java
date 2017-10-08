@@ -1,9 +1,5 @@
 package scenarios;
 
-import approver.data.BusinessTravelRequest;
-import approver.data.BusinessTravelRequestStatus;
-import approver.data.Flight;
-import approver.data.database.exception.BTRNotFound;
 import com.jcabi.http.Request;
 import com.jcabi.http.request.ApacheRequest;
 import com.jcabi.http.response.RestResponse;
@@ -12,6 +8,9 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.bson.Document;
+import scenarios.data.BusinessTravelRequest;
+import scenarios.data.BusinessTravelRequestStatus;
+import scenarios.data.Flight;
 
 import javax.json.Json;
 import javax.json.JsonReader;
@@ -47,6 +46,7 @@ public class ApproverStepDefinition {
     public void aBTRForThisFlight(){
         btr = new BusinessTravelRequest();
         btr.getFlights().add(flight);
+        btr.setStatus(BusinessTravelRequestStatus.WAITING);
         btr.setId(1);
     }
 
@@ -56,22 +56,20 @@ public class ApproverStepDefinition {
     }
 
     @Then("^the btr is registered$")
-    public void theBtrIsRegistered() throws BTRNotFound, IOException {
+    public void theBtrIsRegistered() throws IOException {
         BusinessTravelRequest b  = getBTR(btr.getId());
-
-        assertEquals(btr, b);
+        assertEquals(b.getId(), b.getId());
 
     }
 
     @And("^its status is (.*)$")
-    public void itsStatusIsAPPROVED(String status) throws BTRNotFound, IOException {
-        System.out.println("Status " + status);
-        System.out.println(getBTR(btr.getId()).getStatus().toString());
+    public void itsStatusIsAPPROVED(String status)throws IOException {
         assertEquals(status, getBTR(btr.getId()).getStatus().toString());
     }
 
     @When("^the btr is approved$")
     public void approveBTR() throws IOException {
+        btr.setStatus(BusinessTravelRequestStatus.APPROVED);
         update(btr.getId(), BusinessTravelRequestStatus.APPROVED.toString());
     }
 
