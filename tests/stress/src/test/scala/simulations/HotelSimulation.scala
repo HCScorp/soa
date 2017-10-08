@@ -12,12 +12,12 @@ import scala.util.Random
 class HotelSimulation extends Simulation {
   val httpConf: HttpProtocolBuilder =
     http
-      .baseURL("http://localhost:8080/car-service-document/")
+      .baseURL("http://localhost:8080/hotel-service-document/")
       .acceptHeader("application/json")
       .header("Content-Type", "application/json")
 
   val stressSample: ScenarioBuilder =
-    scenario("Find available cars in Nice")
+    scenario("Find available hotels")
       .repeat(16) {
         exec(session => {
           session
@@ -26,20 +26,20 @@ class HotelSimulation extends Simulation {
             .set("city", Random.nextString(Random.nextInt(10) + 3))
         })
           .exec(
-            http("Find cars by date")
-              .post("car")
+            http("Find hotels by date")
+              .post("hotel")
               .body(StringBody(session => buildSearchByDate(session)))
               .check(status.is(200)))
           .pause(1 seconds)
           .exec(
-            http("Find cars by city")
-              .post("car")
+            http("Find hotels by city")
+              .post("hotel")
               .body(StringBody(session => buildSearchByCity(session)))
               .check(status.is(200)))
           .pause(1 seconds)
           .exec(
-            http("Find cars by everything")
-              .post("car")
+            http("Find hotels by everything")
+              .post("hotel")
               .body(StringBody(session => buildSearchByEverything(session)))
               .check(status.is(200)))
       }
