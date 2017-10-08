@@ -1,4 +1,4 @@
-package tcs.data;
+package mail.data;
 
 import org.json.JSONObject;
 
