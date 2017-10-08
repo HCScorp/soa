@@ -1,4 +1,4 @@
-package data;
+package approver.data;
 
 import javax.xml.bind.annotation.XmlType;
 

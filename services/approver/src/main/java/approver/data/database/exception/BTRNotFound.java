@@ -1,4 +1,4 @@
-package data.database.exception;
+package approver.data.database.exception;
 
 public class BTRNotFound extends Exception {
     private int id;

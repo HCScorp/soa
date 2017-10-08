@@ -1,10 +1,9 @@
-package service;
+package approver.service;
 
-import data.BusinessTravelRequest;
-import data.BusinessTravelRequestStatus;
-import data.database.BTRHandler;
-import data.database.DB;
-import data.database.exception.BTRNotFound;
+import approver.data.BusinessTravelRequest;
+import approver.data.BusinessTravelRequestStatus;
+import approver.data.database.BTRHandler;
+import approver.data.database.exception.BTRNotFound;
 import org.bson.Document;
 import org.json.JSONObject;
 
@@ -16,11 +15,11 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class ApproverService {
 
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createNewBTR(String input) {
         BTRHandler.insert(Document.parse(input));
+
         return Response.status(200).build();
     }
 
