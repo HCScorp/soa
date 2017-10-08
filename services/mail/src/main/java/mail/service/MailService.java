@@ -1,7 +1,7 @@
-package tcs.service;
+package mail.service;
 
 import org.json.JSONObject;
-import tcs.data.MailRequest;
+import mail.data.MailRequest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
