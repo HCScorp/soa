@@ -15,7 +15,7 @@ build() { # $1: directory, $2: image_name
 
 # Compile services
 echo "Build services..."
-mvn -q clean package
+mvn clean package
 
 echo "Build docker images..."
 # Build docker images
