@@ -1,5 +1,7 @@
 package scenarios;
 
+import approver.data.BusinessTravelRequest;
+import approver.data.Flight;
 import com.jcabi.http.Request;
 import com.jcabi.http.Response;
 import com.jcabi.http.request.ApacheRequest;
@@ -11,10 +13,6 @@ import cucumber.api.java.en.When;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.JSONObject;
-import scenarios.data.BusinessTravelRequest;
-import scenarios.data.BusinessTravelRequestStatus;
-import scenarios.data.Flight;
-
 import javax.json.Json;
 import javax.json.JsonReader;
 import javax.json.JsonStructure;
@@ -70,19 +68,19 @@ public class ApproverStepDefinition {
 
     @When("^the btr is approved$")
     public void approveBTR() throws IOException {
-        btr.setStatus(BusinessTravelRequestStatus.APPROVED);
+        btr.setStatus(BusinessTravelRequest.Status.APPROVED);
         update(btr.getId(), "APPROVE");
     }
 
-    private BusinessTravelRequest getBTR(int id) throws IOException {
-        String resp = new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/" + id)
+    private BusinessTravelRequest getBTR(ObjectId id) throws IOException {
+        String resp = new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/" + id.toHexString())
                 .method(Request.GET).fetch().as(RestResponse.class).assertStatus(HttpURLConnection.HTTP_OK).body();
 
         return new BusinessTravelRequest(Document.parse(resp));
     }
 
     private ObjectId submit(BusinessTravelRequest btr) throws IOException {
-        JsonReader reader = Json.createReader(new StringReader(btr.toJSON().toString()));
+        JsonReader reader = Json.createReader(new StringReader(btr.toBSON().toJson()));
         JsonStructure object = reader.readObject();
         reader.close();
         Response req = new ApacheRequest("http://" + host + ":" + port + "/approver-service-rest/btr/")
