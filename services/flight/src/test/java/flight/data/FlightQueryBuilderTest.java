@@ -33,7 +33,7 @@ public class FlightQueryBuilderTest {
         input.put("destination", "Nice");
         input.put("date", LocalDate.of(2017, 12, 21).toString());
         input.put("journeyType", Flight.JourneyType.DIRECT.toString());
-        input.put("maxTravelTime", Duration.ofHours(2).toMinutes());
+        input.put("maxTravelTime", (int) Duration.ofHours(2).toMinutes());
         input.put("category", Flight.Category.ECO.toString());
         input.put("airline", "Air France");
         input.put("order", "ASCENDING");

@@ -14,8 +14,8 @@ Therefore, the message content can only be the following search criterion (all o
 
 Input: search criterion
  + city 		: string
- + dateFrom 	: string	(formatted as year-month-day, e.g. 2017-12-21)
- + dateTo 		: string 	(formatted as year-month-day, e.g. 2017-12-25)
+ + dateFrom 	: string	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
+ + dateTo 		: string 	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
  + order		: string 	(can be ASCENDING or DESCENDING, ASCENDING by default)
 
 Output: list of hotels ordered by price
@@ -33,9 +33,9 @@ Input:
 ```json
 {
   "city": "Nice",
-  "dateFrom": "2017-12-21",
-  "dateTo": "2017-12-25",
-  "dateTo": "2017-12-25",
+  "dateFrom": "2017-08-21",
+  "dateTo": "2017-08-25",
+  "dateTo": "2017-08-25",
   "order": "ASCENDING"
 }
 ```

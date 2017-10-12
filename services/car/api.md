@@ -14,8 +14,8 @@ Therefore, the message content can only be the following search criterion (all o
 
 Input:
  + city 		: string
- + dateFrom 	: string	(formatted as year-month-day, e.g. 2017-12-21)
- + dateTo 		: string 	(formatted as year-month-day, e.g. 2017-12-25)
+ + dateFrom 	: string	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
+ + dateTo 		: string 	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
 
 Output: list of cars
 

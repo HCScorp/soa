@@ -13,6 +13,6 @@ public class MaxTravelTimeFB implements FilterBuilder<Bson> {
             return null;
         }
 
-        return lte("duration", bson.getLong("maxTravelTime"));
+        return lte("duration", bson.getInteger("maxTravelTime").longValue());
     }
 }

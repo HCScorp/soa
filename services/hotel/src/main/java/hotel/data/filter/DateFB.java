@@ -24,6 +24,7 @@ public class DateFB implements FilterBuilder<Bson> {
 
             DateRange stayDates = new DateRange(fromDate, toDate).exclusive();
 
+            // Easy to make that search more efficient but we don't care in this projet
             return not(elemMatch("fullBookedDays",
                     in("date", stayDates.stream()
                             .map(LocalDate::toString)

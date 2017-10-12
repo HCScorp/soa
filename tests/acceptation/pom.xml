@@ -18,6 +18,7 @@
         <cxf.version>3.1.10</cxf.version>
         <cucumber.version>1.2.5</cucumber.version>
         <versions.maven.surefire>2.19.1</versions.maven.surefire>
+        <skip.surefire.tests>${skipTests}</skip.surefire.tests>
     </properties>
 
     <dependencies>
@@ -25,6 +26,7 @@
             <groupId>fr.unice.polytech.hcs.services</groupId>
             <artifactId>approver</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <classifier>classes</classifier>
         </dependency>
         <dependency>
             <groupId>info.cukes</groupId>
@@ -111,6 +113,7 @@
                     <excludes>
                         <exclude>scenarios/*</exclude>
                     </excludes>
+                    <skipTests>${skip.surefire.tests}</skipTests>
                 </configuration>
                 <executions>
                     <execution>

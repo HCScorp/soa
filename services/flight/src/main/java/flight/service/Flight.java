@@ -4,6 +4,7 @@ import org.bson.Document;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Flight {
 
@@ -22,6 +23,8 @@ public class Flight {
     private String origin;
     private String destination;
     private LocalDate date;
+    private LocalTime time;
+    private int secondOfDay;
     private int price;
     private JourneyType journeyType;
     private Duration duration;
@@ -33,12 +36,15 @@ public class Flight {
     }
 
     public Flight(String origin, String destination,
-                  LocalDate date, int price,
+                  LocalDate date, LocalTime time,
+                  int price,
                   JourneyType journeyType, Duration duration,
                   Category category, String airline) {
         this.origin = origin;
         this.destination = destination;
         this.date = date;
+        this.time = time;
+        this.secondOfDay = time.toSecondOfDay();
         this.price = price;
         this.journeyType = journeyType;
         this.duration = duration;
@@ -50,6 +56,8 @@ public class Flight {
         this.origin = bson.getString("origin");
         this.destination = bson.getString("destination");
         this.date = LocalDate.parse(bson.getString("date"));
+        this.time = LocalTime.parse(bson.getString("time"));
+        this.secondOfDay = bson.getInteger("secondOfDay");
         this.price = bson.getInteger("price");
         this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
         this.duration = Duration.ofMinutes(bson.getLong("duration"));
@@ -62,6 +70,8 @@ public class Flight {
                 .append("origin", origin)
                 .append("destination", destination)
                 .append("date", date.toString())
+                .append("time", time.toString())
+                .append("secondOfDay", time.toSecondOfDay())
                 .append("price", price)
                 .append("journeyType", journeyType.toString())
                 .append("duration", duration.toMinutes())
@@ -79,6 +89,14 @@ public class Flight {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public int getSecondOfDay() {
+        return secondOfDay;
     }
 
     public int getPrice() {
@@ -112,6 +130,7 @@ public class Flight {
         if (origin != null ? !origin.equals(flight.origin) : flight.origin != null) return false;
         if (destination != null ? !destination.equals(flight.destination) : flight.destination != null) return false;
         if (date != null ? !date.equals(flight.date) : flight.date != null) return false;
+        if (time != null ? !time.equals(flight.time) : flight.time != null) return false;
         if (journeyType != flight.journeyType) return false;
         if (duration != null ? !duration.equals(flight.duration) : flight.duration != null) return false;
         if (category != flight.category) return false;
@@ -123,6 +142,7 @@ public class Flight {
         int result = origin != null ? origin.hashCode() : 0;
         result = 31 * result + (destination != null ? destination.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + price;
         result = 31 * result + (journeyType != null ? journeyType.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
