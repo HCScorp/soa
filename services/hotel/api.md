@@ -35,7 +35,6 @@ Input:
   "city": "Nice",
   "dateFrom": "2017-08-21",
   "dateTo": "2017-08-25",
-  "dateTo": "2017-08-25",
   "order": "ASCENDING"
 }
 ```
@@ -45,17 +44,17 @@ Output:
 {
   "result": [
 	{
-	  "name": "Le Méridien",
+      "name": "Le Méridien",
       "city": "Nice",
       "zipCode": "06046",
-	  "address": "1, promenade des Anglais",
+      "address": "1, promenade des Anglais",
       "nightPrice": 200
 	},
 	{
-	  "name": "Négresco",
+      "name": "Négresco",
       "city": "Nice",
       "zipCode": "06000",
-	  "address": "37, promenade des Anglais",
+      "address": "37, promenade des Anglais",
       "nightPrice": 300
 	}
   ]
