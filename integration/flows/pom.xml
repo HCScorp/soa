@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fr.unice.polytech.hcs.flows</artifactId>
+    <artifactId>flows</artifactId>
     <version>1.0</version>
     <packaging>bundle</packaging>
     <name>ESB :: Integration :: Technical Flows</name>
@@ -17,6 +17,14 @@
     </parent>
 
     <dependencies>
+
+
+        <!-- Dependency for Http component -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-ahc</artifactId>
+            <version>${camel.version}</version> <!-- use the same version as your Camel core version -->
+        </dependency>
         <!-- Dependencies required by Camel -->
         <dependency>
             <groupId>org.apache.camel</groupId>
