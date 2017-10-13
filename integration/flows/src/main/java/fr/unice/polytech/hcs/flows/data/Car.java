@@ -3,19 +3,25 @@ package fr.unice.polytech.hcs.flows.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
 public class Car implements Serializable {
 
     @JsonProperty("compagny")
     private String compagny;
+
     @JsonProperty("city")
     private String city;
+
     @JsonProperty("model")
     private String model;
+
     @JsonProperty("numberPlate")
     private String numberPlate;
+
     @JsonProperty("bookedDay")
-    private String bookedDay;
+    private List<LocalDate> bookedDay;
 
 
     public String getCompagny() {
@@ -51,11 +57,11 @@ public class Car implements Serializable {
         this.numberPlate = numberPlate;
     }
 
-    public String getBookedDay() {
+    public List<LocalDate> getBookedDay() {
         return bookedDay;
     }
 
-    public void setBookedDay(String bookedDay) {
+    public void setBookedDay(List<LocalDate> bookedDay) {
         this.bookedDay = bookedDay;
     }
 
