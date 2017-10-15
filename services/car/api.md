@@ -40,18 +40,18 @@ Output:
 ```json
 {
   "result": [
-	{
-	  "company": "Tesla location",
+    {
+      "company": "Tesla location",
       "city": "Nice",
       "model": "S P90D",
       "numberPlate": "888-999"
-	},
-	{
-	  "company": "Mercedes location",
+    },
+    {
+      "company": "Mercedes location",
       "city": "Nice",
       "model": "Class A",
       "numberPlate": "555-444"
-	}
+    }
   ]
 }
 ```
