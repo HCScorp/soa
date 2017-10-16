@@ -1,11 +1,9 @@
 package fr.unice.polytech.hcs.flows;
 
+
 import fr.unice.polytech.hcs.flows.data.Car;
 import fr.unice.polytech.hcs.flows.utils.CsvFormat;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-
-import org.bson.Document;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
@@ -13,15 +11,13 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FillCarRental extends RouteBuilder {
-
+public class FillFlightBooking extends RouteBuilder {
 
     private static final ExecutorService WORKERS = Executors.newFixedThreadPool(5);
 
 
     @Override
     public void configure() throws Exception {
-
         from("file:/servicemix/camel/input?fileName=car.csv")
                 .routeId("csv-to-car-rental")
                 .routeDescription("Loads a CSV file containing car and routes contents to  Rental")
@@ -51,5 +47,6 @@ public class FillCarRental extends RouteBuilder {
                 .log("Marshalling into a JSON body")
                 .marshal().json(JsonLibrary.Gson)
                 .to("http:car:8080/flight-service-document/car");
-        }
+
+    }
 }

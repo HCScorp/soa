@@ -33,9 +33,8 @@ public class FillCarRentalTest extends ActiveMQTest {
 
     @Test
     public void TestFillCarRental(){
-        assertNotNull(context.hasEndpoint("activemq:flight"));
-        assertNotNull(context.hasEndpoint("http:car:8080/flight-service-document/car"));
-        
+        assertNotNull("ActiveMq is Null ! ", context.hasEndpoint("activemq:flight"));
+        assertNotNull("FlightWs is Null !",context.hasEndpoint( "http:car:8080/flight-service-document/car"));
         // Configuring expectations on the mocked endpoint
         String mock = "mock://"+"http:car:8080/flight-service-document/car";
         assertNotNull(context.hasEndpoint(mock));
