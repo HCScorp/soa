@@ -26,7 +26,7 @@ public class Endpoints {
     // External partners (HCS)
     public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight";
     public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
-    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/flight-service-document/car";
+    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
 
     // External partners (other groups)
     // TODO public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight";

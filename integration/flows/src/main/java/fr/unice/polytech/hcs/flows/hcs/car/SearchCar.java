@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.CSV_INPUT_FILE_CARS;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
 
 public class SearchCar extends RouteBuilder {
@@ -22,34 +23,32 @@ public class SearchCar extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        from(CSV_INPUT_FILE_CARS)
-                .routeId("csv-to-car-rental")
-                .routeDescription("Loads a CSV file containing car and routes contents to  Rental")
-                .log("processing ${file:name}")
-                .unmarshal(CsvFormat.buildCsvFormat())
-                .log("Splitting content")
+        from(HCS_SEARCH_CAR_MQ)
+                .routeId("car-rental")
+                .routeDescription("Loads a route to carWS")
                 .split(body())
                 .parallelProcessing().executorService(WORKERS)
                 .log("Transforming a CSV line into a Person")
-                // change that "thing"
-                .process((Exchange exchange) -> {
-                    Map<String, Object> v = (Map<String, Object>) exchange.getIn().getBody();
-                })
-                .to(HCS_SEARCH_CAR_MQ);
-
-
-        from(HCS_SEARCH_CAR_MQ)
-                .routeId("request-to-car-ws")
-                .routeDescription("Send the car request to the car WS")
-                .log("create request for car WS ")
-                .process((Exchange exchange) -> {
-                    Car req = (Car) exchange.getIn().getBody();
-                })
-                .log("${body.bookedDate} Marshalling request")
+                // put headers properties
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader("Content-Type", constant("application/json"))
-                .log("Marshalling into a JSON body")
-                .marshal().json(JsonLibrary.Gson)
-                .to("http:hcs-car:8080/car-service-document/car");
+                .setHeader("Accept", constant("application/json"))
+                // Process to the translation. We take just what we need.
+                // Fields are the same as the api.md from the carWS
+                .process((Exchange exchange) -> {
+                    Map<String, Object> v = (Map<String, Object>) exchange.getIn().getBody();
+                    Car car = new Car();
+                    // add the next step later
+                    car.setCity((String) v.get("city"));
+                    // set the dateFrom from the initial request.
+                    car.setDateFrom((String) v.get("dateFrom"));
+                    // set the dateTo from the initial request.
+                    car.setDateTo((String) v.get("dateTo"));
+                    // put changes.
+                    exchange.getIn().setBody(car);
+                })
+                // We wait the answer of the endpoint.
+                .inOut(HCS_SEARCH_CAR_EP)
+                .unmarshal().json(JsonLibrary.Jackson);
     }
 }
