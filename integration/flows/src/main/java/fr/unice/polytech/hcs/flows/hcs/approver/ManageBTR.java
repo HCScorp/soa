@@ -1,20 +1,19 @@
-package fr.unice.polytech.hcs.flows;
+package fr.unice.polytech.hcs.flows.hcs.approver;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 
-public class FillReportApprouver extends RouteBuilder {
+public class ManageBTR extends RouteBuilder {
 
     private CamelContext camelContext;
 
 
-    public FillReportApprouver() {
-
+    public ManageBTR() {
         camelContext = new DefaultCamelContext();
     }
 
-    public FillReportApprouver(CamelContext context) {
+    public ManageBTR(CamelContext context) {
         super(context);
     }
 
