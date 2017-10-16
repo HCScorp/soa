@@ -80,7 +80,7 @@ Output:
       "duration": 105,
       "category": "ECO",
       "airline": "EasyJet"
-	}
+    }
   ]
 }
 ```

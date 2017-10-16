@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fr.unice.polytech.hcs.flows</artifactId>
+    <artifactId>flows</artifactId>
     <version>1.0</version>
     <packaging>bundle</packaging>
     <name>ESB :: Integration :: Technical Flows</name>
@@ -17,6 +17,13 @@
     </parent>
 
     <dependencies>
+
+        <!-- Dependency for Http component -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-ahc</artifactId>
+            <version>${camel.version}</version> <!-- use the same version as your Camel core version -->
+        </dependency>
         <!-- Dependencies required by Camel -->
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -49,6 +56,16 @@
             <artifactId>log4j-core</artifactId>
             <version>2.9.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-lagarto</artifactId>
+            <version>3.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.5.0</version>
         </dependency>
 
     </dependencies>
