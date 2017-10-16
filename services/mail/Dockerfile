@@ -1,12 +1,20 @@
-FROM tomee:8-jre-7.0.3-plus
-MAINTAINER Sébastien Mosser (mosser@i3s.unice.fr)
+FROM maven:3.5.0-alpine as builder
+LABEL maintainer = "HCS Team"
 
-# Build with : docker build -t petitroll/tcs-rpc .
-# Publish with: docker push petitroll/tcs-rpc
+WORKDIR /
+
+COPY . .
+
+RUN mvn clean package -f services/mail/pom.xml -DskipTests=true
+
+
+FROM tomee:8-jre-7.0.3-plus
+LABEL MAINTAINER = "Sébastien Mosser mosser@i3s.unice.fr)"
 
 WORKDIR /usr/local/tomee/
 
-COPY ./target/mail-service-rpc.war ./webapps/.
+#COPY ./target/mail-service-rpc.war ./webapps/.
+COPY --from=builder /services/mail/target/mail-service-rpc.war ./webapps/.
 
 HEALTHCHECK --interval=5s CMD curl --fail http://localhost:8080/ || exit 1
 
