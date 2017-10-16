@@ -1,7 +1,7 @@
-package fr.unice.polytech.hcs.flows;
+package fr.unice.polytech.hcs.flows.hcs.flight;
 
 
-import fr.unice.polytech.hcs.flows.data.Car;
+import fr.unice.polytech.hcs.flows.hcs.car.Car;
 import fr.unice.polytech.hcs.flows.utils.CsvFormat;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FillFlightBooking extends RouteBuilder {
+public class SearchFlight extends RouteBuilder {
 
     private static final ExecutorService WORKERS = Executors.newFixedThreadPool(5);
 

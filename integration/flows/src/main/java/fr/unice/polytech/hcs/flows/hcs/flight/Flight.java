@@ -1,11 +1,9 @@
-package fr.unice.polytech.hcs.flows.data;
+package fr.unice.polytech.hcs.flows.hcs.flight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.util.List;
 
 public class Flight implements Serializable {
 
@@ -25,9 +23,8 @@ public class Flight implements Serializable {
     @JsonProperty("secondOfDay")
     private String secondOfDay;
 
-
     @JsonProperty("price")
-    private int model;
+    private int price;
 
     @JsonProperty("journeyType")
     private String journeyType;
@@ -45,7 +42,6 @@ public class Flight implements Serializable {
 
 
     public String getOrigin() {
-
         return origin;
     }
 
@@ -85,12 +81,12 @@ public class Flight implements Serializable {
         this.secondOfDay = secondOfDay;
     }
 
-    public int getModel() {
-        return model;
+    public int getPrice() {
+        return price;
     }
 
-    public void setModel(int model) {
-        this.model = model;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getJourneyType() {
@@ -133,7 +129,7 @@ public class Flight implements Serializable {
 
         Flight flight = (Flight) o;
 
-        if (model != flight.model) return false;
+        if (price != flight.price) return false;
         if (origin != null ? !origin.equals(flight.origin) : flight.origin != null) return false;
         if (destination != null ? !destination.equals(flight.destination) : flight.destination != null) return false;
         if (date != null ? !date.equals(flight.date) : flight.date != null) return false;
@@ -152,7 +148,7 @@ public class Flight implements Serializable {
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (secondOfDay != null ? secondOfDay.hashCode() : 0);
-        result = 31 * result + model;
+        result = 31 * result + price;
         result = 31 * result + (journeyType != null ? journeyType.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
