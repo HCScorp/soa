@@ -49,6 +49,6 @@ public class SearchCar extends RouteBuilder {
                 })
                 // We wait the answer of the endpoint.
                 .inOut(HCS_SEARCH_CAR_EP)
-                .unmarshal().json(JsonLibrary.Jackson);
+                .marshal().json(JsonLibrary.Jackson);
     }
 }

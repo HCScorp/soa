@@ -17,8 +17,12 @@ public class Flight implements Serializable {
     @JsonProperty("date")
     private String date;
 
-    @JsonProperty("time")
-    private String time;
+    @JsonProperty("timeFrom")
+    private String timeFrom;
+
+
+    @JsonProperty("timeTo")
+    private String timeTo;
 
     @JsonProperty("secondOfDay")
     private String secondOfDay;
@@ -40,6 +44,8 @@ public class Flight implements Serializable {
     @JsonProperty("airline")
     private String airline;
 
+    @JsonProperty("order")
+    private String order;
 
     public String getOrigin() {
         return origin;
@@ -65,12 +71,20 @@ public class Flight implements Serializable {
         this.date = date;
     }
 
-    public String getTime() {
-        return time;
+    public String getTimeFrom() {
+        return timeFrom;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeFrom(String timeFrom) {
+        this.timeFrom = timeFrom;
+    }
+
+    public String getTimeTo() {
+        return timeTo;
+    }
+
+    public void setTimeTo(String timeTo) {
+        this.timeTo = timeTo;
     }
 
     public String getSecondOfDay() {
@@ -121,6 +135,13 @@ public class Flight implements Serializable {
         this.airline = airline;
     }
 
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -133,12 +154,14 @@ public class Flight implements Serializable {
         if (origin != null ? !origin.equals(flight.origin) : flight.origin != null) return false;
         if (destination != null ? !destination.equals(flight.destination) : flight.destination != null) return false;
         if (date != null ? !date.equals(flight.date) : flight.date != null) return false;
-        if (time != null ? !time.equals(flight.time) : flight.time != null) return false;
+        if (timeFrom != null ? !timeFrom.equals(flight.timeFrom) : flight.timeFrom != null) return false;
+        if (timeTo != null ? !timeTo.equals(flight.timeTo) : flight.timeTo != null) return false;
         if (secondOfDay != null ? !secondOfDay.equals(flight.secondOfDay) : flight.secondOfDay != null) return false;
         if (journeyType != null ? !journeyType.equals(flight.journeyType) : flight.journeyType != null) return false;
         if (duration != null ? !duration.equals(flight.duration) : flight.duration != null) return false;
         if (category != null ? !category.equals(flight.category) : flight.category != null) return false;
-        return airline != null ? airline.equals(flight.airline) : flight.airline == null;
+        if (airline != null ? !airline.equals(flight.airline) : flight.airline != null) return false;
+        return order != null ? order.equals(flight.order) : flight.order == null;
     }
 
     @Override
@@ -146,13 +169,15 @@ public class Flight implements Serializable {
         int result = origin != null ? origin.hashCode() : 0;
         result = 31 * result + (destination != null ? destination.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (timeFrom != null ? timeFrom.hashCode() : 0);
+        result = 31 * result + (timeTo != null ? timeTo.hashCode() : 0);
         result = 31 * result + (secondOfDay != null ? secondOfDay.hashCode() : 0);
         result = 31 * result + price;
         result = 31 * result + (journeyType != null ? journeyType.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (airline != null ? airline.hashCode() : 0);
+        result = 31 * result + (order != null ? order.hashCode() : 0);
         return result;
     }
 }
