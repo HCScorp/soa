@@ -1,4 +1,4 @@
-package fr.unice.polytech.hcs.flows.hcs.hotel;
+package fr.unice.polytech.hcs.flows.hotel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -6,14 +6,19 @@ import java.io.Serializable;
 
 public class HotelRequest implements Serializable {
 
-    @JsonProperty("city") private String city;
-    @JsonProperty("dateFrom") private String dateFrom;
-    @JsonProperty("dateTo") private String dateTo;
-    @JsonProperty("order") private String order;
+    @JsonProperty("city")
+    private String city;
+    @JsonProperty("dateFrom")
+    private String dateFrom;
+    @JsonProperty("dateTo")
+    private String dateTo;
+    @JsonProperty("order")
+    private String order;
 
     public String getCity() {
         return city;
     }
+
     public void setCity(String city) {
         this.city = city;
     }
@@ -21,6 +26,7 @@ public class HotelRequest implements Serializable {
     public String getDateFrom() {
         return dateFrom;
     }
+
     public void setDateFrom(String dateFrom) {
         this.dateFrom = dateFrom;
     }
@@ -28,6 +34,7 @@ public class HotelRequest implements Serializable {
     public String getDateTo() {
         return dateTo;
     }
+
     public void setDateTo(String dateTo) {
         this.dateTo = dateTo;
     }
@@ -35,6 +42,7 @@ public class HotelRequest implements Serializable {
     public String getOrder() {
         return order;
     }
+
     public void setOrder(String order) {
         this.order = order;
     }

@@ -1,49 +1,29 @@
-package fr.unice.polytech.hcs.flows.hcs.flight;
+package fr.unice.polytech.hcs.flows.flight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.time.Duration;
 
-public class Flight implements Serializable {
+public class FlightSearchRequest implements Serializable {
 
     @JsonProperty("origin")
     private String origin;
-
     @JsonProperty("destination")
     private String destination;
-
-
     @JsonProperty("date")
     private String date;
-
     @JsonProperty("timeFrom")
     private String timeFrom;
-
-
     @JsonProperty("timeTo")
     private String timeTo;
-
-    @JsonProperty("secondOfDay")
-    private String secondOfDay;
-
-    @JsonProperty("price")
-    private int price;
-
     @JsonProperty("journeyType")
     private String journeyType;
-
-
-    @JsonProperty("duration")
-    private Duration duration;
-
+    @JsonProperty("maxTravelTime")
+    private int maxTravelTime;
     @JsonProperty("category")
     private String category;
-
-
     @JsonProperty("airline")
     private String airline;
-
     @JsonProperty("order")
     private String order;
 
@@ -87,22 +67,6 @@ public class Flight implements Serializable {
         this.timeTo = timeTo;
     }
 
-    public String getSecondOfDay() {
-        return secondOfDay;
-    }
-
-    public void setSecondOfDay(String secondOfDay) {
-        this.secondOfDay = secondOfDay;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public String getJourneyType() {
         return journeyType;
     }
@@ -111,12 +75,12 @@ public class Flight implements Serializable {
         this.journeyType = journeyType;
     }
 
-    public Duration getDuration() {
-        return duration;
+    public int getMaxTravelTime() {
+        return maxTravelTime;
     }
 
-    public void setDuration(Duration duration) {
-        this.duration = duration;
+    public void setMaxTravelTime(int maxTravelTime) {
+        this.maxTravelTime = maxTravelTime;
     }
 
     public String getCategory() {
@@ -148,20 +112,18 @@ public class Flight implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Flight flight = (Flight) o;
+        FlightSearchRequest that = (FlightSearchRequest) o;
 
-        if (price != flight.price) return false;
-        if (origin != null ? !origin.equals(flight.origin) : flight.origin != null) return false;
-        if (destination != null ? !destination.equals(flight.destination) : flight.destination != null) return false;
-        if (date != null ? !date.equals(flight.date) : flight.date != null) return false;
-        if (timeFrom != null ? !timeFrom.equals(flight.timeFrom) : flight.timeFrom != null) return false;
-        if (timeTo != null ? !timeTo.equals(flight.timeTo) : flight.timeTo != null) return false;
-        if (secondOfDay != null ? !secondOfDay.equals(flight.secondOfDay) : flight.secondOfDay != null) return false;
-        if (journeyType != null ? !journeyType.equals(flight.journeyType) : flight.journeyType != null) return false;
-        if (duration != null ? !duration.equals(flight.duration) : flight.duration != null) return false;
-        if (category != null ? !category.equals(flight.category) : flight.category != null) return false;
-        if (airline != null ? !airline.equals(flight.airline) : flight.airline != null) return false;
-        return order != null ? order.equals(flight.order) : flight.order == null;
+        if (maxTravelTime != that.maxTravelTime) return false;
+        if (origin != null ? !origin.equals(that.origin) : that.origin != null) return false;
+        if (destination != null ? !destination.equals(that.destination) : that.destination != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+        if (timeFrom != null ? !timeFrom.equals(that.timeFrom) : that.timeFrom != null) return false;
+        if (timeTo != null ? !timeTo.equals(that.timeTo) : that.timeTo != null) return false;
+        if (journeyType != null ? !journeyType.equals(that.journeyType) : that.journeyType != null) return false;
+        if (category != null ? !category.equals(that.category) : that.category != null) return false;
+        if (airline != null ? !airline.equals(that.airline) : that.airline != null) return false;
+        return order != null ? order.equals(that.order) : that.order == null;
     }
 
     @Override
@@ -171,10 +133,8 @@ public class Flight implements Serializable {
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (timeFrom != null ? timeFrom.hashCode() : 0);
         result = 31 * result + (timeTo != null ? timeTo.hashCode() : 0);
-        result = 31 * result + (secondOfDay != null ? secondOfDay.hashCode() : 0);
-        result = 31 * result + price;
         result = 31 * result + (journeyType != null ? journeyType.hashCode() : 0);
-        result = 31 * result + (duration != null ? duration.hashCode() : 0);
+        result = 31 * result + maxTravelTime;
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (airline != null ? airline.hashCode() : 0);
         result = 31 * result + (order != null ? order.hashCode() : 0);

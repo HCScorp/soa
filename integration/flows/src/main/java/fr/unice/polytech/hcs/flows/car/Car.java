@@ -1,10 +1,8 @@
-package fr.unice.polytech.hcs.flows.hcs.car;
+package fr.unice.polytech.hcs.flows.car;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
 
 public class Car implements Serializable {
 

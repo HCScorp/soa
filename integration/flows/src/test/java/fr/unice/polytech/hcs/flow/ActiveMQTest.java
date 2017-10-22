@@ -5,7 +5,7 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-public abstract class ActiveMQTest  extends CamelTestSupport {
+public abstract class ActiveMQTest extends CamelTestSupport {
 
     private static BrokerService brokerSvc;
 
@@ -18,7 +18,9 @@ public abstract class ActiveMQTest  extends CamelTestSupport {
     }
 
     @AfterClass
-    public static void tearDownClass() throws Exception { brokerSvc.stop(); }
+    public static void tearDownClass() throws Exception {
+        brokerSvc.stop();
+    }
 
 
 }
