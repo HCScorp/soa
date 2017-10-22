@@ -7,7 +7,6 @@ import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.time.LocalDateTime;

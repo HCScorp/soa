@@ -5,7 +5,6 @@ import fr.unice.polytech.hcs.flow.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import fr.unice.polytech.hcs.flows.flight.g1.G1FlightSearchRequest;
 import fr.unice.polytech.hcs.flows.flight.g1.G1SearchFlight;
-import fr.unice.polytech.hcs.flows.flight.hcs.HCSSearchFlight;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
@@ -30,16 +29,17 @@ public class G1SearchFlightTest extends ActiveMQTest {
     @Before
     public void init() {
         FlightSearchRequest f = new FlightSearchRequest();
+        f.origin = "Nice";
+        f.destination = "Paris";
         f.date = "2017-01-05";
-        f.airline = "airfrance";
-        f.category = "airbus";
-        f.destination = "caraibe";
-        f.journeyType = "normal";
-        f.order = "10";
-        f.timeFrom = "08-00-00" ;
-        f.timeTo = "14-00-00";
-        f.maxTravelTime = 20;
-        flight = new G1FlightSearchRequest(f);
+        f.airline = "Air France";
+        f.category = "ECO";
+        f.journeyType = "DIRECT";
+        f.order = "ASCENDING";
+        f.timeFrom = "08:00:00" ;
+        f.timeTo = "14:30:00";
+        f.maxTravelTime = 200;
+
         request = new G1FlightSearchRequest(f);
     }
 
@@ -71,7 +71,7 @@ public class G1SearchFlightTest extends ActiveMQTest {
         getMockEndpoint(mock).assertIsSatisfied();
 
         // As the assertions are now satisfied, one can access to the contents of the exchanges
-        assertEquals(mapper.writeValueAsString(flight), request);
+        assertEquals(mapper.writeValueAsString(this.request), request);
 
     }
 
