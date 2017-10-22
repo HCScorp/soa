@@ -5,14 +5,13 @@ import org.apache.camel.Exchange;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.CSV_INPUT_FILE_CARS;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
 public class SearchCar extends RouteBuilder {
 
@@ -23,8 +22,14 @@ public class SearchCar extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        /*
+        * HCS search car route
+        * */
+
+
         from(HCS_SEARCH_CAR_MQ)
-                .routeId("car-rental")
+
+                .routeId("car-rental-hcs")
                 .routeDescription("Loads a route to carWS")
                 .split(body())
                 .parallelProcessing().executorService(WORKERS)
@@ -48,7 +53,11 @@ public class SearchCar extends RouteBuilder {
                     exchange.getIn().setBody(car);
                 })
                 // We wait the answer of the endpoint.
-                .inOut(HCS_SEARCH_CAR_EP)
+                .multicast(new GroupedExchangeAggregationStrategy())
+                .parallelProcessing()
+                .inOut(HCS_SEARCH_CAR_EP, UNKNOWN_SEARCH_CAR_EP)
+                .choice()
+                .when(body())
                 .marshal().json(JsonLibrary.Jackson);
     }
 }

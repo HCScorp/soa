@@ -16,6 +16,10 @@ public class Endpoints {
     public static final String HCS_SEARCH_HOTEL_MQ = "activemq:hcs-hotel";
     public static final String HCS_SEARCH_CAR_MQ = "activemq:hcs-car";
 
+    public static final String UNKNOWN_SEARCH_FLIGHT_MQ = "activemq:unknown-flight";
+    public static final String UNKNOWN_SEARCH_HOTEL_MQ = "activemq:unknown-hotel";
+    public static final String UNKNOWN_SEARCH_CAR_MQ = "activemq:unknown-car";
+
     // TODO public static final String G1_SEARCH_FLIGHT_MQ = "activemq:g1-flight";
     // TODO public static final String G7_SEARCH_HOTEL_MQ = "activemq:g7-hotel";
     // TODO public static final String G2_SEARCH_CAR_MQ = "activemq:g2-car";
@@ -28,10 +32,20 @@ public class Endpoints {
     public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
     public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
 
+    public static final String UNKNOWN_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight";
+    public static final String UNKNOWN_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
+    public static final String UNKNOWN_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
+
+
     // External partners (other groups)
     // TODO public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight";
     // TODO public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/hotel-service-document/hotel";
     // TODO public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/flight-service-document/car";
+
+
+    // MoneySaver Message Queue
+    public static final String MONEY_ANALYSER_MQ = "activemq:money-savior";
+    public static final String MONEY_ANALYSER_EP = "file:/servicemix/camel/input?fileName=out.csv";
 
     // Dead letters channel TODO
     // public static final String DEATH_POOL = "activemq:global:dead";

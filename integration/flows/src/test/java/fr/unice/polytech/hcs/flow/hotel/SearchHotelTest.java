@@ -45,7 +45,7 @@ public class SearchHotelTest extends ActiveMQTest {
         // check if we receive a message.
         getMockEndpoint(mock).expectedMessageCount(1);
 
-        // Create the mapper to transform Tesla -> String thanks to Serializable properties
+        // Create the mapper to transform hotel -> String thanks to Serializable properties
         ObjectMapper mapper = new ObjectMapper();
 
         // The tesla asking is sended to the message Queue !
