@@ -2,15 +2,14 @@ package fr.unice.polytech.hcs.flow.car;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flow.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.car.Car;
-import fr.unice.polytech.hcs.flows.car.SearchCar;
+import fr.unice.polytech.hcs.flows.car.hcs.Car;
+import fr.unice.polytech.hcs.flows.car.hcs.HCSSearchCar;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.IOP.ENCODING_CDR_ENCAPS;
 
-public class SearchCarTest extends ActiveMQTest {
+public class HCSSearchCarTest extends ActiveMQTest {
 
     @Override
     public String isMockEndpoints() {
@@ -19,7 +18,7 @@ public class SearchCarTest extends ActiveMQTest {
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
-        return new SearchCar();
+        return new HCSSearchCar();
     }
 
     private Car tesla;

@@ -1,4 +1,4 @@
-package fr.unice.polytech.hcs.flows.car;
+package fr.unice.polytech.hcs.flows.car.hcs;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -14,7 +14,7 @@ import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.UNKNOWN_SEARCH_CAR_EP;
 
-public class SearchCar extends RouteBuilder {
+public class HCSSearchCar extends RouteBuilder {
 
 
     private static final ExecutorService WORKERS = Executors.newFixedThreadPool(5);

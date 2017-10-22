@@ -42,7 +42,7 @@ public class G1SearchFlight extends RouteBuilder {
                 .log("Marshalling into a JSON body")
                 .marshal().json(JsonLibrary.Jackson)
                 .inOut(G1_SEARCH_FLIGHT_EP)
-                .unmarshal(new JsonDataFormat())
+                .unmarshal().json(JsonLibrary.Jackson)
                 .process(jsonToFlightSearchResponse)
         ;
     }

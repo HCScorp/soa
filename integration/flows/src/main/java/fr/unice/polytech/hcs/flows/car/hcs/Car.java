@@ -1,4 +1,4 @@
-package fr.unice.polytech.hcs.flows.car;
+package fr.unice.polytech.hcs.flows.car.hcs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

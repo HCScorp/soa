@@ -23,7 +23,6 @@ public class SearchFlight extends RouteBuilder {
         from(SEARCH_FLIGHT_INPUT)
                 .routeId("search-flight-input")
                 .routeDescription("Create generic flight search request")
-
                 .log("Parse flight request from JSON to FSReq")
                 .unmarshal().json(JsonLibrary.Jackson, FlightSearchRequest.class)
 
