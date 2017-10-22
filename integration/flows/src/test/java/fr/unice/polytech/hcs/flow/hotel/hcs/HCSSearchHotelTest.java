@@ -1,15 +1,16 @@
-package fr.unice.polytech.hcs.flow.hotel;
+package fr.unice.polytech.hcs.flow.hotel.hcs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flow.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.hotel.HotelRequest;
 import fr.unice.polytech.hcs.flows.hotel.SearchHotel;
+import fr.unice.polytech.hcs.flows.hotel.hcs.HCSSearchHotel;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SearchHotelTest extends ActiveMQTest {
+public class HCSSearchHotelTest extends ActiveMQTest {
 
 
     @Override
@@ -19,7 +20,7 @@ public class SearchHotelTest extends ActiveMQTest {
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
-        return new SearchHotel();
+        return new HCSSearchHotel();
     }
 
     private HotelRequest hotel;
@@ -28,10 +29,10 @@ public class SearchHotelTest extends ActiveMQTest {
     public void init() {
         resetMocks();
         hotel = new HotelRequest();
-        hotel.setCity("Paris");
-        hotel.setDateFrom("2017-10-21");
-        hotel.setDateTo("2017-10-26");
-        hotel.setOrder("ASCENDING");
+        hotel.city = "Paris";
+        hotel.dateFrom = "2017-10-21";
+        hotel.dateTo = "2017-10-26";
+        hotel.order = "ASCENDING";
     }
 
 

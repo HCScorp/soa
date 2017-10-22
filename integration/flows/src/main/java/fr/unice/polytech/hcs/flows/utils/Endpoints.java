@@ -8,6 +8,7 @@ public class Endpoints {
     public static final String CSV_INPUT_FILE_CARS = "file:/servicemix/camel/input?fileName=cars.csv";
 
     public static final String SEARCH_FLIGHT_INPUT = "direct:search-flight";
+    public static final String SEARCH_HOTEL_INPUT = "direct:search-hotel";
     // TODO HCS + others groups ?
 
     // File outputs
