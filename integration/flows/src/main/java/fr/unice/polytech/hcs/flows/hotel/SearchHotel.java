@@ -1,4 +1,4 @@
-package fr.unice.polytech.hcs.flows.hcs.hotel;
+package fr.unice.polytech.hcs.flows.hotel;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

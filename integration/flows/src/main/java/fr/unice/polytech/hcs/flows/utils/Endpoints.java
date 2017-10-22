@@ -3,16 +3,21 @@ package fr.unice.polytech.hcs.flows.utils;
 public class Endpoints {
 
     // File inputs
-    public static final String CSV_INPUT_FILE_FLIGHTS    = "file:/servicemix/camel/input?fileName=flights.csv";
+    public static final String CSV_INPUT_FILE_FLIGHTS = "file:/servicemix/camel/input?fileName=flights.csv";
     public static final String CSV_INPUT_FILE_HOTELS = "file:/servicemix/camel/input?fileName=hotels.csv";
     public static final String CSV_INPUT_FILE_CARS = "file:/servicemix/camel/input?fileName=cars.csv";
+
+    public static final String SEARCH_FLIGHT_INPUT = "direct:search-flight";
     // TODO HCS + others groups ?
 
     // File outputs
     // public static final String TODO = "file:/servicemix/camel/output";
 
     // Internal message queues (HCS)
+    public static final String SEARCH_FLIGHT_MQ = "activemq:search-flight";
     public static final String HCS_SEARCH_FLIGHT_MQ = "activemq:hcs-flight";
+    public static final String OTHER_SEARCH_FLIGHT_MQ = "activemq:other-flight";
+
     public static final String HCS_SEARCH_HOTEL_MQ = "activemq:hcs-hotel";
     public static final String HCS_SEARCH_CAR_MQ = "activemq:hcs-car";
 
@@ -26,6 +31,7 @@ public class Endpoints {
 
     // Direct endpoints (flow modularity without a message queue overhead)
     // public static final String TODO    = "direct:todo";
+    public static final String COMPARATOR = "direct:comparator";
 
     // External partners (HCS)
     public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight";

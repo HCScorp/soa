@@ -2,23 +2,30 @@ package fr.unice.polytech.hcs.flow.car;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flow.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.hcs.car.Car;
+import fr.unice.polytech.hcs.flows.car.Car;
+import fr.unice.polytech.hcs.flows.car.SearchCar;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
-import fr.unice.polytech.hcs.flows.hcs.car.SearchCar;
 import org.junit.Before;
 import org.junit.Test;
 import org.omg.IOP.ENCODING_CDR_ENCAPS;
 
 public class SearchCarTest extends ActiveMQTest {
 
-    @Override public String isMockEndpoints() { return Endpoints.HCS_SEARCH_CAR_EP + "|" + Endpoints.UNKNOWN_SEARCH_CAR_EP; }
-    @Override protected RouteBuilder createRouteBuilder() throws Exception { return new SearchCar(); }
+    @Override
+    public String isMockEndpoints() {
+        return Endpoints.HCS_SEARCH_CAR_EP + "|" + Endpoints.UNKNOWN_SEARCH_CAR_EP;
+    }
+
+    @Override
+    protected RouteBuilder createRouteBuilder() throws Exception {
+        return new SearchCar();
+    }
 
     private Car tesla;
 
     @Before
-    public void init(){
+    public void init() {
         tesla = new Car();
         tesla.setCity("toulon");
         tesla.setDateTo("12-01-02");
@@ -26,15 +33,16 @@ public class SearchCarTest extends ActiveMQTest {
     }
 
     @Test
-    public void TestSearchFlightHcs() throws Exception{
+    public void TestSearchFlightHcs() throws Exception {
         // Asserting endpoints existence
         assertNotNull(Endpoints.HCS_SEARCH_CAR_EP + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_MQ));
-        assertNotNull(Endpoints.HCS_SEARCH_CAR_MQ + "no endpoint !",context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
-        assertNotNull(Endpoints.UNKNOWN_SEARCH_CAR_EP + "no endpoint !",context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
+        assertNotNull(Endpoints.HCS_SEARCH_CAR_MQ + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
+        assertNotNull(Endpoints.UNKNOWN_SEARCH_CAR_EP + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
 
         // Configuring expectations on the mocked endpoint
-        String mockHcs = "mock://"+ Endpoints.HCS_SEARCH_CAR_EP;
-        String mockUnknown = "mock://"+ Endpoints.UNKNOWN_SEARCH_CAR_EP;
+        String mockHcs = "mock://" + Endpoints.HCS_SEARCH_CAR_EP;
+        String mockUnknown = "mock://" + Endpoints.UNKNOWN_SEARCH_CAR_EP;
+
 
         // Is the mock have endpoint ? Mandatory for the next step
         assertNotNull(context.hasEndpoint(mockHcs));

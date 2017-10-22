@@ -1,8 +1,6 @@
-package fr.unice.polytech.hcs.flows.hcs.car;
+package fr.unice.polytech.hcs.flows.car;
 
-import fr.unice.polytech.hcs.flows.utils.CsvFormat;
 import org.apache.camel.Exchange;
-
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
@@ -11,7 +9,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
+
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.UNKNOWN_SEARCH_CAR_EP;
 
 public class SearchCar extends RouteBuilder {
 

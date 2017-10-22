@@ -2,10 +2,8 @@ package fr.unice.polytech.hcs.flow.hotel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flow.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.hcs.flight.Flight;
-import fr.unice.polytech.hcs.flows.hcs.flight.SearchFlight;
-import fr.unice.polytech.hcs.flows.hcs.hotel.HotelRequest;
-import fr.unice.polytech.hcs.flows.hcs.hotel.SearchHotel;
+import fr.unice.polytech.hcs.flows.hotel.HotelRequest;
+import fr.unice.polytech.hcs.flows.hotel.SearchHotel;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
@@ -14,13 +12,20 @@ import org.junit.Test;
 public class SearchHotelTest extends ActiveMQTest {
 
 
-    @Override public String isMockEndpointsAndSkip() { return Endpoints.HCS_SEARCH_HOTEL_EP; }
-    @Override protected RouteBuilder createRouteBuilder() throws Exception { return new SearchHotel(); }
+    @Override
+    public String isMockEndpointsAndSkip() {
+        return Endpoints.HCS_SEARCH_HOTEL_EP;
+    }
+
+    @Override
+    protected RouteBuilder createRouteBuilder() throws Exception {
+        return new SearchHotel();
+    }
 
     private HotelRequest hotel;
 
     @Before
-    public void init(){
+    public void init() {
         resetMocks();
         hotel = new HotelRequest();
         hotel.setCity("Paris");
@@ -31,13 +36,13 @@ public class SearchHotelTest extends ActiveMQTest {
 
 
     @Test
-    public void TestSearchFlight() throws Exception{
+    public void TestSearchFlight() throws Exception {
         // Asserting endpoints existence
         assertNotNull(Endpoints.HCS_SEARCH_HOTEL_MQ + " no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_HOTEL_MQ));
         assertNotNull(Endpoints.HCS_SEARCH_HOTEL_EP + " no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_HOTEL_EP));
 
         // Configuring expectations on the mocked endpoint
-        String mock = "mock://"+ Endpoints.HCS_SEARCH_HOTEL_EP;
+        String mock = "mock://" + Endpoints.HCS_SEARCH_HOTEL_EP;
 
         // Is the mock have endpoint ? Mandatory for the next step
         assertNotNull(context.hasEndpoint(mock));

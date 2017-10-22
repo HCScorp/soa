@@ -1,4 +1,4 @@
-package fr.unice.polytech.hcs.flows.hcs.approver;
+package fr.unice.polytech.hcs.flows.approver;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
