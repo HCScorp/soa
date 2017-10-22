@@ -1,50 +1,63 @@
 package fr.unice.polytech.hcs.flows.hotel;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.dataformat.JsonDataFormat;
+import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_HOTEL_EP;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_HOTEL_MQ;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
 public class SearchHotel extends RouteBuilder {
 
-
-    private static final ExecutorService WORKERS = Executors.newFixedThreadPool(5);
-
+    private static final ExecutorService WORKERS = Executors.newFixedThreadPool(2);
 
     @Override
     public void configure() throws Exception {
 
-        from(HCS_SEARCH_HOTEL_MQ)
-                .routeId("hotel-search")
-                .routeDescription("Loads a route to hotelWS")
-                .split(body())
-                .parallelProcessing().executorService(WORKERS)
-                .log("Transforming a CSV line into a Hotel Request")
-                // put headers properties
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .setHeader("Content-Type", constant("application/json"))
-                .setHeader("Accept", constant("application/json"))
-                // Process to the translation. We take just what we need.
-                // Fields are the same as the api.md from the carWS
-                .process((Exchange exchange) -> {
-                    Map<String, Object> v = (Map<String, Object>) exchange.getIn().getBody();
-                    HotelRequest hotelRequest = new HotelRequest();
+        rest("/hotel")
+                .post("/search").to(SEARCH_HOTEL_INPUT);
 
-                    hotelRequest.setCity((String) v.get("city"));
-                    hotelRequest.setDateFrom((String) v.get("dateFrom"));
-                    hotelRequest.setDateTo((String) v.get("dateTo"));
-                    hotelRequest.setOrder((String) v.get("order"));
+        from(SEARCH_HOTEL_INPUT)
+                .routeId("search-hotel-input")
+                .routeDescription("Create generic hotel search request")
 
-                    exchange.getIn().setBody(hotelRequest);
-                })
-                // We wait the answer of the endpoint.
-                .inOut(HCS_SEARCH_HOTEL_EP)
-                .marshal().json(JsonLibrary.Jackson);
+                .log("Load hotel request")
+                .unmarshal(new JsonDataFormat())
+
+                .log("Transform a hotel request into a hotel request object")
+                .process(jsonToHotelRequest)
+                .to(SEARCH_FLIGHT_MQ)
+        ;
+
+        from(SEARCH_HOTEL_MQ)
+                // Forwards to service and wait for responses
+                .multicast(new GroupedExchangeAggregationStrategy())
+                .parallelProcessing()
+                .executorService(WORKERS)
+                .timeout(2000) // 2 seconds
+                .inOut(HCS_SEARCH_HOTEL_MQ, G7_SEARCH_HOTEL_MQ)
+                .choice()
+                .when(simple("${body.form.price1} >= ${body.form.price2}")) // TODO
+                .process("") // TODO
+                .otherwise()
+                .process("") // TODO
+                .end();
     }
+
+    private static Processor jsonToHotelRequest = (Exchange exchange) -> {
+        Map<String, Object> data = (Map<String, Object>) exchange.getIn().getBody();
+        HotelRequest hr = new HotelRequest();
+
+        hr.city = (String) data.get("city");
+        hr.dateFrom = (String) data.get("dateFrom");
+        hr.dateTo = (String) data.get("dateTo");
+        hr.order = (String) data.get("order");
+
+        exchange.getIn().setBody(hr);
+    };
 }
