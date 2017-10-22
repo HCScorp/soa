@@ -6,14 +6,10 @@ import java.io.Serializable;
 
 public class HotelRequest implements Serializable {
 
-    @JsonProperty("city")
-    private String city;
-    @JsonProperty("dateFrom")
-    private String dateFrom;
-    @JsonProperty("dateTo")
-    private String dateTo;
-    @JsonProperty("order")
-    private String order;
+    @JsonProperty("city")       private String city;
+    @JsonProperty("dateFrom")   private String dateFrom;
+    @JsonProperty("dateTo")     private String dateTo;
+    @JsonProperty("order")      private String order;
 
     public String getCity() {
         return city;

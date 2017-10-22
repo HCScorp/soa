@@ -16,18 +16,16 @@ public class Endpoints {
     // Internal message queues (HCS)
     public static final String SEARCH_FLIGHT_MQ = "activemq:search-flight";
     public static final String HCS_SEARCH_FLIGHT_MQ = "activemq:hcs-flight";
-    public static final String OTHER_SEARCH_FLIGHT_MQ = "activemq:other-flight";
+    public static final String G1_SEARCH_FLIGHT_MQ = "activemq:g1-flight";
 
+    public static final String SEARCH_HOTEL_MQ = "activemq:search-hotel";
     public static final String HCS_SEARCH_HOTEL_MQ = "activemq:hcs-hotel";
+    public static final String G7_SEARCH_HOTEL_MQ = "activemq:g7-hotel";
+
+    public static final String SEARCH_CAR_MQ = "activemq:search-car";
     public static final String HCS_SEARCH_CAR_MQ = "activemq:hcs-car";
+    public static final String G2_SEARCH_CAR_MQ = "activemq:g2-car";
 
-    public static final String UNKNOWN_SEARCH_FLIGHT_MQ = "activemq:unknown-flight";
-    public static final String UNKNOWN_SEARCH_HOTEL_MQ = "activemq:unknown-hotel";
-    public static final String UNKNOWN_SEARCH_CAR_MQ = "activemq:unknown-car";
-
-    // TODO public static final String G1_SEARCH_FLIGHT_MQ = "activemq:g1-flight";
-    // TODO public static final String G7_SEARCH_HOTEL_MQ = "activemq:g7-hotel";
-    // TODO public static final String G2_SEARCH_CAR_MQ = "activemq:g2-car";
 
     // Direct endpoints (flow modularity without a message queue overhead)
     // public static final String TODO    = "direct:todo";
@@ -38,7 +36,7 @@ public class Endpoints {
     public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
     public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
 
-    public static final String UNKNOWN_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight";
+    public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight";
     public static final String UNKNOWN_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
     public static final String UNKNOWN_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
 

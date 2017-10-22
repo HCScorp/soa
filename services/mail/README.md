@@ -12,5 +12,8 @@
 
   * Compiling: `mvn clean package` will create the file `target/tcs-service-rpc.war`
   * Running: `mvn tomee:run` will deploy the created `war` inside a TomEE+ server, available on `localhost:8080`
-  * The WSDL interface is available at the adress specified by TomEE when the server is up and running.
+  * The WSDL interface is available at the address specified by TomEE when the server is up and running.
 
+## Documentation
+
+[Mail API documentation](api.md)

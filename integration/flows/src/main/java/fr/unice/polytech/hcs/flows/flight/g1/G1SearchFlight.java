@@ -1,25 +1,26 @@
-package fr.unice.polytech.hcs.flows.flight.hcs;
+package fr.unice.polytech.hcs.flows.flight.g1;
+
 
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_FLIGHT_EP;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_FLIGHT_MQ;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.G1_SEARCH_FLIGHT_EP;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.G1_SEARCH_FLIGHT_MQ;
 
-public class HCSSearchFlight extends RouteBuilder {
+public class G1SearchFlight extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
 
-        from(HCS_SEARCH_FLIGHT_MQ)
-                .routeId("hcs-search-flight-ws")
+        from(G1_SEARCH_FLIGHT_MQ)
+                .routeId("g1-search-flight-ws")
                 .routeDescription("Send the flight search request to the flight WS")
 
-                .log("Create request for HCS flight WS ")
+                .log("Create request for G1 flight WS ")
                 .process((Exchange exc) -> {
-                    HCSFlightSearchRequest req = new HCSFlightSearchRequest((FlightSearchRequest) exc.getIn().getBody());
+                    G1FlightSearchRequest req = new G1FlightSearchRequest((FlightSearchRequest) exc.getIn().getBody());
                     exc.getIn().setBody(req);
                 })
 
@@ -29,7 +30,6 @@ public class HCSSearchFlight extends RouteBuilder {
 
                 .log("Marshalling into a JSON body")
                 .marshal().json(JsonLibrary.Jackson)
-                .to(HCS_SEARCH_FLIGHT_EP)
-        ;
+                .to(G1_SEARCH_FLIGHT_EP);
     }
 }

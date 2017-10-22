@@ -7,98 +7,28 @@ import java.io.Serializable;
 
 public class HCSFlightSearchRequest implements Serializable {
 
-    @JsonProperty("origin") private String origin;
-    @JsonProperty("destination") private String destination;
-    @JsonProperty("date") private String date;
-    @JsonProperty("timeFrom") private String timeFrom;
-    @JsonProperty("timeTo") private String timeTo;
-    @JsonProperty("journeyType") private String journeyType;
-    @JsonProperty("maxTravelTime") private int maxTravelTime;
-    @JsonProperty("category") private String category;
-    @JsonProperty("airline") private String airline;
-    @JsonProperty("order") private String order;
-
-    public String getOrigin() {
-        return origin;
-    }
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
-    public String getDate() {
-        return date;
-    }
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTimeFrom() {
-        return timeFrom;
-    }
-    public void setTimeFrom(String timeFrom) {
-        this.timeFrom = timeFrom;
-    }
-
-    public String getTimeTo() {
-        return timeTo;
-    }
-    public void setTimeTo(String timeTo) {
-        this.timeTo = timeTo;
-    }
-
-    public String getJourneyType() {
-        return journeyType;
-    }
-    public void setJourneyType(String journeyType) {
-        this.journeyType = journeyType;
-    }
-
-    public int getMaxTravelTime() {
-        return maxTravelTime;
-    }
-    public void setMaxTravelTime(int maxTravelTime) {
-        this.maxTravelTime = maxTravelTime;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getAirline() {
-        return airline;
-    }
-    public void setAirline(String airline) {
-        this.airline = airline;
-    }
-
-    public String getOrder() {
-        return order;
-    }
-    public void setOrder(String order) {
-        this.order = order;
-    }
+    @JsonProperty("origin")         private String origin;
+    @JsonProperty("destination")    private String destination;
+    @JsonProperty("date")           private String date;
+    @JsonProperty("timeFrom")       private String timeFrom;
+    @JsonProperty("timeTo")         private String timeTo;
+    @JsonProperty("journeyType")    private String journeyType;
+    @JsonProperty("maxTravelTime")  private int maxTravelTime;
+    @JsonProperty("category")       private String category;
+    @JsonProperty("airline")        private String airline;
+    @JsonProperty("order")          private String order;
 
     public HCSFlightSearchRequest(FlightSearchRequest fsr) {
-        origin = fsr.getOrigin();
-        destination = fsr.getDestination();
-        date = fsr.getDate();
-        timeFrom = fsr.getTimeFrom();
-        timeTo = fsr.getTimeTo();
-        journeyType = fsr.getJourneyType();
-        maxTravelTime = fsr.getMaxTravelTime();
-        category = fsr.getCategory();
-        airline = fsr.getAirline();
-        order = fsr.getOrder();
+        origin = fsr.origin;
+        destination = fsr.destination;
+        date = fsr.date;
+        timeFrom = fsr.timeFrom;
+        timeTo = fsr.timeTo;
+        journeyType = fsr.journeyType;
+        maxTravelTime = fsr.maxTravelTime;
+        category = fsr.category;
+        airline = fsr.airline;
+        order = fsr.order;
     }
 
     @Override
