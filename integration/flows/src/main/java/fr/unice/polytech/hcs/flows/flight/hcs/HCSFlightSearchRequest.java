@@ -7,16 +7,16 @@ import java.io.Serializable;
 
 public class HCSFlightSearchRequest implements Serializable {
 
-    @JsonProperty("origin")         private String origin;
-    @JsonProperty("destination")    private String destination;
-    @JsonProperty("date")           private String date;
-    @JsonProperty("timeFrom")       private String timeFrom;
-    @JsonProperty("timeTo")         private String timeTo;
-    @JsonProperty("journeyType")    private String journeyType;
-    @JsonProperty("maxTravelTime")  private int maxTravelTime;
-    @JsonProperty("category")       private String category;
-    @JsonProperty("airline")        private String airline;
-    @JsonProperty("order")          private String order;
+    @JsonProperty private String origin;
+    @JsonProperty private String destination;
+    @JsonProperty private String date;
+    @JsonProperty private String timeFrom;
+    @JsonProperty private String timeTo;
+    @JsonProperty private String journeyType;
+    @JsonProperty private int maxTravelTime;
+    @JsonProperty private String category;
+    @JsonProperty private String airline;
+    @JsonProperty private String order;
 
     public HCSFlightSearchRequest(FlightSearchRequest fsr) {
         origin = fsr.origin;

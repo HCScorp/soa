@@ -6,16 +6,16 @@ import java.io.Serializable;
 
 public class FlightSearchRequest implements Serializable {
 
-    @JsonProperty() public String origin;
-    @JsonProperty() public String destination;
-    @JsonProperty() public String date;
-    @JsonProperty() public String timeFrom;
-    @JsonProperty() public String timeTo;
-    @JsonProperty() public String journeyType;
-    @JsonProperty() public int maxTravelTime; // in minutes
-    @JsonProperty() public String category;
-    @JsonProperty() public String airline;
-    @JsonProperty() public String order;
+    @JsonProperty public String origin;
+    @JsonProperty public String destination;
+    @JsonProperty public String date;
+    @JsonProperty public String timeFrom;
+    @JsonProperty public String timeTo;
+    @JsonProperty public String journeyType;
+    @JsonProperty public int maxTravelTime; // in minutes
+    @JsonProperty public String category;
+    @JsonProperty public String airline;
+    @JsonProperty public String order;
 
     @Override
     public boolean equals(Object o) {
