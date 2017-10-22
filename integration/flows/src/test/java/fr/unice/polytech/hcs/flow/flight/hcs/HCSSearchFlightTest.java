@@ -30,16 +30,16 @@ public class HCSSearchFlightTest extends ActiveMQTest {
     public void init() {
         resetMocks();
         request = new FlightSearchRequest();
-        request.setOrigin("Nice");
-        request.setDestination("Paris");
-        request.setDate("2017-10-21");
-        request.setTimeFrom("08-30-00");
-        request.setTimeTo("12-30-00");
-        request.setJourneyType("DIRECT");
-        request.setMaxTravelTime(120);
-        request.setCategory("BUSINESS");
-        request.setAirline("AirFrance");
-        request.setOrder("ASCENDING");
+        request.origin = "Nice";
+        request.destination = "Paris";
+        request.date = "2017-10-21";
+        request.timeFrom = "08-30-00";
+        request.timeTo = "12-30-00";
+        request.journeyType = "DIRECT";
+        request.maxTravelTime = 120;
+        request.category = "BUSINESS";
+        request.airline = "AirFrance";
+        request.order = "ASCENDING";
 
         hcs = new HCSFlightSearchRequest(request);
     }
