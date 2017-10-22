@@ -7,7 +7,6 @@ services:
     build: ../services/approver
     ports:
       - "9090:8080"
-
   car:
     image: hcsoa/car
     build: ../services/car
@@ -52,6 +51,21 @@ services:
     build: ../services/mail
     ports:
       - "9094:8080"
+
+  car-ext:
+    image: hcsoa/car-ext
+    ports:
+      - "9095:8080"
+
+  hotel-ext:
+    image: hcsoa/hotel-ext
+    ports:
+      - "9096:8080"
+
+  flight-ext:
+    image: hcsoa/flight-ext
+    ports:
+      - "9097:8080"
 
   database:
     image: mongo:3.4.9
