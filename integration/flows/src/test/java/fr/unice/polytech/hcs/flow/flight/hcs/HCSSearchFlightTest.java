@@ -63,7 +63,7 @@ public class HCSSearchFlightTest extends ActiveMQTest {
         // Create the mapper to transform Tesla -> String thanks to Serializable properties
         ObjectMapper mapper = new ObjectMapper();
 
-        // The tesla asking is sended to the message Queue !
+        // The tesla request is sent to the message Queue !
         template.sendBody(mock, mapper.writeValueAsString(request));
 
         // Catch the data into the request catched in the Mock Ws

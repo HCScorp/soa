@@ -1,6 +1,7 @@
 package fr.unice.polytech.hcs.flows.flight.hcs;
 
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
+import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -17,10 +18,10 @@ public class HCSSearchFlight extends RouteBuilder {
                 .routeId("hcs-search-flight-ws")
                 .routeDescription("Send the flight search request to the flight WS")
 
-                .log("Create request for HCS flight WS ")
-                .process((Exchange exc) -> {
-                    HCSFlightSearchRequest req = new HCSFlightSearchRequest((FlightSearchRequest) exc.getIn().getBody());
-                    exc.getIn().setBody(req);
+                .log("Create request for HCS flight WS")
+                .process(e -> {
+                    HCSFlightSearchRequest req = new HCSFlightSearchRequest((FlightSearchRequest) e.getIn().getBody());
+                    e.getIn().setBody(req);
                 })
 
                 .log("${body.origin} -> ${body.destination} Marshalling request")
@@ -29,7 +30,8 @@ public class HCSSearchFlight extends RouteBuilder {
 
                 .log("Marshalling into a JSON body")
                 .marshal().json(JsonLibrary.Jackson)
-                .to(HCS_SEARCH_FLIGHT_EP)
+                .inOut(HCS_SEARCH_FLIGHT_EP)
+                .unmarshal().json(JsonLibrary.Jackson, FlightSearchResponse.class)
         ;
     }
 }

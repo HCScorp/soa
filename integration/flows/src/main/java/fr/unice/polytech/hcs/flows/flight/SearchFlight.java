@@ -1,12 +1,10 @@
 package fr.unice.polytech.hcs.flows.flight;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonDataFormat;
+import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -26,44 +24,55 @@ public class SearchFlight extends RouteBuilder {
                 .routeId("search-flight-input")
                 .routeDescription("Create generic flight search request")
 
-                .log("Load flight request")
-                .unmarshal(new JsonDataFormat())
+                .log("Parse flight request from JSON to FSReq")
+                .unmarshal().json(JsonLibrary.Jackson, FlightSearchRequest.class)
 
-                .log("Transform a flight request into a flight request object")
-                .process(jsonToFlightSearchRequest)
+                .log("Send FSReq to flight queue")
                 .to(SEARCH_FLIGHT_MQ)
         ;
 
         from(SEARCH_FLIGHT_MQ)
-                // Forwards to service and wait for responses
+                // Forwards to services and wait for responses
                 .multicast(new GroupedExchangeAggregationStrategy())
-                    .parallelProcessing()
                     .executorService(WORKERS)
+                    .parallelProcessing()
+                    .parallelAggregate()
+                    .split(body(), combineBody)
                     .timeout(2000) // 2 seconds
                     .inOut(HCS_SEARCH_FLIGHT_MQ, G1_SEARCH_FLIGHT_MQ)
-                .choice()
-                    .when(simple("${body.form.price1} >= ${body.form.price2}")) // TODO
-                        .process("") // TODO
-                    .otherwise()
-                        .process("") // TODO
-                .end();
+                .marshal().json(JsonLibrary.Jackson)
+//                .choice()
+//                    .when(simple("${body.form.1.price} >= ${body.form.2.price}")) // TODO
+//                        .process("") // TODO
+//                    .otherwise()
+//                        .process("") // TODO
+//                .end()
+        ;
     }
 
-    private static Processor jsonToFlightSearchRequest = (Exchange exchange) -> {
-        Map<String, Object> data = (Map<String, Object>) exchange.getIn().getBody();
-        FlightSearchRequest fsr = new FlightSearchRequest();
+    private static AggregationStrategy combineBody = (e1, e2) -> {
+        if (e1 == null) {
+            return e2;
+        }
 
-        fsr.origin = (String) data.get("origin");
-        fsr.destination = (String) data.get("destination");
-        fsr.date = (String) data.get("date");
-        fsr.timeFrom = (String) data.get("timeFrom");
-        fsr.timeTo = (String) data.get("timeTo");
-        fsr.journeyType = (String) data.get("journeyType");
-        fsr.maxTravelTime = (int) data.get("maxTravelTime");
-        fsr.category = (String) data.get("category");
-        fsr.airline = (String) data.get("airline");
-        fsr.order = (String) data.get("order");
+        FlightSearchResponse fsr1 = e1.getIn().getBody(FlightSearchResponse.class);
+        FlightSearchResponse fsr2 = e2.getIn().getBody(FlightSearchResponse.class);
 
-        exchange.getIn().setBody(fsr);
+        Flight cheapest = null;
+        for(Flight f : fsr1.flights) {
+            if(cheapest == null || f.price < cheapest.price) {
+                cheapest = f;
+            }
+        }
+
+        for(Flight f : fsr2.flights) {
+            if(cheapest == null || f.price < cheapest.price) {
+                cheapest = f;
+            }
+        }
+
+        e2.getIn().setBody(cheapest);
+
+        return e2;
     };
 }
