@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class FlightSearchResponse implements Serializable {
+public class FlightSearchResponse implements Serializable, Iterable<Flight> {
 
     @JsonProperty public Flight[] result;
 
@@ -27,5 +28,10 @@ public class FlightSearchResponse implements Serializable {
 
     public int length() {
         return result.length;
+    }
+
+    @Override
+    public Iterator<Flight> iterator() {
+        return Arrays.asList(result).iterator();
     }
 }
