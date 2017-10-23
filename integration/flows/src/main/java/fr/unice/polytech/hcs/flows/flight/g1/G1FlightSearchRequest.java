@@ -11,14 +11,10 @@ import java.time.ZoneId;
 
 public class G1FlightSearchRequest implements Serializable {
 
-    @JsonProperty String event;
-    @JsonProperty String destination;
-    @JsonProperty String departure;
-    @JsonProperty long departureTimeStamp;
-
-    public G1FlightSearchRequest(){
-
-    }
+    @JsonProperty private String event;
+    @JsonProperty private String destination;
+    @JsonProperty private String departure;
+    @JsonProperty private long departureTimeStamp;
 
     public G1FlightSearchRequest(FlightSearchRequest fsr) {
         this.event = "list";

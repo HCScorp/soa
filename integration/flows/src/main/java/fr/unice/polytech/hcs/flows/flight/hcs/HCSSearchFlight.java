@@ -24,14 +24,20 @@ public class HCSSearchFlight extends RouteBuilder {
                     e.getIn().setBody(req);
                 })
 
-                .log("${body.origin} -> ${body.destination} Marshalling request")
+                .log("Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader("Content-Type", constant("application/json"))
+                .setHeader("Accept", constant("application/json"))
 
-                .log("Marshalling into a JSON body")
+                .log("Marshalling body into JSON")
                 .marshal().json(JsonLibrary.Jackson)
+
+                .log("Sending to HCS search flight endpoint")
                 .inOut(HCS_SEARCH_FLIGHT_EP)
+
+                .log("Unmarshal JSON response to Flight Search Response")
                 .unmarshal().json(JsonLibrary.Jackson, FlightSearchResponse.class)
+                .log("Received ${body.length} flight results")
         ;
     }
 }

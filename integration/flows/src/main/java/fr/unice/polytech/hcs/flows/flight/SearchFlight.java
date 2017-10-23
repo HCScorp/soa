@@ -58,13 +58,13 @@ public class SearchFlight extends RouteBuilder {
         FlightSearchResponse fsr2 = e2.getIn().getBody(FlightSearchResponse.class);
 
         Flight cheapest = null;
-        for(Flight f : fsr1.flights) {
+        for(Flight f : fsr1.result) {
             if(cheapest == null || f.price < cheapest.price) {
                 cheapest = f;
             }
         }
 
-        for(Flight f : fsr2.flights) {
+        for(Flight f : fsr2.result) {
             if(cheapest == null || f.price < cheapest.price) {
                 cheapest = f;
             }

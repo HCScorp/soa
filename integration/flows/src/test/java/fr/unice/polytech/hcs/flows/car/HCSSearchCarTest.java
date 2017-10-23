@@ -1,7 +1,7 @@
-package fr.unice.polytech.hcs.flow.car;
+package fr.unice.polytech.hcs.flows.car;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.hcs.flow.ActiveMQTest;
+import fr.unice.polytech.hcs.flows.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.car.hcs.Car;
 import fr.unice.polytech.hcs.flows.car.hcs.HCSSearchCar;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;

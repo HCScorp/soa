@@ -1,10 +1,8 @@
-package fr.unice.polytech.hcs.flow.hotel.hcs;
+package fr.unice.polytech.hcs.flows.hotel.hcs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.hcs.flow.ActiveMQTest;
+import fr.unice.polytech.hcs.flows.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.hotel.HotelRequest;
-import fr.unice.polytech.hcs.flows.hotel.SearchHotel;
-import fr.unice.polytech.hcs.flows.hotel.hcs.HCSSearchHotel;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
