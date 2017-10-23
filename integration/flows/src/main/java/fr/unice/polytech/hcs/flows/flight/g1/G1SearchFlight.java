@@ -51,7 +51,7 @@ public class G1SearchFlight extends RouteBuilder {
         e.getIn().setBody(mapToFsRes((Map<String, Object>) e.getIn().getBody()));
     };
 
-    static FlightSearchResponse mapToFsRes(Map<String, Object> map) {
+    public static FlightSearchResponse mapToFsRes(Map<String, Object> map) {
         Collection<Map<String, Object>> flights = (Collection<Map<String, Object>>) map.get("flights");
 
         FlightSearchResponse fsr = new FlightSearchResponse();

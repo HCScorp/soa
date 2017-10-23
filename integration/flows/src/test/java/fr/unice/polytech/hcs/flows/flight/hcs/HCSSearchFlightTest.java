@@ -62,9 +62,7 @@ public class HCSSearchFlightTest extends ActiveMQTest {
     @Before
     public void initMocks() {
         resetMocks();
-        mock(HCS_SEARCH_FLIGHT_EP).whenAnyExchangeReceived(e -> {
-            e.getIn().setBody(fsResJson);
-        });
+        mock(HCS_SEARCH_FLIGHT_EP).whenAnyExchangeReceived(e -> e.getIn().setBody(fsResJson));
     }
 
     @Before
@@ -88,7 +86,7 @@ public class HCSSearchFlightTest extends ActiveMQTest {
 
 
     @Test
-    public void TestSearchFlight() throws Exception {
+    public void TestHCSSearchFlight() throws Exception {
         // Asserting endpoints existence
         assertNotNull(context.hasEndpoint(HCS_SEARCH_FLIGHT_MQ));
         assertNotNull(context.hasEndpoint(HCS_SEARCH_FLIGHT_EP));
@@ -104,7 +102,7 @@ public class HCSSearchFlightTest extends ActiveMQTest {
         getMockEndpoint(mock).expectedHeaderReceived("CamelHttpMethod", "POST");
 
         // The FSR request is sent to the message Queue !
-        template.sendBody(HCS_SEARCH_FLIGHT_MQ, fsr);
+        FlightSearchResponse out = template.requestBody(HCS_SEARCH_FLIGHT_MQ, fsr, FlightSearchResponse.class);
 
         // Do I receive the proper request ? (type, post, ... )
         getMockEndpoint(mock).assertIsSatisfied();
@@ -115,8 +113,7 @@ public class HCSSearchFlightTest extends ActiveMQTest {
         // As the assertions are now satisfied, one can access to the contents of the exchanges
         JSONAssert.assertEquals(new ObjectMapper().writeValueAsString(hcsFsr), requestStr, false);
 
-        // Check result (perform a new request)
-        FlightSearchResponse out = template.requestBody(HCS_SEARCH_FLIGHT_MQ, fsr, FlightSearchResponse.class);
+        // Check result
         assertEquals(fsRes, out);
     }
 

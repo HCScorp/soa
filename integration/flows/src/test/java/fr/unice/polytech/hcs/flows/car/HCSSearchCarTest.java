@@ -13,7 +13,7 @@ public class HCSSearchCarTest extends ActiveMQTest {
 
     @Override
     public String isMockEndpoints() {
-        return Endpoints.HCS_SEARCH_CAR_EP + "|" + Endpoints.UNKNOWN_SEARCH_CAR_EP;
+        return Endpoints.HCS_SEARCH_CAR_EP + "|" + Endpoints.G2_SEARCH_CAR_EP;
     }
 
     @Override
@@ -36,11 +36,11 @@ public class HCSSearchCarTest extends ActiveMQTest {
         // Asserting endpoints existence
         assertNotNull(Endpoints.HCS_SEARCH_CAR_EP + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_MQ));
         assertNotNull(Endpoints.HCS_SEARCH_CAR_MQ + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
-        assertNotNull(Endpoints.UNKNOWN_SEARCH_CAR_EP + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
+        assertNotNull(Endpoints.G2_SEARCH_CAR_EP + "no endpoint !", context.hasEndpoint(Endpoints.HCS_SEARCH_CAR_EP));
 
         // Configuring expectations on the mocked endpoint
         String mockHcs = "mock://" + Endpoints.HCS_SEARCH_CAR_EP;
-        String mockUnknown = "mock://" + Endpoints.UNKNOWN_SEARCH_CAR_EP;
+        String mockUnknown = "mock://" + Endpoints.G2_SEARCH_CAR_EP;
 
 
         // Is the mock have endpoint ? Mandatory for the next step

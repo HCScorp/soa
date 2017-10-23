@@ -1,38 +1,62 @@
-package fr.unice.polytech.hcs.flows.flight.g1;
+package fr.unice.polytech.hcs.flows.flight;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
-import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
+import fr.unice.polytech.hcs.flows.flight.g1.G1SearchFlight;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
-public class G1SearchFlightTest extends ActiveMQTest {
-
+public class SearchFlightTest extends ActiveMQTest {
     @Override
     public String isMockEndpointsAndSkip() {
-        return G1_SEARCH_FLIGHT_EP;
+        return HCS_SEARCH_FLIGHT_MQ + "|" + G1_SEARCH_FLIGHT_MQ;
     }
 
     @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
-        return new G1SearchFlight();
+        return new SearchFlight();
     }
 
     private FlightSearchRequest fsr;
-    private G1FlightSearchRequest g1Fsr;
 
-    private FlightSearchResponse fsRes;
+    private FlightSearchResponse HCSfsRes;
+    private FlightSearchResponse G1fsRes;
 
-    private final String fsResJson = "{\n" +
+    private final String HCSfsResJson = "{\n" +
+            "  \"result\": [\n" +
+            "    {\n" +
+            "      \"origin\": \"Nice\",\n" +
+            "      \"destination\": \"Paris\",\n" +
+            "      \"date\": \"2017-08-14\",\n" +
+            "      \"time\": \"12:30:00\",\n" +
+            "      \"price\": \"89\",\n" +
+            "      \"journeyType\": \"DIRECT\",\n" +
+            "      \"duration\": 92,\n" +
+            "      \"category\": \"ECO\",\n" +
+            "      \"airline\": \"Air France\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"origin\": \"Nice\",\n" +
+            "      \"destination\": \"Paris\",\n" +
+            "      \"date\": \"2017-08-14\",\n" +
+            "      \"time\": \"08:45:00\",\n" +
+            "      \"price\": \"63\",\n" +
+            "      \"journeyType\": \"DIRECT\",\n" +
+            "      \"duration\": 105,\n" +
+            "      \"category\": \"ECO\",\n" +
+            "      \"airline\": \"EasyJet\"\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}";
+
+    private final String G1fsResJson = "{\n" +
             "    \"flights\": [\n" +
             "        {\n" +
             "            \"departure\": 710171030,\n" +
@@ -112,7 +136,8 @@ public class G1SearchFlightTest extends ActiveMQTest {
     @Before
     public void initMocks() {
         resetMocks();
-        mock(G1_SEARCH_FLIGHT_EP).whenAnyExchangeReceived(e -> e.getIn().setBody(fsResJson));
+        mock(HCS_SEARCH_FLIGHT_MQ).whenAnyExchangeReceived(e -> e.getIn().setBody(HCSfsRes));
+        mock(G1_SEARCH_FLIGHT_MQ).whenAnyExchangeReceived(e -> e.getIn().setBody(G1fsRes));
     }
 
     @Before
@@ -129,47 +154,50 @@ public class G1SearchFlightTest extends ActiveMQTest {
         fsr.timeTo = "14:30:00";
         fsr.maxTravelTime = 200;
 
-        g1Fsr = new G1FlightSearchRequest(fsr);
-
         ObjectMapper mapper = new ObjectMapper();
-        TypeReference<HashMap<String,Object>> typeRef
-                = new TypeReference<HashMap<String,Object>>() {};
+        HCSfsRes = mapper.readValue(HCSfsResJson, FlightSearchResponse.class);
 
-        HashMap<String,Object> fsResMap = mapper.readValue(fsResJson, typeRef);
-        fsRes = G1SearchFlight.mapToFsRes(fsResMap);
+        TypeReference<HashMap<String,Object>> typeRef = new TypeReference<HashMap<String,Object>>() {};
+        HashMap<String,Object> fsResMap = mapper.readValue(G1fsResJson, typeRef);
+        G1fsRes = G1SearchFlight.mapToFsRes(fsResMap);
     }
+
 
     @Test
-    public void TestG1SearchFlight() throws Exception {
+    public void TestSearchFlight() throws Exception {
         // Asserting endpoints existence
+        assertNotNull(context.hasEndpoint(HCS_SEARCH_FLIGHT_MQ));
         assertNotNull(context.hasEndpoint(G1_SEARCH_FLIGHT_MQ));
-        assertNotNull(context.hasEndpoint(G1_SEARCH_FLIGHT_EP));
 
         // Configuring expectations on the mocked endpoint
-        String mock = "mock://" + G1_SEARCH_FLIGHT_EP;
-        assertNotNull(context.hasEndpoint(mock));
+        String mockHCS = "mock://" + HCS_SEARCH_FLIGHT_MQ;
+        String mockG1 = "mock://" + G1_SEARCH_FLIGHT_MQ;
+        assertNotNull(context.hasEndpoint(mockHCS));
+        assertNotNull(context.hasEndpoint(mockG1));
 
         // Check if we receive a message.
-        getMockEndpoint(mock).expectedMessageCount(1);
-        getMockEndpoint(mock).expectedHeaderReceived("Content-Type", "application/json");
-        getMockEndpoint(mock).expectedHeaderReceived("Accept", "application/json");
-        getMockEndpoint(mock).expectedHeaderReceived("CamelHttpMethod", "POST");
+        getMockEndpoint(mockHCS).expectedMessageCount(1);
+        getMockEndpoint(mockG1).expectedMessageCount(1);
 
         // The FSR request is sent to the message Queue !
-        FlightSearchResponse out = template.requestBody(G1_SEARCH_FLIGHT_MQ, fsr, FlightSearchResponse.class);
+        Flight out = template.requestBody(SEARCH_FLIGHT_MQ, fsr, Flight.class);
 
         // Do I receive the proper request ? (type, post, ... )
-        getMockEndpoint(mock).assertIsSatisfied();
-
-        // Catch the data into the request catched in the Mock Ws
-        String requestStr = getMockEndpoint(mock).getReceivedExchanges().get(0).getIn().getBody(String.class);
-
-        // As the assertions are now satisfied, one can access to the contents of the exchanges
-        JSONAssert.assertEquals(new ObjectMapper().writeValueAsString(g1Fsr), requestStr, false);
+        getMockEndpoint(mockHCS).assertIsSatisfied();
+        getMockEndpoint(mockG1).assertIsSatisfied();
 
         // Check result
-        assertEquals(fsRes, out);
+        Flight expected = new Flight();
+        expected.origin = "Nice";
+        expected.destination = "Paris";
+        expected.date = "2017-08-14";
+        expected.time = "08:45:00";
+        expected.price = 63.00;
+        expected.journeyType = "DIRECT";
+        expected.duration = 105;
+        expected.category = "ECO";
+        expected.airline = "EasyJet";
+
+        assertEquals(expected, out);
     }
-
-
 }
