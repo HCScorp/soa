@@ -1,8 +1,8 @@
 package fr.unice.polytech.hcs.flows.splitator;
 
-import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 public class SplittatorRoute< In extends Serializable,
                                 Mid extends Iterable<Out>,
-                                Out extends SerializablePrice >
+                                Out extends SerializableComparable<Out> >
         extends RouteBuilder {
 
     private final String name;
@@ -21,7 +21,7 @@ public class SplittatorRoute< In extends Serializable,
     private final Class<Out> outClass;
     private final String unmarshalUri;
     private final String multicastUri;
-    private final CheapestAggregator<Mid, Out> aggregationStrategy;
+    private final AggregationStrategy aggregationStrategy;
     private final Collection<String> targets;
     private final ExecutorService workers;
     private final long timeout;
@@ -30,7 +30,7 @@ public class SplittatorRoute< In extends Serializable,
 
     protected SplittatorRoute(String restEndpoint,
                             Class<In> inClass, Class<Mid> midClass, Class<Out> outClass,
-                            CheapestAggregator<Mid, Out> aggregationStrategy,
+                            AggregationStrategy aggregationStrategy,
                             String unmarshalUri, String multicastUri,
                             Collection<String> targets,
                             int threadPoolSize, long timeout,

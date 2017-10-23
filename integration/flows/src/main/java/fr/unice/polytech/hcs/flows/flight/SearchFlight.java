@@ -2,14 +2,8 @@ package fr.unice.polytech.hcs.flows.flight;
 
 import fr.unice.polytech.hcs.flows.splitator.CheapestAggregator;
 import fr.unice.polytech.hcs.flows.splitator.SplittatorRoute;
-import org.apache.camel.Endpoint;
-import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 

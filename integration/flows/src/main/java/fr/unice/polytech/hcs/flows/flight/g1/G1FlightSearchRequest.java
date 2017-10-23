@@ -16,7 +16,7 @@ public class G1FlightSearchRequest implements Serializable {
     @JsonProperty private String departure;
     @JsonProperty private long departureTimeStamp;
 
-    public G1FlightSearchRequest(FlightSearchRequest fsr) {
+    G1FlightSearchRequest(FlightSearchRequest fsr) {
         this.event = "list";
         this.destination = fsr.destination;
         this.departure = fsr.origin;

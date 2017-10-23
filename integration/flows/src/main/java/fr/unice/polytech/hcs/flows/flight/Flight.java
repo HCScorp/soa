@@ -1,12 +1,9 @@
 package fr.unice.polytech.hcs.flows.flight;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.hcs.flows.splitator.Price;
-import fr.unice.polytech.hcs.flows.splitator.SerializablePrice;
+import fr.unice.polytech.hcs.flows.splitator.SerializableComparable;
 
-import java.io.Serializable;
-
-public class Flight implements SerializablePrice {
+public class Flight implements SerializableComparable<Flight> {
 
     @JsonProperty public String origin;
     @JsonProperty public String destination;
@@ -17,11 +14,6 @@ public class Flight implements SerializablePrice {
     @JsonProperty public Integer duration; // in minutes
     @JsonProperty public String category;
     @JsonProperty public String airline;
-
-    @Override
-    public Double getPrice() {
-        return price;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -53,5 +45,10 @@ public class Flight implements SerializablePrice {
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (airline != null ? airline.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Flight o) {
+        return price.compareTo(o.price);
     }
 }

@@ -18,7 +18,7 @@ public class HCSFlightSearchRequest implements Serializable {
     @JsonProperty private String airline;
     @JsonProperty private String order;
 
-    public HCSFlightSearchRequest(FlightSearchRequest fsr) {
+    HCSFlightSearchRequest(FlightSearchRequest fsr) {
         origin = fsr.origin;
         destination = fsr.destination;
         date = fsr.date;

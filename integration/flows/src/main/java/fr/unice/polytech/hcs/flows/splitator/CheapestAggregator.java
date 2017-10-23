@@ -3,7 +3,7 @@ package fr.unice.polytech.hcs.flows.splitator;
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
-public class CheapestAggregator<In extends Iterable<Out>, Out extends SerializablePrice> implements AggregationStrategy {
+public class CheapestAggregator<In extends Iterable<Out>, Out extends SerializableComparable<Out>> implements AggregationStrategy {
 
     private final Class<In> inClass;
     private final Class<Out> outClass;
@@ -26,7 +26,7 @@ public class CheapestAggregator<In extends Iterable<Out>, Out extends Serializab
         } else {
             Iterable<Out> fsr1 = e1.getIn().getBody(inClass);
             for(Out p : fsr1) {
-                if(cheapest == null || p.getPrice() < cheapest.getPrice()) {
+                if(cheapest == null || p.compareTo(cheapest) < 0) {
                     cheapest = p;
                 }
             }
@@ -34,7 +34,7 @@ public class CheapestAggregator<In extends Iterable<Out>, Out extends Serializab
 
         Iterable<Out> fsr2 = e2.getIn().getBody(inClass);
         for(Out p : fsr2) {
-            if(cheapest == null || p.getPrice() < cheapest.getPrice()) {
+            if(cheapest == null || p.compareTo(cheapest) < 0) {
                 cheapest = p;
             }
         }
