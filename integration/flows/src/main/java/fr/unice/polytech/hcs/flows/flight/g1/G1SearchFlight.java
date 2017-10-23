@@ -7,7 +7,6 @@ import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.time.LocalDateTime;
@@ -35,11 +34,12 @@ public class G1SearchFlight extends RouteBuilder {
                     e.getIn().setBody(req);
                 })
 
-                .log("${body.origin} -> ${body.destination} Marshalling request")
+                .log("Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader("Content-Type", constant("application/json"))
+                .setHeader("Accept", constant("application/json"))
 
-                .log("Marshalling into a JSON body")
+                .log("Marshalling body into JSON")
                 .marshal().json(JsonLibrary.Jackson)
                 .inOut(G1_SEARCH_FLIGHT_EP)
                 .unmarshal().json(JsonLibrary.Jackson)
@@ -48,29 +48,39 @@ public class G1SearchFlight extends RouteBuilder {
     }
 
     private static Processor jsonToFlightSearchResponse = e -> {
-        Collection<Map<String, Object>> flights = (Collection<Map<String, Object>>) ((Map<String, Object>) e.getIn().getBody()).get("flights");
+        e.getIn().setBody(mapToFsRes((Map<String, Object>) e.getIn().getBody()));
+    };
+
+    public static FlightSearchResponse mapToFsRes(Map<String, Object> map) {
+        Collection<Map<String, Object>> flights = (Collection<Map<String, Object>>) map.get("flights");
 
         FlightSearchResponse fsr = new FlightSearchResponse();
-        fsr.flights = (Flight[]) flights.stream()
-                .map(m -> {
-                    Flight f = new Flight();
-                    f.origin = (String) m.get("from");
-                    f.destination = (String) m.get("to");
-                    Date departure = new Date((long) m.get("departure"));
-                    LocalDateTime dateTime = LocalDateTime.ofInstant(departure.toInstant(), ZoneId.systemDefault());
-                    f.date = dateTime.toLocalDate().toString();
-                    f.time = dateTime.toLocalTime().toString();
-                    f.price = (float) m.get("price");
-                    f.journeyType = "UNKNOWN";
-                    f.duration = (int) m.get("duration");
-                    f.category = (String) m.get("seatClass");
-                    f.airline = (String) m.get("airline");
-                    return f;
-                })
-                .collect(Collectors.toList())
-                .toArray();
+        fsr.result = new Flight[flights.size()];
+        int i = 0;
+        for (Map<String, Object> m : flights) {
+            Flight f = new Flight();
+            f.origin = (String) m.get("from");
+            f.destination = (String) m.get("to");
+            Date departure = new Date((Integer) m.get("departure"));
+            LocalDateTime dateTime = LocalDateTime.ofInstant(departure.toInstant(), ZoneId.systemDefault());
+            f.date = dateTime.toLocalDate().toString();
+            f.time = dateTime.toLocalTime().toString();
 
+            // Thanks camel unmarshalling
+            Object p = m.get("price");
+            if (p instanceof Double) {
+                f.price = (Double) p;
+            } else if (p instanceof Integer) {
+                f.price = ((Integer) p).doubleValue();
+            }
 
-        e.getIn().setBody(fsr);
-    };
+            f.journeyType = "UNKNOWN";
+            f.duration = (Integer) m.get("duration");
+            f.category = (String) m.get("seatClass");
+            f.airline = (String) m.get("airline");
+            fsr.result[i++] = f;
+        }
+
+        return fsr;
+    }
 }

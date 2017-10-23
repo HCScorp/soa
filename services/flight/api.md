@@ -16,8 +16,8 @@ Input: search criterion
  + origin 		 : string
  + destination 	 : string
  + date 		 : string 	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
- + timeFrom		 : string 	(formatted as hour-minute-second, e.g. 08-30-00)
- + timeTo		 : string 	(formatted as hour-minute-second, e.g. 18-45-00)
+ + timeFrom		 : string 	(formatted as hour-minute-second, e.g. 08:30:00)
+ + timeTo		 : string 	(formatted as hour-minute-second, e.g. 18:45:00)
  + journeyType 	 : string 	(can be DIRECT or INDIRECT)
  + maxTravelTime : integer 	(in minutes)
  + category 	 : string 	(can be ECO, ECO_PREMIUM, BUSINESS, FIRST)
@@ -30,7 +30,7 @@ A flight contains the following fields:
  + origin 		 : string
  + destination 	 : string
  + date 		 : string 	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
- + time 		 : string 	(formatted as hour-minute-second, e.g. 15-30-00)
+ + time 		 : string 	(formatted as hour-minute-second, e.g. 15:30:00)
  + price 	 	 : integer 	(in euro)
  + journeyType 	 : string 	(can be DIRECT or INDIRECT)
  + duration 	 : integer 	(in minutes)
@@ -45,8 +45,8 @@ Input:
   "origin": "Nice",
   "destination": "Paris",
   "date": "2017-08-14",
-  "timeFrom": "08-00-00",
-  "timeTo": "14-30-00",
+  "timeFrom": "08:00:00",
+  "timeTo": "14:30:00",
   "journeyType": "DIRECT",
   "maxTravelTime": 120,
   "category": "ECO",
@@ -63,7 +63,7 @@ Output:
       "origin": "Nice",
       "destination": "Paris",
       "date": "2017-08-14",
-      "time": "12-30-00",
+      "time": "12:30:00",
       "price": "89",
       "journeyType": "DIRECT",
       "duration": 92,
@@ -74,7 +74,7 @@ Output:
       "origin": "Nice",
       "destination": "Paris",
       "date": "2017-08-14",
-      "time": "08-45-00",
+      "time": "08:45:00",
       "price": "63",
       "journeyType": "DIRECT",
       "duration": 105,

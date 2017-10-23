@@ -38,8 +38,8 @@ public class Endpoints {
     public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
 
     public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight";
-    public static final String UNKNOWN_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
-    public static final String UNKNOWN_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
+    public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/hotel-service-rpc/hotel";
+    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/car-service-rest/car";
 
 
     // External partners (other groups)

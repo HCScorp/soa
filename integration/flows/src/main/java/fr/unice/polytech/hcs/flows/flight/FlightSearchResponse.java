@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class FlightSearchResponse implements Serializable {
 
-    @JsonProperty public Flight[] flights;
+    @JsonProperty public Flight[] result;
 
     @Override
     public boolean equals(Object o) {
@@ -17,11 +17,15 @@ public class FlightSearchResponse implements Serializable {
         FlightSearchResponse that = (FlightSearchResponse) o;
 
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(flights, that.flights);
+        return Arrays.equals(result, that.result);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(flights);
+        return Arrays.hashCode(result);
+    }
+
+    public int length() {
+        return result.length;
     }
 }

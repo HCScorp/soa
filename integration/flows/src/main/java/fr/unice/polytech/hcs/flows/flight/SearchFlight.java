@@ -17,28 +17,32 @@ public class SearchFlight extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        restConfiguration()
+                .component("servlet")
+        ;
+
         rest("/flight")
                 .post("/search").to(SEARCH_FLIGHT_INPUT);
 
         from(SEARCH_FLIGHT_INPUT)
                 .routeId("search-flight-input")
                 .routeDescription("Create generic flight search request")
-                .log("Parse flight request from JSON to FSReq")
+                .log("Unmarshal flight request from JSON to FSReq")
                 .unmarshal().json(JsonLibrary.Jackson, FlightSearchRequest.class)
 
-                .log("Send FSReq to flight queue")
+                .log("Send FSReq to flight message queue")
                 .to(SEARCH_FLIGHT_MQ)
         ;
 
         from(SEARCH_FLIGHT_MQ)
                 // Forwards to services and wait for responses
-                .multicast(new GroupedExchangeAggregationStrategy())
+                .log("Multicast FSReq to the two flight services")
+                .multicast(combineBody)
                     .executorService(WORKERS)
-                    .parallelProcessing()
-                    .parallelAggregate()
-                    .split(body(), combineBody)
-                    .timeout(2000) // 2 seconds
+                    .parallelProcessing().timeout(2000) // 2 seconds
+                    //.split(body(), combineBody).parallelAggregate()
                     .inOut(HCS_SEARCH_FLIGHT_MQ, G1_SEARCH_FLIGHT_MQ)
+                .log("Marshal Flight to JSON")
                 .marshal().json(JsonLibrary.Jackson)
 //                .choice()
 //                    .when(simple("${body.form.1.price} >= ${body.form.2.price}")) // TODO
@@ -58,13 +62,13 @@ public class SearchFlight extends RouteBuilder {
         FlightSearchResponse fsr2 = e2.getIn().getBody(FlightSearchResponse.class);
 
         Flight cheapest = null;
-        for(Flight f : fsr1.flights) {
+        for(Flight f : fsr1.result) {
             if(cheapest == null || f.price < cheapest.price) {
                 cheapest = f;
             }
         }
 
-        for(Flight f : fsr2.flights) {
+        for(Flight f : fsr2.result) {
             if(cheapest == null || f.price < cheapest.price) {
                 cheapest = f;
             }

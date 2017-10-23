@@ -10,9 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.UNKNOWN_SEARCH_CAR_EP;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
 public class HCSSearchCar extends RouteBuilder {
 
@@ -56,7 +54,7 @@ public class HCSSearchCar extends RouteBuilder {
                 // We wait the answer of the endpoint.
                 .multicast(new GroupedExchangeAggregationStrategy())
                 .parallelProcessing()
-                .inOut(HCS_SEARCH_CAR_EP, UNKNOWN_SEARCH_CAR_EP)
+                .inOut(HCS_SEARCH_CAR_EP, G2_SEARCH_CAR_EP)
                 .choice()
                 .when(body())
                 .marshal().json(JsonLibrary.Jackson);
