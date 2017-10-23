@@ -2,11 +2,29 @@ version: '3'
 
 services:
 
+  bus:
+    image: hcsoa/bus
+    build: ../integration
+    volumes:
+      - ./data/service_mix_deploy:/servicemix/deploy # DEBUG
+      - ./data/input:/servicemix/camel/input
+      - ./data/output:/servicemix/camel/output
+    ports:
+      - "8181:8181"
+    links:
+      - car
+      - car-ext
+      - flight
+      - flight-ext
+      - hotel
+      - hotel-ext
+
   approver:
     image: hcsoa/approver
     build: ../services/approver
     ports:
       - "9090:8080"
+
   car:
     image: hcsoa/car
     build: ../services/car
