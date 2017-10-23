@@ -1,81 +1,32 @@
 package fr.unice.polytech.hcs.flows.flight;
 
-import org.apache.camel.builder.RouteBuilder;
+import fr.unice.polytech.hcs.flows.splitator.CheapestAggregator;
+import fr.unice.polytech.hcs.flows.splitator.SplittatorRoute;
+import org.apache.camel.Endpoint;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
-import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
-public class SearchFlight extends RouteBuilder {
+public class SearchFlight extends SplittatorRoute<FlightSearchRequest, FlightSearchResponse, Flight> {
 
-    private static final ExecutorService WORKERS = Executors.newFixedThreadPool(2);
-
-    @Override
-    public void configure() throws Exception {
-
-        restConfiguration()
-                .component("servlet")
-        ;
-
-        rest("/flight")
-                .post("/search").to(SEARCH_FLIGHT_INPUT);
-
-        from(SEARCH_FLIGHT_INPUT)
-                .routeId("search-flight-input")
-                .routeDescription("Create generic flight search request")
-                .log("Unmarshal flight request from JSON to FSReq")
-                .unmarshal().json(JsonLibrary.Jackson, FlightSearchRequest.class)
-
-                .log("Send FSReq to flight message queue")
-                .to(SEARCH_FLIGHT_MQ)
-        ;
-
-        from(SEARCH_FLIGHT_MQ)
-                // Forwards to services and wait for responses
-                .log("Multicast FSReq to the two flight services")
-                .multicast(combineBody)
-                    .executorService(WORKERS)
-                    .parallelProcessing().timeout(2000) // 2 seconds
-                    //.split(body(), combineBody).parallelAggregate()
-                    .inOut(HCS_SEARCH_FLIGHT_MQ, G1_SEARCH_FLIGHT_MQ)
-                .log("Marshal Flight to JSON")
-                .marshal().json(JsonLibrary.Jackson)
-//                .choice()
-//                    .when(simple("${body.form.1.price} >= ${body.form.2.price}")) // TODO
-//                        .process("") // TODO
-//                    .otherwise()
-//                        .process("") // TODO
-//                .end()
-        ;
+    public SearchFlight() {
+        super("/flight",
+                FlightSearchRequest.class,
+                FlightSearchResponse.class,
+                Flight.class,
+                new CheapestAggregator<>(FlightSearchResponse.class, Flight.class),
+                SEARCH_FLIGHT_INPUT,
+                SEARCH_FLIGHT_MQ,
+                Arrays.asList(HCS_SEARCH_FLIGHT_MQ, G1_SEARCH_FLIGHT_MQ),
+                2,
+                2000,
+                "search-flight-input",
+                "Perform a generic flight search request");
     }
-
-    private static AggregationStrategy combineBody = (e1, e2) -> {
-        if (e1 == null) {
-            return e2;
-        }
-
-        FlightSearchResponse fsr1 = e1.getIn().getBody(FlightSearchResponse.class);
-        FlightSearchResponse fsr2 = e2.getIn().getBody(FlightSearchResponse.class);
-
-        Flight cheapest = null;
-        for(Flight f : fsr1.result) {
-            if(cheapest == null || f.price < cheapest.price) {
-                cheapest = f;
-            }
-        }
-
-        for(Flight f : fsr2.result) {
-            if(cheapest == null || f.price < cheapest.price) {
-                cheapest = f;
-            }
-        }
-
-        e2.getIn().setBody(cheapest);
-
-        return e2;
-    };
 }
