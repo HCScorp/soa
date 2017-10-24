@@ -1,30 +1,22 @@
-package fr.unice.polytech.hcs.flows.hotel.hcs;
+package fr.unice.polytech.hcs.flows.hotel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.hcs.flows.hotel.HotelRequest;
 
 import java.io.Serializable;
 
-public class HCSHotelRequest implements Serializable {
+public class HotelSearchRequest implements Serializable {
 
     @JsonProperty public String city;
     @JsonProperty public String dateFrom;
     @JsonProperty public String dateTo;
     @JsonProperty public String order;
 
-    public HCSHotelRequest(HotelRequest hotelRequest) {
-        this.city = hotelRequest.city;
-        this.dateFrom = hotelRequest.dateFrom;
-        this.dateTo = hotelRequest.dateTo;
-        this.order = hotelRequest.order;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HCSHotelRequest that = (HCSHotelRequest) o;
+        HotelSearchRequest that = (HotelSearchRequest) o;
 
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (dateFrom != null ? !dateFrom.equals(that.dateFrom) : that.dateFrom != null) return false;

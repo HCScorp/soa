@@ -1,36 +1,18 @@
 package fr.unice.polytech.hcs.flows.flight.hcs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.hcs.flows.ActiveMQTest;
+import fr.unice.polytech.hcs.flows.SpecificSearchTest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
-import org.apache.camel.builder.RouteBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-
-import java.io.IOException;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_FLIGHT_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_FLIGHT_MQ;
 
-public class HCSSearchFlightTest extends ActiveMQTest {
+public class HCSSearchFlightTest extends SpecificSearchTest {
 
-
-    @Override
-    public String isMockEndpointsAndSkip() {
-        return HCS_SEARCH_FLIGHT_EP;
+    public HCSSearchFlightTest() {
+        super(HCS_SEARCH_FLIGHT_EP, HCS_SEARCH_FLIGHT_MQ, new HCSSearchFlight());
     }
-
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new HCSSearchFlight();
-    }
-
-    private FlightSearchRequest fsr;
-    private HCSFlightSearchRequest hcsFsr;
-
-    private FlightSearchResponse fsRes;
 
     private final String fsResJson = "{\n" +
             "  \"result\": [\n" +
@@ -59,15 +41,9 @@ public class HCSSearchFlightTest extends ActiveMQTest {
             "  ]\n" +
             "}";
 
-    @Before
-    public void initMocks() {
-        resetMocks();
-        mock(HCS_SEARCH_FLIGHT_EP).whenAnyExchangeReceived(e -> e.getIn().setBody(fsResJson));
-    }
-
-    @Before
-    public void init() throws IOException {
-        fsr = new FlightSearchRequest();
+    @Override
+    public void initVariables() throws Exception {
+        FlightSearchRequest fsr = new FlightSearchRequest();
         fsr.origin = "Nice";
         fsr.destination = "Paris";
         fsr.date = "2017-01-05";
@@ -75,47 +51,13 @@ public class HCSSearchFlightTest extends ActiveMQTest {
         fsr.category = "ECO";
         fsr.journeyType = "DIRECT";
         fsr.order = "ASCENDING";
-        fsr.timeFrom = "08:00:00" ;
+        fsr.timeFrom = "08:00:00";
         fsr.timeTo = "14:30:00";
         fsr.maxTravelTime = 200;
 
-        hcsFsr = new HCSFlightSearchRequest(fsr);
-
-        fsRes = new ObjectMapper().readValue(fsResJson, FlightSearchResponse.class);
+        this.genericRequest = fsr;
+        this.specificRequest = new HCSFlightSearchRequest(fsr);
+        this.genericResponse = new ObjectMapper().readValue(fsResJson, FlightSearchResponse.class);
+        this.specificResultJson = fsResJson;
     }
-
-
-    @Test
-    public void TestHCSSearchFlight() throws Exception {
-        // Asserting endpoints existence
-        assertNotNull(context.hasEndpoint(HCS_SEARCH_FLIGHT_MQ));
-        assertNotNull(context.hasEndpoint(HCS_SEARCH_FLIGHT_EP));
-
-        // Configuring expectations on the mocked endpoint
-        String mock = "mock://" + HCS_SEARCH_FLIGHT_EP;
-        assertNotNull(context.hasEndpoint(mock));
-
-        // Check if we receive a message.
-        getMockEndpoint(mock).expectedMessageCount(1);
-        getMockEndpoint(mock).expectedHeaderReceived("Content-Type", "application/json");
-        getMockEndpoint(mock).expectedHeaderReceived("Accept", "application/json");
-        getMockEndpoint(mock).expectedHeaderReceived("CamelHttpMethod", "POST");
-
-        // The FSR request is sent to the message Queue !
-        FlightSearchResponse out = template.requestBody(HCS_SEARCH_FLIGHT_MQ, fsr, FlightSearchResponse.class);
-
-        // Do I receive the proper request ? (type, post, ... )
-        getMockEndpoint(mock).assertIsSatisfied();
-
-        // Catch the data into the request catched in the Mock Ws
-        String requestStr = getMockEndpoint(mock).getReceivedExchanges().get(0).getIn().getBody(String.class);
-
-        // As the assertions are now satisfied, one can access to the contents of the exchanges
-        JSONAssert.assertEquals(new ObjectMapper().writeValueAsString(hcsFsr), requestStr, false);
-
-        // Check result
-        assertEquals(fsRes, out);
-    }
-
-
 }

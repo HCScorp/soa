@@ -3,27 +3,32 @@ package fr.unice.polytech.hcs.flows.splitator;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.DataFormatDefinition;
 
 import java.io.Serializable;
 import java.util.Map;
 
 
-public class SimplePostJsonRoute<In extends Serializable, Out extends Serializable> extends RouteBuilder {
+public class SimplePostRoute<In extends Serializable, Out extends Serializable> extends RouteBuilder {
 
     private final String routeUri;
     private final String endpoint;
+    private final DataFormatDefinition dataFormatDef;
     private final Convertor<In, Object> genericReqConvertor;
     private final Convertor<Map, Out> specificResConvertor;
     private final String routeId;
     private final String routeDescription;
 
-    public SimplePostJsonRoute(String routeUri, String endpoint,
-                               Convertor<In, Object> genericReqConvertor,
-                               Convertor<Map, Out> specificResConvertor,
-                               String routeId, String routeDescription) {
+    public SimplePostRoute(String routeUri,
+                           String endpoint,
+                           DataFormatDefinition dataFormatDef,
+                           Convertor<In, Object> genericReqConvertor,
+                           Convertor<Map, Out> specificResConvertor,
+                           String routeId,
+                           String routeDescription) {
         this.routeUri = routeUri;
         this.endpoint = endpoint;
+        this.dataFormatDef = dataFormatDef;
         this.genericReqConvertor = genericReqConvertor;
         this.specificResConvertor = specificResConvertor;
         this.routeId = routeId;
@@ -45,14 +50,14 @@ public class SimplePostJsonRoute<In extends Serializable, Out extends Serializab
                 .setHeader("Accept", constant("application/json"))
 
                 .log("Marshalling body into JSON")
-                .marshal().json(JsonLibrary.Jackson)
+                .marshal(dataFormatDef)
 
                 .log("Sending to endpoint")
                 .inOut(endpoint)
                 .log("Received specific request result results")
 
                 .log("Unmarshal JSON response to generic response")
-                .unmarshal().json(JsonLibrary.Jackson)
+                .unmarshal(dataFormatDef)
                 .process(e -> e.getIn().setBody(specificResConvertor.convert((Map) e.getIn().getBody())))
         ;
     }

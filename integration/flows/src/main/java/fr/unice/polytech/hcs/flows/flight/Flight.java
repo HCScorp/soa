@@ -1,8 +1,10 @@
 package fr.unice.polytech.hcs.flows.flight;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.splitator.SerializableComparable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Flight implements SerializableComparable<Flight> {
 
     @JsonProperty public String origin;

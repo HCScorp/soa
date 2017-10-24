@@ -2,35 +2,17 @@ package fr.unice.polytech.hcs.flows.flight.g1;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.hcs.flows.ActiveMQTest;
+import fr.unice.polytech.hcs.flows.SpecificSearchTest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
-import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
-import org.apache.camel.builder.RouteBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-
-import java.io.IOException;
 import java.util.HashMap;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
-public class G1SearchFlightTest extends ActiveMQTest {
+public class G1SearchFlightTest extends SpecificSearchTest {
 
-    @Override
-    public String isMockEndpointsAndSkip() {
-        return G1_SEARCH_FLIGHT_EP;
+    public G1SearchFlightTest() {
+        super(G1_SEARCH_FLIGHT_EP, G1_SEARCH_FLIGHT_MQ, new G1SearchFlight());
     }
-
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new G1SearchFlight();
-    }
-
-    private FlightSearchRequest fsr;
-    private G1FlightSearchRequest g1Fsr;
-
-    private FlightSearchResponse fsRes;
 
     private final String fsResJson = "{\n" +
             "    \"flights\": [\n" +
@@ -109,15 +91,9 @@ public class G1SearchFlightTest extends ActiveMQTest {
             "    ]\n" +
             "}";
 
-    @Before
-    public void initMocks() {
-        resetMocks();
-        mock(G1_SEARCH_FLIGHT_EP).whenAnyExchangeReceived(e -> e.getIn().setBody(fsResJson));
-    }
-
-    @Before
-    public void init() throws IOException {
-        fsr = new FlightSearchRequest();
+    @Override
+    public void initVariables() throws Exception {
+        FlightSearchRequest fsr = new FlightSearchRequest();
         fsr.origin = "Nice";
         fsr.destination = "Paris";
         fsr.date = "2017-01-05";
@@ -129,47 +105,15 @@ public class G1SearchFlightTest extends ActiveMQTest {
         fsr.timeTo = "14:30:00";
         fsr.maxTravelTime = 200;
 
-        g1Fsr = new G1FlightSearchRequest(fsr);
+        this.genericRequest = fsr;
+        this.specificRequest = new G1FlightSearchRequest(fsr);
 
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<HashMap<String,Object>> typeRef
                 = new TypeReference<HashMap<String,Object>>() {};
 
         HashMap<String,Object> fsResMap = mapper.readValue(fsResJson, typeRef);
-        fsRes = G1SearchFlight.mapToFsRes(fsResMap);
+        this.genericResponse = G1SearchFlight.mapToFsRes(fsResMap);
+        this.specificResultJson = fsResJson;
     }
-
-    @Test
-    public void TestG1SearchFlight() throws Exception {
-        // Asserting endpoints existence
-        assertNotNull(context.hasEndpoint(G1_SEARCH_FLIGHT_MQ));
-        assertNotNull(context.hasEndpoint(G1_SEARCH_FLIGHT_EP));
-
-        // Configuring expectations on the mocked endpoint
-        String mock = "mock://" + G1_SEARCH_FLIGHT_EP;
-        assertNotNull(context.hasEndpoint(mock));
-
-        // Check if we receive a message.
-        getMockEndpoint(mock).expectedMessageCount(1);
-        getMockEndpoint(mock).expectedHeaderReceived("Content-Type", "application/json");
-        getMockEndpoint(mock).expectedHeaderReceived("Accept", "application/json");
-        getMockEndpoint(mock).expectedHeaderReceived("CamelHttpMethod", "POST");
-
-        // The FSR request is sent to the message Queue !
-        FlightSearchResponse out = template.requestBody(G1_SEARCH_FLIGHT_MQ, fsr, FlightSearchResponse.class);
-
-        // Do I receive the proper request ? (type, post, ... )
-        getMockEndpoint(mock).assertIsSatisfied();
-
-        // Catch the data into the request catched in the Mock Ws
-        String requestStr = getMockEndpoint(mock).getReceivedExchanges().get(0).getIn().getBody(String.class);
-
-        // As the assertions are now satisfied, one can access to the contents of the exchanges
-        JSONAssert.assertEquals(new ObjectMapper().writeValueAsString(g1Fsr), requestStr, false);
-
-        // Check result
-        assertEquals(fsRes, out);
-    }
-
-
 }

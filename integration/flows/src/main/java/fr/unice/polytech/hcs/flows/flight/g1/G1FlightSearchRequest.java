@@ -48,5 +48,4 @@ public class G1FlightSearchRequest implements Serializable {
         result = 31 * result + (int) (departureTimeStamp ^ (departureTimeStamp >>> 32));
         return result;
     }
-    // TODO
 }

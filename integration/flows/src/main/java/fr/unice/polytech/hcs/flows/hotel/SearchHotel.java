@@ -51,7 +51,7 @@ public class SearchHotel extends RouteBuilder {
 
     private static Processor jsonToHotelRequest = (Exchange exchange) -> {
         Map<String, Object> data = (Map<String, Object>) exchange.getIn().getBody();
-        HotelRequest hr = new HotelRequest();
+        HotelSearchRequest hr = new HotelSearchRequest();
 
         hr.city = (String) data.get("city");
         hr.dateFrom = (String) data.get("dateFrom");

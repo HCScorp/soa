@@ -2,7 +2,7 @@ package fr.unice.polytech.hcs.flows.hotel.hcs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.hotel.HotelRequest;
+import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
@@ -21,12 +21,12 @@ public class HCSSearchHotelTest extends ActiveMQTest {
         return new HCSSearchHotel();
     }
 
-    private HotelRequest hotel;
+    private HotelSearchRequest hotel;
 
     @Before
     public void init() {
         resetMocks();
-        hotel = new HotelRequest();
+        hotel = new HotelSearchRequest();
         hotel.city = "Paris";
         hotel.dateFrom = "2017-10-21";
         hotel.dateTo = "2017-10-26";

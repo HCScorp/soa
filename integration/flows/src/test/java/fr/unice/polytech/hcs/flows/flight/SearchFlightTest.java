@@ -2,32 +2,25 @@ package fr.unice.polytech.hcs.flows.flight;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.unice.polytech.hcs.flows.ActiveMQTest;
+import fr.unice.polytech.hcs.flows.SplittatorRouteTest;
 import fr.unice.polytech.hcs.flows.flight.g1.G1SearchFlight;
-import org.apache.camel.builder.RouteBuilder;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
+import static fr.unice.polytech.hcs.flows.utils.Build.*;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
-public class SearchFlightTest extends ActiveMQTest {
-    @Override
-    public String isMockEndpointsAndSkip() {
-        return HCS_SEARCH_FLIGHT_MQ + "|" + G1_SEARCH_FLIGHT_MQ;
+public class SearchFlightTest extends SplittatorRouteTest<Flight> {
+
+    public SearchFlightTest() {
+        super(
+                Arrays.asList(
+                        HCS_SEARCH_FLIGHT_MQ,
+                        G1_SEARCH_FLIGHT_MQ),
+                SEARCH_FLIGHT_MQ,
+                new SearchFlight());
     }
-
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new SearchFlight();
-    }
-
-    private FlightSearchRequest fsr;
-
-    private FlightSearchResponse HCSfsRes;
-    private FlightSearchResponse G1fsRes;
 
     private final String HCSfsResJson = "{\n" +
             "  \"result\": [\n" +
@@ -133,16 +126,12 @@ public class SearchFlightTest extends ActiveMQTest {
             "    ]\n" +
             "}";
 
-    @Before
-    public void initMocks() {
-        resetMocks();
-        mock(HCS_SEARCH_FLIGHT_MQ).whenAnyExchangeReceived(e -> e.getIn().setBody(HCSfsRes));
-        mock(G1_SEARCH_FLIGHT_MQ).whenAnyExchangeReceived(e -> e.getIn().setBody(G1fsRes));
-    }
+    @Override
+    protected void initVariables() throws Exception {
+        FlightSearchResponse HCSfsRes;
+        FlightSearchResponse G1fsRes;
 
-    @Before
-    public void init() throws IOException {
-        fsr = new FlightSearchRequest();
+        FlightSearchRequest fsr = new FlightSearchRequest();
         fsr.origin = "Nice";
         fsr.destination = "Paris";
         fsr.date = "2017-01-05";
@@ -150,43 +139,18 @@ public class SearchFlightTest extends ActiveMQTest {
         fsr.category = "ECO";
         fsr.journeyType = "DIRECT";
         fsr.order = "ASCENDING";
-        fsr.timeFrom = "08:00:00" ;
+        fsr.timeFrom = "08:00:00";
         fsr.timeTo = "14:30:00";
         fsr.maxTravelTime = 200;
 
         ObjectMapper mapper = new ObjectMapper();
         HCSfsRes = mapper.readValue(HCSfsResJson, FlightSearchResponse.class);
 
-        TypeReference<HashMap<String,Object>> typeRef = new TypeReference<HashMap<String,Object>>() {};
-        HashMap<String,Object> fsResMap = mapper.readValue(G1fsResJson, typeRef);
+        TypeReference<HashMap<String, Object>> typeRef = new TypeReference<HashMap<String, Object>>() {
+        };
+        HashMap<String, Object> fsResMap = mapper.readValue(G1fsResJson, typeRef);
         G1fsRes = G1SearchFlight.mapToFsRes(fsResMap);
-    }
 
-
-    @Test
-    public void TestSearchFlight() throws Exception {
-        // Asserting endpoints existence
-        assertNotNull(context.hasEndpoint(HCS_SEARCH_FLIGHT_MQ));
-        assertNotNull(context.hasEndpoint(G1_SEARCH_FLIGHT_MQ));
-
-        // Configuring expectations on the mocked endpoint
-        String mockHCS = "mock://" + HCS_SEARCH_FLIGHT_MQ;
-        String mockG1 = "mock://" + G1_SEARCH_FLIGHT_MQ;
-        assertNotNull(context.hasEndpoint(mockHCS));
-        assertNotNull(context.hasEndpoint(mockG1));
-
-        // Check if we receive a message.
-        getMockEndpoint(mockHCS).expectedMessageCount(1);
-        getMockEndpoint(mockG1).expectedMessageCount(1);
-
-        // The FSR request is sent to the message Queue !
-        Flight out = template.requestBody(SEARCH_FLIGHT_MQ, fsr, Flight.class);
-
-        // Do I receive the proper request ? (type, post, ... )
-        getMockEndpoint(mockHCS).assertIsSatisfied();
-        getMockEndpoint(mockG1).assertIsSatisfied();
-
-        // Check result
         Flight expected = new Flight();
         expected.origin = "Nice";
         expected.destination = "Paris";
@@ -198,6 +162,11 @@ public class SearchFlightTest extends ActiveMQTest {
         expected.category = "ECO";
         expected.airline = "EasyJet";
 
-        assertEquals(expected, out);
+        this.genericRequest = fsr;
+        this.mockedEpResults = map(
+                entry(HCS_SEARCH_FLIGHT_MQ, HCSfsRes),
+                entry(G1_SEARCH_FLIGHT_MQ, G1fsRes));
+        this.expectedResultClass = Flight.class;
+        this.expectedResult = expected;
     }
 }

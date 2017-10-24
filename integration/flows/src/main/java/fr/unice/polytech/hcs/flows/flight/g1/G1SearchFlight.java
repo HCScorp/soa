@@ -4,7 +4,10 @@ package fr.unice.polytech.hcs.flows.flight.g1;
 import fr.unice.polytech.hcs.flows.flight.Flight;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
-import fr.unice.polytech.hcs.flows.splitator.SimplePostJsonRoute;
+import fr.unice.polytech.hcs.flows.splitator.SimplePostRoute;
+import fr.unice.polytech.hcs.flows.utils.Cast;
+import org.apache.camel.model.dataformat.JsonDataFormat;
+import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,15 +18,16 @@ import java.util.Map;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G1_SEARCH_FLIGHT_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G1_SEARCH_FLIGHT_MQ;
 
-public class G1SearchFlight extends SimplePostJsonRoute<FlightSearchRequest, FlightSearchResponse> {
+public class G1SearchFlight extends SimplePostRoute<FlightSearchRequest, FlightSearchResponse> {
 
     public G1SearchFlight() {
         super(G1_SEARCH_FLIGHT_MQ,
                 G1_SEARCH_FLIGHT_EP,
+                new JsonDataFormat(JsonLibrary.Jackson),
                 G1FlightSearchRequest::new,
                 G1SearchFlight::mapToFsRes,
                 "g1-search-flight-ws",
-                "Send the flight search request to the flight WS");
+                "Send the flight search request to the G1 flight WS");
     }
 
     public static FlightSearchResponse mapToFsRes(Map<String, Object> map) {
@@ -40,16 +44,7 @@ public class G1SearchFlight extends SimplePostJsonRoute<FlightSearchRequest, Fli
             LocalDateTime dateTime = LocalDateTime.ofInstant(departure.toInstant(), ZoneId.systemDefault());
             f.date = dateTime.toLocalDate().toString();
             f.time = dateTime.toLocalTime().toString();
-
-            // Thanks camel unmarshalling
-            Object p = m.get("price");
-            if (p instanceof Double) {
-                f.price = (Double) p;
-            } else if (p instanceof Integer) {
-                f.price = ((Integer) p).doubleValue();
-            }
-
-            f.journeyType = "UNKNOWN";
+            f.price = Cast.toDouble(m.get("price"));
             f.duration = (Integer) m.get("duration");
             f.category = (String) m.get("seatClass");
             f.airline = (String) m.get("airline");
