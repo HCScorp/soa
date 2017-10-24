@@ -7,4 +7,4 @@ FROM petitroll/esb
 RUN mkdir -p camel/input camel/output
 
 # Deploying technical flows
-COPY flows/target/flows-1.0.jar ./deploy/.
+COPY flows/target/flows-1.0.jar ./deploy/
