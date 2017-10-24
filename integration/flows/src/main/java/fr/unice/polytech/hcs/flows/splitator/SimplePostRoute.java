@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 
-public class SimplePostRoute<In extends Serializable, Out extends Serializable> extends RouteBuilder {
+public abstract class SimplePostRoute<In extends Serializable, Out extends Serializable> extends RouteBuilder {
 
     private final String routeUri;
     private final String endpoint;

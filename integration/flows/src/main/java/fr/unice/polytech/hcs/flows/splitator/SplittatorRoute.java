@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class SplittatorRoute< In extends Serializable,
+public abstract class SplittatorRoute< In extends Serializable,
                                 Mid extends Iterable<Out>,
                                 Out extends SerializableComparable<Out> >
         extends RouteBuilder {
