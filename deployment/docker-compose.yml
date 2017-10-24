@@ -12,12 +12,12 @@ services:
     ports:
       - "8181:8181"
     links:
-      - car
-      - car-ext
-      - flight
-      - flight-ext
-      - hotel
-      - hotel-ext
+      - car:hcs-car
+      - car-ext:g2-car
+      - flight:hcs-flight
+      - flight-ext:g1-flight
+      - hotel:hcs-hotel
+      - hotel-ext:g7-hotel
 
   approver:
     image: hcsoa/approver

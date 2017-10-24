@@ -33,13 +33,13 @@ public class Endpoints {
     public static final String COMPARATOR = "direct:comparator";
 
     // External partners (HCS)
-    public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight";
-    public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
-    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
+    public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight?bridgeEndpoint=true&throwExceptionOnFailure=false";
+    public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel?bridgeEndpoint=true&throwExceptionOnFailure=false";
+    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car?bridgeEndpoint=true&throwExceptionOnFailure=false";
 
-    public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight";
-    public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/hotel-service-rpc/hotel";
-    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/car-service-rest/car";
+    public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight?bridgeEndpoint=true&throwExceptionOnFailure=false";
+    public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/hotel-service-rpc/hotel?bridgeEndpoint=true&throwExceptionOnFailure=false";
+    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/car-service-rest/car?bridgeEndpoint=true&throwExceptionOnFailure=false";
 
 
     // External partners (other groups)
