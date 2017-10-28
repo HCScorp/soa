@@ -19,6 +19,10 @@ public class SearchHotel extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        restConfiguration()
+                .component("servlet")
+        ;
+
         rest("/hotel")
                 .post("/search").to(SEARCH_HOTEL_INPUT);
 
@@ -40,13 +44,7 @@ public class SearchHotel extends RouteBuilder {
                 .parallelProcessing()
                 .executorService(WORKERS)
                 .timeout(2000) // 2 seconds
-                .inOut(HCS_SEARCH_HOTEL_MQ, G7_SEARCH_HOTEL_MQ)
-                .choice()
-                .when(simple("${body.form.price1} >= ${body.form.price2}")) // TODO
-                .process("") // TODO
-                .otherwise()
-                .process("") // TODO
-                .end();
+                .inOut(HCS_SEARCH_HOTEL_MQ, G7_SEARCH_HOTEL_MQ);
     }
 
     private static Processor jsonToHotelRequest = (Exchange exchange) -> {
