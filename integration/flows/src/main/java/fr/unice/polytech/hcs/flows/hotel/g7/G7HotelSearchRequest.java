@@ -9,12 +9,12 @@ import java.time.format.DateTimeFormatter;
 
 public class G7HotelSearchRequest implements Serializable {
 
-    @JsonProperty private String address;
-    @JsonProperty private String city;
-    @JsonProperty private String checkin;
-    @JsonProperty private String checkout;
-    @JsonProperty private String sortOrder;
-    @JsonProperty private int resultNumber;
+    @JsonProperty public String address;
+    @JsonProperty public String city;
+    @JsonProperty public String checkin;
+    @JsonProperty public String checkout;
+    @JsonProperty public String sortOrder;
+    @JsonProperty public int resultNumber;
 
     G7HotelSearchRequest(HotelSearchRequest hsr) {
         this.city = hsr.city;
@@ -23,7 +23,7 @@ public class G7HotelSearchRequest implements Serializable {
         this.checkout = LocalDate.parse(hsr.dateTo).format(formatter);
         this.sortOrder = hsr.order;
         this.address = "";
-        this.resultNumber = 10;
+        this.resultNumber = 1;
     }
 
     @Override

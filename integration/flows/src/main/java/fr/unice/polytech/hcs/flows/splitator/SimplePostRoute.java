@@ -15,8 +15,8 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
     private final String endpoint;
     private final DataFormatDefinition dataFormatDefIn;
     private final DataFormatDefinition dataFormatDefOut;
-    private final Convertor<In, Object> genericReqConvertor;
-    private final Convertor<Map, Out> specificResConvertor;
+    private final Converter<In, Object> genericRecConverter;
+    private final Converter<Map, Out> specificResConverter;
     private final String routeId;
     private final String routeDescription;
 
@@ -24,16 +24,16 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
                            String endpoint,
                            DataFormatDefinition dataFormatDefIn,
                            DataFormatDefinition dataFormatDefOut,
-                           Convertor<In, Object> genericReqConvertor,
-                           Convertor<Map, Out> specificResConvertor,
+                           Converter<In, Object> genericRecConverter,
+                           Converter<Map, Out> specificResConverter,
                            String routeId,
                            String routeDescription) {
         this.routeUri = routeUri;
         this.endpoint = endpoint;
         this.dataFormatDefIn = dataFormatDefIn;
         this.dataFormatDefOut = dataFormatDefOut;
-        this.genericReqConvertor = genericReqConvertor;
-        this.specificResConvertor = specificResConvertor;
+        this.genericRecConverter = genericRecConverter;
+        this.specificResConverter = specificResConverter;
         this.routeId = routeId;
         this.routeDescription = routeDescription;
     }
@@ -41,13 +41,13 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
     public SimplePostRoute(String routeUri,
                            String endpoint,
                            DataFormatDefinition dataFormatDefIn,
-                           Convertor<In, Object> genericReqConvertor,
-                           Convertor<Map, Out> specificResConvertor,
+                           Converter<In, Object> genericRecConverter,
+                           Converter<Map, Out> specificResConverter,
                            String routeId,
                            String routeDescription) {
         this(routeUri, endpoint,
                 dataFormatDefIn, dataFormatDefIn,
-                genericReqConvertor, specificResConvertor,
+                genericRecConverter, specificResConverter,
                 routeId, routeDescription);
     }
 
@@ -58,7 +58,7 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
                 .routeDescription(routeDescription)
 
                 .log("Creating specific request from generic request")
-                .process(e -> e.getIn().setBody(genericReqConvertor.convert((In) e.getIn().getBody())))
+                .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
 
                 .log("Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -70,12 +70,12 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
 
                 .log("Sending to endpoint")
                 .inOut(endpoint)
-                .log("Received specific request result results")
+                .log("Received specific request result")
 
                 .log("Unmarshalling response")
                 .unmarshal(dataFormatDefOut)
                 .log("Converting to generic response")
-                .process(e -> e.getIn().setBody(specificResConvertor.convert((Map) e.getIn().getBody())))
+                .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
         ;
     }
 }
