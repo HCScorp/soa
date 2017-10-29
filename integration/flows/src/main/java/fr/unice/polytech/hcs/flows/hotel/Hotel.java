@@ -2,11 +2,12 @@ package fr.unice.polytech.hcs.flows.hotel;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.hcs.flows.splitator.SerializableComparable;
 
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Hotel implements Serializable {
+public class Hotel implements SerializableComparable<Hotel> {
 
     @JsonProperty public String name;
     @JsonProperty public String city;
@@ -36,5 +37,10 @@ public class Hotel implements Serializable {
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (nightPrice != null ? nightPrice.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int compareTo(Hotel o) {
+        return nightPrice.compareTo(o.nightPrice);
     }
 }

@@ -19,8 +19,8 @@ public class SearchFlight extends SplittatorRoute<FlightSearchRequest, FlightSea
                 SEARCH_FLIGHT_MQ,
                 Arrays.asList(HCS_SEARCH_FLIGHT_MQ, G1_SEARCH_FLIGHT_MQ),
                 2,
-                2000,
+                10000,
                 "search-flight-input",
-                "Perform a generic flight search request");
+                "Execute a generic flight search request");
     }
 }

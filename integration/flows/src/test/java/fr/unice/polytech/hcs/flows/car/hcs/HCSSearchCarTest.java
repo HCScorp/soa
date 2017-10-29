@@ -1,9 +1,6 @@
 package fr.unice.polytech.hcs.flows.car.hcs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.car.hcs.Car;
-import fr.unice.polytech.hcs.flows.car.hcs.HCSSearchCar;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;

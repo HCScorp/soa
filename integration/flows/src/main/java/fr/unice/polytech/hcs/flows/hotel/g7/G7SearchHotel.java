@@ -6,6 +6,8 @@ import fr.unice.polytech.hcs.flows.hotel.HotelSearchResponse;
 import fr.unice.polytech.hcs.flows.splitator.SimplePostRoute;
 import fr.unice.polytech.hcs.flows.utils.Cast;
 import org.apache.camel.model.dataformat.JacksonXMLDataFormat;
+import org.apache.camel.model.dataformat.JsonDataFormat;
+import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class G7SearchHotel extends SimplePostRoute<HotelSearchRequest, HotelSear
         super(G7_SEARCH_HOTEL_MQ,
                 G7_SEARCH_HOTEL_EP,
                 new JacksonXMLDataFormat(),
+                new JsonDataFormat(JsonLibrary.Jackson),
                 G7HotelSearchRequest::new,
                 G7SearchHotel::mapToHsRes,
                 "g7-search-hotel-ws",
@@ -27,6 +30,10 @@ public class G7SearchHotel extends SimplePostRoute<HotelSearchRequest, HotelSear
 
     public static HotelSearchResponse mapToHsRes(Map<String, Object> map) {
         Collection<Map<String, Object>> hotels = (Collection<Map<String, Object>>) map.get("hotels"); // TODO
+        // TODO
+        // TODO
+        // TODO
+        // TODO
 
         HotelSearchResponse hsr = new HotelSearchResponse();
         hsr.result = new Hotel[hotels.size()];

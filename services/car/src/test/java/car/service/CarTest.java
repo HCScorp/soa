@@ -21,8 +21,9 @@ class CarTest {
         teslaBson.put("city", "Nice");
         teslaBson.put("model", "S");
         teslaBson.put("numberPlate", "999-111");
+        teslaBson.put("price", 50);
         teslaBson.put("bookedDays", Collections.singletonList(new Document("date", LocalDate.of(2017, 12, 24).toString())));
-        tesla = new Car("Tesla", "Nice", "S", "999-111", Collections.singletonList(LocalDate.of(2017, 12, 24)));
+        tesla = new Car("Tesla", "Nice", "S", "999-111", 50, Collections.singletonList(LocalDate.of(2017, 12, 24)));
     }
 
     @Test

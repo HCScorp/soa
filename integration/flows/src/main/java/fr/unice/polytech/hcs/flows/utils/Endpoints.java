@@ -9,7 +9,7 @@ public class Endpoints {
 
     public static final String SEARCH_FLIGHT_INPUT = "direct:search-flight";
     public static final String SEARCH_HOTEL_INPUT = "direct:search-hotel";
-    // TODO HCS + others groups ?
+    public static final String SEARCH_CAR_INPUT = "direct:search-car";
 
     // File outputs
     // public static final String TODO = "file:/servicemix/camel/output";

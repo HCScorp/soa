@@ -22,7 +22,8 @@ Output: list of cars
 A car contains the following fields:
  + company 		: string
  + city 	 	: string
- + price 		: string
+ + model 		: string
+ + price 		: integer
  + numberPlate	: string
 
 ### Example
@@ -43,13 +44,15 @@ Output:
     {
       "company": "Tesla location",
       "city": "Nice",
-      "price": "S P90D",
+      "model": "S P100D",
+      "price": 35,
       "numberPlate": "888-999"
     },
     {
       "company": "Mercedes location",
       "city": "Nice",
-      "price": "Class A",
+      "model": "Class A",
+      "price": 40,
       "numberPlate": "555-444"
     }
   ]
