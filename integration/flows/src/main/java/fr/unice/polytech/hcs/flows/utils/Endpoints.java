@@ -49,7 +49,7 @@ public class Endpoints {
     // public static final String DEATH_POOL = "activemq:global:dead";
 
     // Archiver route
-    public static final String REFUND_SENDING = "direct:refund-piece";
+    public static final String REFUND_SENDING = "activemq:refund-piece";
     public static final String REFUND_PIECE_OUTPUT_DIR = "file:/servicemix/camel/output";
 
     public static final String REFUND_SENDING_EP = "";
