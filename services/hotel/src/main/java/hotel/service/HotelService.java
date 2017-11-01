@@ -48,7 +48,7 @@ public class HotelService {
 
             // Format output to JSON
             JSONObject result = new JSONObject();
-            result.put("hotels", new JSONArray(resultBson.stream().map(Hotel::convertToWebResult).toArray()));
+            result.put("result", new JSONArray(resultBson.stream().map(Hotel::convertToWebResult).toArray()));
 
             // Build and send response with JSON
             return Response.ok().entity(result.toString(INDENT_FACTOR)).build();

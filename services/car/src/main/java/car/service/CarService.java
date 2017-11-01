@@ -48,7 +48,7 @@ public class CarService {
 
             // Format output to JSON
             JSONObject result = new JSONObject();
-            result.put("cars", new JSONArray(resultBson.stream().map(Car::convertToWebResult).toArray()));
+            result.put("result", new JSONArray(resultBson.stream().map(Car::convertToWebResult).toArray()));
 
             // Build and send response with JSON
             return Response.ok().entity(result.toString(INDENT_FACTOR)).build();

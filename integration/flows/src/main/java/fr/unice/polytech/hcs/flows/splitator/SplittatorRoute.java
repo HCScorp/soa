@@ -1,7 +1,9 @@
 package fr.unice.polytech.hcs.flows.splitator;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.converter.stream.InputStreamCache;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 import java.io.Serializable;
@@ -59,28 +61,26 @@ public abstract class SplittatorRoute< In extends Serializable,
     public void configure() throws Exception {
         restConfiguration()
                 .component("servlet")
+                .bindingMode(RestBindingMode.json)
         ;
 
         rest(restEndpoint)
                 .post()
+                .type(inClass)
+                .outType(outClass)
                 .to(unmarshalUri)
         ;
 
         from(unmarshalUri)
                 .routeId(routeId)
                 .routeDescription(routeDescription)
-
-                .log("Unmarshal request from JSON to request")
-                .log("IN : ${body}")
-                .unmarshal().json(JsonLibrary.Jackson, inClass)
-                .log("OUT : ${body}")
-
-                .log("Send request to message queue")
+                .log("["+unmarshalUri+"] Received generic request: ${body}")
+                .log("["+unmarshalUri+"] Sending generic request to message handler queue")
                 .to(multicastUri)
         ;
 
         from(multicastUri)
-                .log("Multicast request to the services")
+                .log("["+multicastUri+"] Multicast request to the services")
                 .multicast(aggregationStrategy)
                     .parallelProcessing()
                     .executorService(workers)
@@ -88,10 +88,8 @@ public abstract class SplittatorRoute< In extends Serializable,
                     .timeout(timeout)
                     .inOut(targets.toArray(new String[targets.size()]))
                     .end()
-                .log("Marshal response to JSON")
-                .log("IN : ${body}")
-                .marshal().json(JsonLibrary.Jackson, outClass)
-                .log("OUT : ${body}")
+                .log("["+multicastUri+"] End of multicast")
+                .log("["+multicastUri+"] Sending generic response")
         ;
     }
 }

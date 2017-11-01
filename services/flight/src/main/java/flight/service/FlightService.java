@@ -48,7 +48,7 @@ public class FlightService {
 
             // Format output to JSON
             JSONObject result = new JSONObject();
-            result.put("flights", new JSONArray(resultBson.stream().map(Document::toJson).toArray()));
+            result.put("result", new JSONArray(resultBson.stream().map(Document::toJson).toArray()));
 
             // Build and send response with JSON
             return Response.ok().entity(result.toString(INDENT_FACTOR)).build();

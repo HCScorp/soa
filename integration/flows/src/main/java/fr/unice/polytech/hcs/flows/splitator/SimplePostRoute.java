@@ -57,36 +57,36 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .log("Creating specific request from generic request")
-                .log("IN : ${body}")
+                .log("["+routeUri+"] Creating specific request from generic request")
+                .log("["+routeUri+"] IN : ${body}")
                 .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
-                .log("OUT : ${body}")
+                .log("["+routeUri+"] OUT : ${body}")
 
-                .log("Setting up request header")
+                .log("["+routeUri+"] [Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader("Content-Type", constant("application/json"))
                 .setHeader("Accept", constant("application/json"))
 
-                .log("Marshalling body")
-                .log("IN : ${body}")
+                .log("["+routeUri+"] Marshalling body")
+                .log("["+routeUri+"] IN : ${body}")
                 .marshal(dataFormatDefIn)
-                .log("OUT : ${body}")
+                .log("["+routeUri+"] OUT : ${body}")
 
-                .log("Sending to endpoint")
-                .log("IN : ${body}")
+                .log("["+routeUri+"] Sending to endpoint")
+                .log("["+routeUri+"] IN : ${body}")
                 .inOut(endpoint)
-                .log("OUT : ${body}")
-                .log("Received specific request result")
+                .log("["+routeUri+"] OUT : ${body}")
+                .log("["+routeUri+"] Received specific request result")
 
-                .log("Unmarshalling response")
-                .log("IN : ${body}")
+                .log("["+routeUri+"] Unmarshalling response")
+                .log("["+routeUri+"] IN : ${body}")
                 .unmarshal(dataFormatDefOut)
-                .log("OUT : ${body}")
+                .log("["+routeUri+"] OUT : ${body}")
 
-                .log("Converting to generic response : ${body}")
-                .log("IN : ${body}")
+                .log("["+routeUri+"] Converting to generic response : ${body}")
+                .log("["+routeUri+"] IN : ${body}")
                 .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
-                .log("OUT : ${body}")
+                .log("["+routeUri+"] OUT : ${body}")
         ;
     }
 }
