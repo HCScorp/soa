@@ -58,7 +58,9 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
                 .routeDescription(routeDescription)
 
                 .log("Creating specific request from generic request")
+                .log("IN : ${body}")
                 .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
+                .log("OUT : ${body}")
 
                 .log("Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -66,16 +68,25 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
                 .setHeader("Accept", constant("application/json"))
 
                 .log("Marshalling body")
+                .log("IN : ${body}")
                 .marshal(dataFormatDefIn)
+                .log("OUT : ${body}")
 
                 .log("Sending to endpoint")
+                .log("IN : ${body}")
                 .inOut(endpoint)
+                .log("OUT : ${body}")
                 .log("Received specific request result")
 
                 .log("Unmarshalling response")
+                .log("IN : ${body}")
                 .unmarshal(dataFormatDefOut)
-                .log("Converting to generic response")
+                .log("OUT : ${body}")
+
+                .log("Converting to generic response : ${body}")
+                .log("IN : ${body}")
                 .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
+                .log("OUT : ${body}")
         ;
     }
 }

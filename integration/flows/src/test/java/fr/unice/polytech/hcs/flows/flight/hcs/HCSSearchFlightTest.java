@@ -56,7 +56,6 @@ public class HCSSearchFlightTest extends SpecificSearchTest {
         fsr.maxTravelTime = 200;
 
         this.genericRequest = fsr;
-        this.specificRequest = new HCSFlightSearchRequest(fsr);
         this.genericResponse = new ObjectMapper().readValue(fsResJson, FlightSearchResponse.class);
         this.specificResultJson = fsResJson;
     }

@@ -57,6 +57,7 @@ public abstract class SimpleGetRoute<In extends Serializable, Out extends Serial
 
                 .log("Unmarshalling response")
                 .unmarshal(dataFormatDef)
+
                 .log("Converting to generic response")
                 .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
         ;

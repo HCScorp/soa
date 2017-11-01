@@ -1,5 +1,6 @@
 package fr.unice.polytech.hcs.flows;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.splitator.GenericResponse;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Before;
@@ -43,15 +44,11 @@ public abstract class SplittatorRouteTest<T extends Serializable> extends Active
     }
 
     @Before
-    public void initMocks() {
-        resetMocks();
-        mockedEpResults.forEach(
-                (endPoint, result) -> mock(endPoint).whenAnyExchangeReceived(e -> e.getIn().setBody(result)));
-    }
-
-    @Before
     public void init() throws Exception {
         initVariables();
+        resetMocks();
+        mockedEpResults.forEach(
+                (endPoint, result) -> this.mock(endPoint).whenAnyExchangeReceived(e -> e.getIn().setBody(result)));
     }
 
     @Test
@@ -59,10 +56,10 @@ public abstract class SplittatorRouteTest<T extends Serializable> extends Active
         List<String> mocks = mockedEp.stream()
                 .map(endPoint -> {
                     // Asserting endpoints existence
-                    assertNotNull(context.hasEndpoint(endPoint));
-                    final String mock = "mock://" + endPoint;
+                    isAvailableAndMocked(endPoint);
+
                     // Configuring expectations on the mocked endpoint
-                    assertNotNull(context.hasEndpoint(mock));
+                    final String mock = mockStr(endPoint);
                     // Check if we receive a message.
                     getMockEndpoint(mock).expectedMessageCount(1);
                     return mock;
@@ -70,7 +67,7 @@ public abstract class SplittatorRouteTest<T extends Serializable> extends Active
                 .collect(Collectors.toList());
 
         // The generic request is sent to the target
-        T out = template.requestBody(target, genericRequest, expectedResultClass);
+        String out = template.requestBody(target, genericRequest, String.class);
 
         // Do I receive the proper request ? (type, post, ... )
         for (String mock : mocks) {
@@ -78,6 +75,6 @@ public abstract class SplittatorRouteTest<T extends Serializable> extends Active
         }
 
         // Check result
-        assertEquals(expectedResult, out);
+        assertEquals(expectedResult, new ObjectMapper().readValue(out, expectedResultClass));
     }
 }

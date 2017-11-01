@@ -11,7 +11,7 @@ public class HCSCarSearchRequest implements Serializable {
     @JsonProperty private String dateFrom;
     @JsonProperty private String dateTo;
 
-    public HCSCarSearchRequest(CarSearchRequest csr) {
+    HCSCarSearchRequest(CarSearchRequest csr) {
         this.city = csr.city;
         this.dateFrom = csr.dateFrom;
         this.dateTo = csr.dateTo;

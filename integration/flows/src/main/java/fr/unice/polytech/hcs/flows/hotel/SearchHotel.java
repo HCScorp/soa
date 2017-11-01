@@ -19,7 +19,7 @@ import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
 public class SearchHotel extends SplittatorRoute<HotelSearchRequest, HotelSearchResponse, Hotel> {
 
-    protected SearchHotel() {
+    public SearchHotel() {
         super("/hotel",
                 HotelSearchRequest.class,
                 HotelSearchResponse.class,

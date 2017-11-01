@@ -106,7 +106,6 @@ public class G1SearchFlightTest extends SpecificSearchTest {
         fsr.maxTravelTime = 200;
 
         this.genericRequest = fsr;
-        this.specificRequest = new G1FlightSearchRequest(fsr);
 
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<HashMap<String,Object>> typeRef
