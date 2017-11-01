@@ -1,6 +1,5 @@
 package fr.unice.polytech.hcs.flows.hotel.g7;
 
-import fr.unice.polytech.hcs.flows.car.g2.G2SearchCar;
 import fr.unice.polytech.hcs.flows.hotel.Hotel;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchResponse;
@@ -37,7 +36,7 @@ public class G7SearchHotel extends RouteBuilder {
                 .process(e -> e.getIn().setBody(genericReqConverter.convert((HotelSearchRequest) e.getIn().getBody())))
 
                 .log("Converting specific request to XML request")
-                .bean(G2SearchCar.class, "buildXMLRequest(${body})")
+                .bean(G7SearchHotel.class, "buildXMLRequest(${body})")
 
                 .log("Sending to endpoint")
                 .inOut(endpoint)
@@ -51,7 +50,7 @@ public class G7SearchHotel extends RouteBuilder {
         ;
     }
 
-    public String buildXMLRequest(G7HotelSearchRequest g7Hsr) {
+    public static String buildXMLRequest(G7HotelSearchRequest g7Hsr) {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soa=\"http://gr7.polytech.unice.fr/soa/\">\n" +
                 "   <soapenv:Header/>\n" +
                 "   <soapenv:Body>\n" +
