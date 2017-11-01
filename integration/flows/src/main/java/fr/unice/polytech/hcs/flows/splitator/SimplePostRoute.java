@@ -13,26 +13,42 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
 
     private final String routeUri;
     private final String endpoint;
-    private final DataFormatDefinition dataFormatDef;
-    private final Convertor<In, Object> genericReqConvertor;
-    private final Convertor<Map, Out> specificResConvertor;
+    private final DataFormatDefinition dataFormatDefIn;
+    private final DataFormatDefinition dataFormatDefOut;
+    private final Converter<In, Object> genericRecConverter;
+    private final Converter<Map, Out> specificResConverter;
     private final String routeId;
     private final String routeDescription;
 
     public SimplePostRoute(String routeUri,
                            String endpoint,
-                           DataFormatDefinition dataFormatDef,
-                           Convertor<In, Object> genericReqConvertor,
-                           Convertor<Map, Out> specificResConvertor,
+                           DataFormatDefinition dataFormatDefIn,
+                           DataFormatDefinition dataFormatDefOut,
+                           Converter<In, Object> genericRecConverter,
+                           Converter<Map, Out> specificResConverter,
                            String routeId,
                            String routeDescription) {
         this.routeUri = routeUri;
         this.endpoint = endpoint;
-        this.dataFormatDef = dataFormatDef;
-        this.genericReqConvertor = genericReqConvertor;
-        this.specificResConvertor = specificResConvertor;
+        this.dataFormatDefIn = dataFormatDefIn;
+        this.dataFormatDefOut = dataFormatDefOut;
+        this.genericRecConverter = genericRecConverter;
+        this.specificResConverter = specificResConverter;
         this.routeId = routeId;
         this.routeDescription = routeDescription;
+    }
+
+    public SimplePostRoute(String routeUri,
+                           String endpoint,
+                           DataFormatDefinition dataFormatDefIn,
+                           Converter<In, Object> genericRecConverter,
+                           Converter<Map, Out> specificResConverter,
+                           String routeId,
+                           String routeDescription) {
+        this(routeUri, endpoint,
+                dataFormatDefIn, dataFormatDefIn,
+                genericRecConverter, specificResConverter,
+                routeId, routeDescription);
     }
 
     @Override
@@ -41,24 +57,36 @@ public abstract class SimplePostRoute<In extends Serializable, Out extends Seria
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .log("Create specific request from generic request")
-                .process(e -> e.getIn().setBody(genericReqConvertor.convert((In) e.getIn().getBody())))
+                .log("Creating specific request from generic request")
+                .log("IN : ${body}")
+                .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
+                .log("OUT : ${body}")
 
                 .log("Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader("Content-Type", constant("application/json"))
                 .setHeader("Accept", constant("application/json"))
 
-                .log("Marshalling body into JSON")
-                .marshal(dataFormatDef)
+                .log("Marshalling body")
+                .log("IN : ${body}")
+                .marshal(dataFormatDefIn)
+                .log("OUT : ${body}")
 
                 .log("Sending to endpoint")
+                .log("IN : ${body}")
                 .inOut(endpoint)
-                .log("Received specific request result results")
+                .log("OUT : ${body}")
+                .log("Received specific request result")
 
-                .log("Unmarshal JSON response to generic response")
-                .unmarshal(dataFormatDef)
-                .process(e -> e.getIn().setBody(specificResConvertor.convert((Map) e.getIn().getBody())))
+                .log("Unmarshalling response")
+                .log("IN : ${body}")
+                .unmarshal(dataFormatDefOut)
+                .log("OUT : ${body}")
+
+                .log("Converting to generic response : ${body}")
+                .log("IN : ${body}")
+                .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
+                .log("OUT : ${body}")
         ;
     }
 }

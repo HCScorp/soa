@@ -5,6 +5,7 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -70,7 +71,9 @@ public abstract class SplittatorRoute< In extends Serializable,
                 .routeDescription(routeDescription)
 
                 .log("Unmarshal request from JSON to request")
+                .log("IN : ${body}")
                 .unmarshal().json(JsonLibrary.Jackson, inClass)
+                .log("OUT : ${body}")
 
                 .log("Send request to message queue")
                 .to(multicastUri)
@@ -78,15 +81,17 @@ public abstract class SplittatorRoute< In extends Serializable,
 
         from(multicastUri)
                 .log("Multicast request to the services")
-                    .multicast(aggregationStrategy)
-                    .parallelAggregate()
-                    .executorService(workers)
+                .multicast(aggregationStrategy)
                     .parallelProcessing()
+                    .executorService(workers)
+//                    .parallelAggregate()
                     .timeout(timeout)
                     .inOut(targets.toArray(new String[targets.size()]))
-
+                    .end()
                 .log("Marshal response to JSON")
+                .log("IN : ${body}")
                 .marshal().json(JsonLibrary.Jackson, outClass)
+                .log("OUT : ${body}")
         ;
     }
 }

@@ -1,6 +1,9 @@
 package fr.unice.polytech.hcs.flows;
 
 
+import fr.unice.polytech.hcs.flows.car.SearchCar;
+import fr.unice.polytech.hcs.flows.car.g2.G2SearchCar;
+import fr.unice.polytech.hcs.flows.car.hcs.HCSSearchCar;
 import fr.unice.polytech.hcs.flows.flight.SearchFlight;
 import fr.unice.polytech.hcs.flows.flight.g1.G1SearchFlight;
 import fr.unice.polytech.hcs.flows.flight.hcs.HCSSearchFlight;
@@ -23,14 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ActiveMQTest extends CamelTestSupport {
-
-
-    protected static XPath xpath;
-
-    @BeforeClass
-    public static void setUpXPath() throws Exception {
-        xpath = XPathFactory.newInstance().newXPath();
-    }
 
     /**
      * Handling ActiveMQ
@@ -66,6 +61,9 @@ public abstract class ActiveMQTest extends CamelTestSupport {
                 this.includeRoutes(new HCSSearchHotel());
                 this.includeRoutes(new G7SearchHotel());
                 this.includeRoutes(new SearchHotel());
+                this.includeRoutes(new HCSSearchCar());
+                this.includeRoutes(new G2SearchCar());
+                this.includeRoutes(new SearchCar());
                 // TODO
             }
         };
@@ -82,14 +80,19 @@ public abstract class ActiveMQTest extends CamelTestSupport {
         // Automatically loads all the constants defined in the Endpoints class
         Field[] fields = Endpoints.class.getDeclaredFields();
         for (Field f : fields) {
-            if (Modifier.isStatic(f.getModifiers()) && f.getType().equals(String.class))
+            if (Modifier.isStatic(f.getModifiers()) && f.getType().equals(String.class)) {
                 mocks.put("" + f.get(""), "mock://" + f.get(""));
+            }
         }
     }
 
     protected void isAvailableAndMocked(String name) {
         assertNotNull(context.hasEndpoint(name));
         assertNotNull(context.hasEndpoint(mocks.get(name)));
+    }
+
+    protected String mockStr(String name) {
+        return mocks.get(name);
     }
 
     protected MockEndpoint mock(String name) {

@@ -1,4 +1,4 @@
-FROM petitroll/esb
+FROM hcsoa/esb
 
 # Build: docker build -t petitroll/tcs-bus .
 # Run:   docker run -v ./_in:/servicemix/camel/input -v ./_out:/servicemix/camel/output petitroll/tcs-bus

@@ -12,16 +12,18 @@ public class Car {
     private String city;
     private String model;
     private String numberPlate;
+    private int price;
     private List<LocalDate> bookedDays;
 
     public Car() {
         // empty
     }
 
-    public Car(String company, String city, String model, String numberPlate, List<LocalDate> bookedDays) {
+    public Car(String company, String city, String model, String numberPlate, int price, List<LocalDate> bookedDays) {
         this.company = company;
         this.city = city;
         this.model = model;
+        this.price = price;
         this.numberPlate = numberPlate;
         this.bookedDays = bookedDays;
     }
@@ -31,6 +33,7 @@ public class Car {
         this.city = bson.getString("city");
         this.model = bson.getString("model");
         this.numberPlate = bson.getString("numberPlate");
+        this.price = bson.getInteger("price");
         this.bookedDays = ((List<Document>) bson.get("bookedDays")).stream()
                 .map(d -> d.getString("date"))
                 .map(LocalDate::parse)
@@ -43,6 +46,7 @@ public class Car {
                 .append("city", city)
                 .append("model", model)
                 .append("numberPlate", numberPlate)
+                .append("price", price)
                 .append("bookedDays", bookedDays.stream()
                         .map(LocalDate::toString)
                         .map(d -> new Document("date", d))
@@ -66,12 +70,16 @@ public class Car {
         return model;
     }
 
-    public List<LocalDate> getBookedDays() {
-        return bookedDays;
-    }
-
     public String getNumberPlate() {
         return numberPlate;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public List<LocalDate> getBookedDays() {
+        return bookedDays;
     }
 
     @Override
@@ -81,6 +89,7 @@ public class Car {
 
         Car car = (Car) o;
 
+        if (price != car.price) return false;
         if (company != null ? !company.equals(car.company) : car.company != null) return false;
         if (city != null ? !city.equals(car.city) : car.city != null) return false;
         if (model != null ? !model.equals(car.model) : car.model != null) return false;
@@ -93,6 +102,7 @@ public class Car {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (numberPlate != null ? numberPlate.hashCode() : 0);
+        result = 31 * result + price;
         return result;
     }
 }
