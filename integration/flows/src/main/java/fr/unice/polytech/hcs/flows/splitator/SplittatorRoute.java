@@ -62,6 +62,7 @@ public abstract class SplittatorRoute< In extends Serializable,
         restConfiguration()
                 .component("servlet")
                 .bindingMode(RestBindingMode.json)
+                .dataFormatProperty("json.in.enableFeatures", "ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT")
         ;
 
         rest(restEndpoint)
