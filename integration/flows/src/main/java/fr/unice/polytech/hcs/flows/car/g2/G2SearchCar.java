@@ -4,7 +4,7 @@ package fr.unice.polytech.hcs.flows.car.g2;
 import fr.unice.polytech.hcs.flows.car.Car;
 import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 import fr.unice.polytech.hcs.flows.car.CarSearchResponse;
-import fr.unice.polytech.hcs.flows.splitator.SimpleGetRoute;
+import fr.unice.polytech.hcs.flows.splitator.SimpleJsonGetRoute;
 import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
@@ -14,14 +14,13 @@ import java.util.Map;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G2_SEARCH_CAR_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G2_SEARCH_CAR_MQ;
 
-public class G2SearchCar extends SimpleGetRoute<CarSearchRequest, CarSearchResponse> {
+public class G2SearchCar extends SimpleJsonGetRoute<CarSearchRequest, CarSearchResponse> {
 
     // TODO dynamic get url
 
     public G2SearchCar() {
         super(G2_SEARCH_CAR_MQ,
                 G2_SEARCH_CAR_EP,
-                new JsonDataFormat(JsonLibrary.Jackson),
                 G2CarSearchRequest::new,
                 G2SearchCar::mapToCsRes,
                 "g2-search-car-ws",

@@ -4,7 +4,7 @@ package fr.unice.polytech.hcs.flows.flight.g1;
 import fr.unice.polytech.hcs.flows.flight.Flight;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
-import fr.unice.polytech.hcs.flows.splitator.SimplePostRoute;
+import fr.unice.polytech.hcs.flows.splitator.SimpleJsonPostRoute;
 import fr.unice.polytech.hcs.flows.utils.Cast;
 import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -18,12 +18,11 @@ import java.util.Map;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G1_SEARCH_FLIGHT_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G1_SEARCH_FLIGHT_MQ;
 
-public class G1SearchFlight extends SimplePostRoute<FlightSearchRequest, FlightSearchResponse> {
+public class G1SearchFlight extends SimpleJsonPostRoute<FlightSearchRequest, FlightSearchResponse> {
 
     public G1SearchFlight() {
         super(G1_SEARCH_FLIGHT_MQ,
                 G1_SEARCH_FLIGHT_EP,
-                new JsonDataFormat(JsonLibrary.Jackson),
                 G1FlightSearchRequest::new,
                 G1SearchFlight::mapToFsRes,
                 "g1-search-flight-ws",

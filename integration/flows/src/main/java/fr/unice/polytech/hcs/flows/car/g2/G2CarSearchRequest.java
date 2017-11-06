@@ -1,24 +1,25 @@
 package fr.unice.polytech.hcs.flows.car.g2;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class G2CarSearchRequest implements Serializable {
 
-    @JsonProperty public String address;
-    @JsonProperty public String checkin;
-    @JsonProperty public String checkout;
-    @JsonProperty public String city;
-    @JsonProperty public int resultNumber;
+    public String destination;
+    public long date;
+    public long duration; // in days
 
     G2CarSearchRequest(CarSearchRequest csr) {
-        this.address = "";
-        this.checkin = "";
-        this.checkout = "";
-        this.city = csr.city;
-        this.resultNumber = 10;
+        this.destination = csr.city;
+        LocalDate dateFrom = LocalDate.parse(csr.dateFrom);
+        LocalDate dateTo = LocalDate.parse(csr.dateTo);
+        this.date = dateFrom.atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        this.duration = DAYS.between(dateFrom, dateTo);
     }
 
     @Override
@@ -28,20 +29,16 @@ public class G2CarSearchRequest implements Serializable {
 
         G2CarSearchRequest that = (G2CarSearchRequest) o;
 
-        if (resultNumber != that.resultNumber) return false;
-        if (address != null ? !address.equals(that.address) : that.address != null) return false;
-        if (checkin != null ? !checkin.equals(that.checkin) : that.checkin != null) return false;
-        if (checkout != null ? !checkout.equals(that.checkout) : that.checkout != null) return false;
-        return city != null ? city.equals(that.city) : that.city == null;
+        if (date != that.date) return false;
+        if (duration != that.duration) return false;
+        return destination != null ? destination.equals(that.destination) : that.destination == null;
     }
 
     @Override
     public int hashCode() {
-        int result = address != null ? address.hashCode() : 0;
-        result = 31 * result + (checkin != null ? checkin.hashCode() : 0);
-        result = 31 * result + (checkout != null ? checkout.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + resultNumber;
+        int result = destination != null ? destination.hashCode() : 0;
+        result = 31 * result + (int) (date ^ (date >>> 32));
+        result = 31 * result + (int) (duration ^ (duration >>> 32));
         return result;
     }
 }

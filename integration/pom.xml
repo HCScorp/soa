@@ -24,7 +24,6 @@
         <bundle.namespace>fr.unice.polytech.hcs.flows</bundle.namespace>
     </properties>
 
-
     <modules>
         <module>flows</module>
     </modules>

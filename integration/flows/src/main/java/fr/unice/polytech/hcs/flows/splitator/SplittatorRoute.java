@@ -75,6 +75,10 @@ public abstract class SplittatorRoute< In extends Serializable,
         from(unmarshalUri)
                 .routeId(routeId)
                 .routeDescription(routeDescription)
+
+                .log("["+unmarshalUri+"] Remove shitty headers (thx camel)")
+                .removeHeaders("CamelHttp*")
+
                 .log("["+unmarshalUri+"] Received generic request: ${body}")
                 .log("["+unmarshalUri+"] Sending generic request to message handler queue")
                 .to(multicastUri)
