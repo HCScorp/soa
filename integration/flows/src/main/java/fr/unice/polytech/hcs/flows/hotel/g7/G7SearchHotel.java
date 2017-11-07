@@ -4,15 +4,12 @@ import fr.unice.polytech.hcs.flows.hotel.Hotel;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchResponse;
 import fr.unice.polytech.hcs.flows.splitator.Converter;
-import fr.unice.polytech.hcs.flows.utils.Cast;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.DataFormatDefinition;
-import org.apache.camel.model.dataformat.JacksonXMLDataFormat;
-import org.apache.camel.model.dataformat.JsonDataFormat;
-import org.apache.camel.model.dataformat.JsonLibrary;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G7_SEARCH_HOTEL_EP;
@@ -33,25 +30,25 @@ public class G7SearchHotel extends RouteBuilder {
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .log("Creating specific request from generic request")
+                .log("["+routeUri+"] Creating specific request from generic request")
                 .process(e -> e.getIn().setBody(genericReqConverter.convert((HotelSearchRequest) e.getIn().getBody())))
 
-                .log("Converting specific request to XML request")
+                .log("["+routeUri+"] Converting specific request to XML request")
                 .bean(G7SearchHotel.class, "buildXMLRequest(${body})")
 
                 .log("["+routeUri+"] Setting up request header")
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/xml"))
                 .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/xml"))
 
-                .log("Sending to endpoint")
+                .log("["+routeUri+"] Sending to endpoint")
                 .inOut(endpoint)
-                .log("Receiving specific request result")
+                .log("["+routeUri+"] Received specific request result")
 
-                .log("Unmarshalling JSON response")
+                .log("["+routeUri+"] Unmarshalling response")
                 .unmarshal().jacksonxml()
 
-                .log("Converting specific response to generic response")
-                .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
+                .log("["+routeUri+"] Converting to generic response")
+                .process(e -> e.getIn().setBody(specificResConverter.convert((Map<String, Map<String, Map>>) e.getIn().getBody())))
         ;
     }
 
@@ -74,30 +71,22 @@ public class G7SearchHotel extends RouteBuilder {
     }
 
 
-    public static HotelSearchResponse mapToHsRes(Object o) {
-        if(o == null) {
+    public static HotelSearchResponse mapToHsRes(Map<String, Map<String, Map>> xml) {
+        if(xml == null) {
             return null;
         }
 
-        System.out.println("lalalalalala: " + o);
-//        Collection<Map<String, Object>> hotels = (Collection<Map<String, Object>>) o.get("hotel_list"); // TODO
-//        System.out.println("lololo: " + hotels);
-        // TODO
-        // TODO
-        // TODO
-        // TODO
+        Map<String, Object> hotelMap = (Map<String, Object>) xml.get("Body").get("searchHotelResponse").get("hotel_list");
 
         HotelSearchResponse hsr = new HotelSearchResponse();
-//        hsr.result = new Hotel[hotels.size()];
-//        int i = 0;
-//        for (Map<String, Object> m : hotels) {
-//            Hotel h = new Hotel();
-//            h.name = (String) m.get("name");
-//            h.address = (String) m.get("address");
-//            h.city = (String) m.get("city");
-//            h.nightPrice = Cast.toDouble(m.get("price"));
-//            hsr.result[i++] = h;
-//        }
+        hsr.result = new ArrayList<>();
+        Hotel hotel = new Hotel();
+        hotel.name = (String) hotelMap.get("name");
+        hotel.nightPrice = Double.parseDouble((String) hotelMap.get("price"));
+        hotel.city = (String) hotelMap.get("city");
+        hotel.address = (String) hotelMap.get("address");
+        hotel.zipCode = ((String) hotelMap.get("address")).substring(0, 4);
+        hsr.result.add(hotel);
 
         return hsr;
     }

@@ -22,7 +22,6 @@ public class SearchHotel extends SplittatorRoute<HotelSearchRequest, HotelSearch
     public SearchHotel() {
         super("/hotel",
                 HotelSearchRequest.class,
-                HotelSearchResponse.class,
                 Hotel.class,
                 new CheapestAggregator<>(HotelSearchResponse.class, Hotel.class),
                 SEARCH_HOTEL_INPUT,

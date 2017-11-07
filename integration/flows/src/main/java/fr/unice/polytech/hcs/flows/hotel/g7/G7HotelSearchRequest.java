@@ -23,7 +23,7 @@ public class G7HotelSearchRequest implements Serializable {
         this.checkout = LocalDate.parse(hsr.dateTo).format(formatter);
         this.sortOrder = hsr.order;
         this.address = "";
-        this.resultNumber = 10;
+        this.resultNumber = 1;
     }
 
     @Override

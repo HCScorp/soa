@@ -1,5 +1,7 @@
 package fr.unice.polytech.hcs.flows.splitator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.converter.stream.InputStreamCache;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -20,7 +22,6 @@ public abstract class SplittatorRoute< In extends Serializable,
     private final String name;
     private final String restEndpoint;
     private final Class<In> inClass;
-    private final Class<Mid> midClass;
     private final Class<Out> outClass;
     private final String unmarshalUri;
     private final String multicastUri;
@@ -32,7 +33,7 @@ public abstract class SplittatorRoute< In extends Serializable,
     private final String routeDescription;
 
     protected SplittatorRoute(String restEndpoint,
-                            Class<In> inClass, Class<Mid> midClass, Class<Out> outClass,
+                            Class<In> inClass, Class<Out> outClass,
                             AggregationStrategy aggregationStrategy,
                             String unmarshalUri, String multicastUri,
                             Collection<String> targets,
@@ -41,7 +42,6 @@ public abstract class SplittatorRoute< In extends Serializable,
         this.name = inClass.getSimpleName() + "__" + outClass.getSimpleName();
         this.restEndpoint = restEndpoint;
         this.inClass = inClass;
-        this.midClass = midClass;
         this.outClass = outClass;
         this.unmarshalUri = unmarshalUri;
         this.multicastUri = multicastUri;
@@ -62,7 +62,6 @@ public abstract class SplittatorRoute< In extends Serializable,
         restConfiguration()
                 .component("servlet")
                 .bindingMode(RestBindingMode.json)
-                .dataFormatProperty("json.in.enableFeatures", "ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT")
         ;
 
         rest(restEndpoint)
@@ -89,12 +88,17 @@ public abstract class SplittatorRoute< In extends Serializable,
                 .multicast(aggregationStrategy)
                     .parallelProcessing()
                     .executorService(workers)
-//                    .parallelAggregate()
                     .timeout(timeout)
                     .inOut(targets.toArray(new String[targets.size()]))
                     .end()
                 .log("["+multicastUri+"] End of multicast")
                 .log("["+multicastUri+"] Sending generic response")
+                .process(e -> {
+                    if (e.getIn().getBody() == null) {
+                        e.getIn().setBody("{}");
+                    }
+                })
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
         ;
     }
 }

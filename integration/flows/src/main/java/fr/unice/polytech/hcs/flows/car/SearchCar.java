@@ -12,7 +12,6 @@ public class SearchCar extends SplittatorRoute<CarSearchRequest, CarSearchRespon
     public SearchCar() {
         super("/car",
                 CarSearchRequest.class,
-                CarSearchResponse.class,
                 Car.class,
                 new CheapestAggregator<>(CarSearchResponse.class, Car.class),
                 SEARCH_CAR_INPUT,

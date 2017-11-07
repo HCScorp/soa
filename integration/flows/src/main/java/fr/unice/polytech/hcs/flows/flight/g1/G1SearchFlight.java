@@ -11,6 +11,7 @@ import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class G1SearchFlight extends SimpleJsonPostRoute<FlightSearchRequest, Fli
         Collection<Map<String, Object>> flights = (Collection<Map<String, Object>>) map.get("flights");
 
         FlightSearchResponse fsr = new FlightSearchResponse();
-        fsr.result = new Flight[flights.size()];
+        fsr.result = new ArrayList<>();
         int i = 0;
         for (Map<String, Object> m : flights) {
             Flight f = new Flight();
@@ -47,7 +48,7 @@ public class G1SearchFlight extends SimpleJsonPostRoute<FlightSearchRequest, Fli
             f.duration = (Integer) m.get("duration");
             f.category = (String) m.get("seatClass");
             f.airline = (String) m.get("airline");
-            fsr.result[i++] = f;
+            fsr.result.add(f);
         }
 
         return fsr;

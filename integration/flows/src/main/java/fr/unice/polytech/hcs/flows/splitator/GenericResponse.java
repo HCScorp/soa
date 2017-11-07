@@ -5,29 +5,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class GenericResponse<T> implements Serializable, Iterable<T> {
 
-    @JsonProperty public T[] result;
+    @JsonProperty public List<T> result;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GenericResponse<T> that = (GenericResponse<T>) o;
+        GenericResponse<?> that = (GenericResponse<?>) o;
 
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        return Arrays.equals(result, that.result);
+        return result == null
+                ? that.result == null
+                : (result.containsAll(that.result) && that.result.containsAll(result));
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(result);
+        return result != null ? result.hashCode() : 0;
     }
 
     @Override
     public Iterator<T> iterator() {
-        return Arrays.asList(result).iterator();
+        return result.iterator();
     }
 }

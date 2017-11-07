@@ -12,7 +12,6 @@ public class SearchFlight extends SplittatorRoute<FlightSearchRequest, FlightSea
     public SearchFlight() {
         super("/flight",
                 FlightSearchRequest.class,
-                FlightSearchResponse.class,
                 Flight.class,
                 new CheapestAggregator<>(FlightSearchResponse.class, Flight.class),
                 SEARCH_FLIGHT_INPUT,

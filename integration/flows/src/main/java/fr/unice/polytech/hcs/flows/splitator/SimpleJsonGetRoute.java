@@ -4,6 +4,7 @@ package fr.unice.polytech.hcs.flows.splitator;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.DataFormatDefinition;
+import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.io.Serializable;
@@ -40,34 +41,25 @@ public abstract class SimpleJsonGetRoute<In extends Serializable, Out extends Se
                 .routeDescription(routeDescription)
 
                 .log("["+routeUri+"] Creating specific request from generic request")
-                .log("["+routeUri+"] IN: ${body}")
                 .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
-                .log("["+routeUri+"] OUT: ${body}")
 
                 .log("["+routeUri+"] Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
 
                 .log("["+routeUri+"] Preparing url to request")
-                .log("["+routeUri+"] IN: ${body}") // todo url instead of body
                 .marshal().json(JsonLibrary.Jackson)
-                .log("["+routeUri+"] OUT: ${body}") // todo url instead of body
 
                 .log("["+routeUri+"] Sending to endpoint")
-                .log("["+routeUri+"] IN: ${body}")
                 .inOut(endpoint)
-                .log("["+routeUri+"] OUT: ${body}")
                 .log("["+routeUri+"] Received specific request result")
 
                 .log("["+routeUri+"] Unmarshalling response")
-                .log("["+routeUri+"] IN: ${body}")
                 .unmarshal().json(JsonLibrary.Jackson)
-                .log("["+routeUri+"] OUT: ${body}")
 
-                .log("["+routeUri+"] Converting to generic response : ${body}")
-                .log("["+routeUri+"] IN: ${body}")
+                .log("["+routeUri+"] Converting to generic response")
                 .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
-                .log("["+routeUri+"] OUT: ${body}")
+//                .log("["+routeUri+"] OUT: ${body}")
 //        from(routeUri)
 //                .routeId(routeId)
 //                .routeDescription(routeDescription)

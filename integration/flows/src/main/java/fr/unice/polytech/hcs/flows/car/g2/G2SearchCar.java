@@ -8,6 +8,7 @@ import fr.unice.polytech.hcs.flows.splitator.SimpleJsonGetRoute;
 import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class G2SearchCar extends SimpleJsonGetRoute<CarSearchRequest, CarSearchR
         Collection<Map<String, Object>> cars = (Collection<Map<String, Object>>) map.get("cars");
 
         CarSearchResponse csr = new CarSearchResponse();
-        csr.result = new Car[cars.size()];
+        csr.result = new ArrayList<>();
         int i = 0;
         for (Map<String, Object> m : cars) {
             Car c = new Car();
@@ -45,7 +46,7 @@ public class G2SearchCar extends SimpleJsonGetRoute<CarSearchRequest, CarSearchR
 //            f.duration = (Integer) m.get("duration");
 //            f.category = (String) m.get("seatClass");
 //            f.airline = (String) m.get("airline");
-            csr.result[i++] = c;
+            csr.result.add(c);
         }
 
         return csr;

@@ -1,6 +1,5 @@
 package fr.unice.polytech.hcs.flows.splitator;
 
-import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
