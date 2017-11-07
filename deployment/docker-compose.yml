@@ -89,6 +89,7 @@ services:
     image: mongo:3.4.9
     volumes:
       - "./mongo_data:/data/db"
+      - "./import:/import"
 
   cadvisor:
     image: petitroll/cadvisor

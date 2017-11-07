@@ -1,0 +1,16 @@
+[
+  {
+    "company": "Tesla location",
+    "city": "Nice",
+    "model": "S P100D",
+    "price": 35,
+    "numberPlate": "888-999"
+  },
+  {
+    "company": "Mercedes location",
+    "city": "Nice",
+    "model": "Class A",
+    "price": 40,
+    "numberPlate": "555-444"
+  }
+]
