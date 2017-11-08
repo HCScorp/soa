@@ -1,6 +1,5 @@
 env:
-  - DOCKER_COMPOSE_VERSION=1.16.1
-  - PUSH=true
+  - DOCKER_COMPOSE_VERSION=1.16.1 PUSH=true
 
 services:
   - docker
