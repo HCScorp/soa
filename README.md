@@ -1,4 +1,4 @@
-# SOA : The Virtual Travel Agency
+# SOA : The Virtual Travel Agency [![Build Status](https://travis-ci.org/HCScorp/soa.svg?branch=develop)](https://travis-ci.org/HCScorp/soa)
 
   * Authors: 
 	+ César Collé [(email)](cesar.colle@etu.unice.fr)

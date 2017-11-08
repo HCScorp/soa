@@ -19,6 +19,11 @@ services:
       - hotel:hcs-hotel
       - hotel-ext:g7-hotel
 
+    environment:
+      - FTP_PASS=cesarius
+      - FTP_USER=collus
+      - FTP_ADRESS=ftp
+
   approver:
     image: hcsoa/approver
     build: ../services/approver
@@ -91,9 +96,6 @@ services:
     environment:
       - FTP_PASS=cesarius
       - FTP_USER=collus
-
-
-
 
   database:
     image: mongo:3.4.9
