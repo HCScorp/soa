@@ -2,7 +2,9 @@ package fr.unice.polytech.hcs.flows.expense;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Document {
+import java.io.Serializable;
+
+public class Document implements Serializable{
     @JsonProperty public String category;
     @JsonProperty public String evidence;
     @JsonProperty public Integer price;
@@ -25,5 +27,14 @@ public class Document {
         result = 31 * result + (evidence != null ? evidence.hashCode() : 0);
         result = 31 * result + price;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "category='" + category + '\'' +
+                ", evidence='" + evidence + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

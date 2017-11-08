@@ -1,7 +1,9 @@
 package fr.unice.polytech.hcs.flows.expense;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
+
+import java.io.InputStream;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.EXPENSE_EMAIL;
 
@@ -14,10 +16,10 @@ public class ExpenseRegistration extends RouteBuilder {
         String enclosure = "[ " + routeId + " ]";
         from(EXPENSE_EMAIL)
                 .routeId(routeId)
-                .log(enclosure + " unmarshaling email")
-                .log("${body}")
-                .unmarshal().json(JsonLibrary.Jackson, Expense.class)
-                .log("${body}")
-                .end();
+                .process(exchange -> {
+                    InputStream is = exchange.getIn().getBody(InputStream.class);
+                    exchange.getIn().setBody(new ObjectMapper().readValue(is , Expense.class));
+                })
+                .log("${body}");
     }
 }

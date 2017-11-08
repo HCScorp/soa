@@ -2,9 +2,10 @@ package fr.unice.polytech.hcs.flows.expense;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Expense {
+public class Expense implements Serializable {
     @JsonProperty public Integer travelId;
     @JsonProperty public List<Document> documents;
 
@@ -24,5 +25,13 @@ public class Expense {
         int result = travelId;
         result = 31 * result + (documents != null ? documents.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "travelId=" + travelId +
+                ", documents=" + documents +
+                '}';
     }
 }
