@@ -2,9 +2,11 @@ package fr.unice.polytech.hcs.flows.hotel.g7;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import fr.unice.polytech.hcs.flows.SpecificSearchTest;
+import fr.unice.polytech.hcs.flows.hotel.Hotel;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
+import fr.unice.polytech.hcs.flows.hotel.HotelSearchResponse;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G7_SEARCH_HOTEL_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G7_SEARCH_HOTEL_MQ;
@@ -23,18 +25,9 @@ public class G7SearchHotelTest extends SpecificSearchTest {
             "                <availableRooms>60</availableRooms>\n" +
             "                <city>Berlin</city>\n" +
             "                <country>Germany</country>\n" +
-            "                <name>Cephalotaxus Siebold &amp; Zucc. ex Endl.</name>\n" +
+            "                <name>Cephalotaxus Siebold Zucc. ex Endl.</name>\n" +
             "                <partner>false</partner>\n" +
             "                <price>91.71</price>\n" +
-            "            </hotel_list>\n" +
-            "            <hotel_list>\n" +
-            "                <address>552 Grayhawk Lane</address>\n" +
-            "                <availableRooms>4</availableRooms>\n" +
-            "                <city>Berlin</city>\n" +
-            "                <country>Germany</country>\n" +
-            "                <name>Viguiera reticulata S. Watson</name>\n" +
-            "                <partner>false</partner>\n" +
-            "                <price>93.84</price>\n" +
             "            </hotel_list>\n" +
             "        </ns2:searchHotelResponse>\n" +
             "    </soap:Body>\n" +
@@ -49,7 +42,19 @@ public class G7SearchHotelTest extends SpecificSearchTest {
         hsr.order = "ASCENDING";
 
         this.genericRequest = hsr;
-        this.genericResponse = G7SearchHotel.mapToHsRes(new XmlMapper().readValue(hsResXml, Map.class));
+        HotelSearchResponse resp = new HotelSearchResponse();
+        resp.result = new ArrayList<>();
+
+        Hotel h1 = new Hotel();
+        h1.name = "Cephalotaxus Siebold Zucc. ex Endl.";
+        h1.address = "65573 Bowman Center";
+        h1.zipCode = "65573";
+        h1.city = "Berlin";
+        h1.nightPrice = 91.71;
+
+        resp.result.add(h1);
+
+        this.genericResponse = resp;
         this.specificResultJson = hsResXml;
     }
 }

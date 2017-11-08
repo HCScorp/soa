@@ -53,4 +53,19 @@ public class Flight implements SerializableComparable<Flight> {
     public int compareTo(Flight o) {
         return price.compareTo(o.price);
     }
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "origin='" + origin + '\'' +
+                ", destination='" + destination + '\'' +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                ", price=" + price +
+                ", journeyType='" + journeyType + '\'' +
+                ", duration=" + duration +
+                ", category='" + category + '\'' +
+                ", airline='" + airline + '\'' +
+                '}';
+    }
 }

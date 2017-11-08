@@ -41,4 +41,15 @@ public class Car implements SerializableComparable<Car> {
     public int compareTo(Car o) {
         return price.compareTo(o.price);
     }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "company='" + company + '\'' +
+                ", city='" + city + '\'' +
+                ", model='" + model + '\'' +
+                ", numberPlate='" + numberPlate + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

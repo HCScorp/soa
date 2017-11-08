@@ -17,13 +17,13 @@
     </parent>
 
     <dependencies>
+        <!-- Dependencies required by Camel -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-ftp</artifactId>
-            <version>2.20.0</version>
+            <version>${camel.version}</version>
+            <scope>provided</scope>
         </dependency>
-
-        <!-- Dependencies required by Camel -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
@@ -38,12 +38,6 @@
         </dependency>
 
         <!-- Test -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.9.0</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- Camel Testing with JMS and HTTP support -->
         <dependency>

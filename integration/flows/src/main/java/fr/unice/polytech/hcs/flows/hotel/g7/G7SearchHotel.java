@@ -85,7 +85,7 @@ public class G7SearchHotel extends RouteBuilder {
         hotel.nightPrice = Double.parseDouble((String) hotelMap.get("price"));
         hotel.city = (String) hotelMap.get("city");
         hotel.address = (String) hotelMap.get("address");
-        hotel.zipCode = ((String) hotelMap.get("address")).substring(0, 4);
+        hotel.zipCode = ((String) hotelMap.get("address")).substring(0, 5);
         hsr.result.add(hotel);
 
         return hsr;

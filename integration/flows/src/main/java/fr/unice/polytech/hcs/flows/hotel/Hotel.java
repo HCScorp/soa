@@ -43,4 +43,15 @@ public class Hotel implements SerializableComparable<Hotel> {
     public int compareTo(Hotel o) {
         return nightPrice.compareTo(o.nightPrice);
     }
+
+    @Override
+    public String toString() {
+        return "Hotel{" +
+                "name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", address='" + address + '\'' +
+                ", nightPrice=" + nightPrice +
+                '}';
+    }
 }
