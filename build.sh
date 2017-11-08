@@ -13,18 +13,35 @@ build() { # $1: directory, $2: image_name
   cd ../..
 }
 
-# Compile services
-echo "Build services..."
-mvn clean package
+build_docker_images() {
+  echo "Build docker images..."
+  # Build docker images
+  if [[ "$COMPOSE" = "true" ]]; then
+      docker-compose -f deployment/docker-compose.yml build
+  else
+      build bus       hcsoa/bus
+      build approver  hcsoa/approver
+      build car       hcsoa/car
+      build flight    hcsoa/flight
+      build hotel     hcsoa/hotel
+      build mail      hcsoa/mail
+  fi
+}
 
-echo "Build docker images..."
-# Build docker images
-if [[ "$COMPOSE" = "true" ]]; then
-    docker-compose -f deployment/docker-compose.yml build
-else
-    build approver  hcsoa/approver
-    build car       hcsoa/car
-    build flight    hcsoa/flight
-    build hotel     hcsoa/hotel
-    build mail      hcsoa/mail
+# Build & run docker build if no error during compilation
+echo "Build..."
+mvn clean package && build_docker_images
+
+# Push images
+if [[ "$PUSH" == "true" && $? == 0 ]]; then
+  if [[ "$COMPOSE" = "true" ]]; then
+      docker-compose -f deployment/docker-compose.yml push
+  else
+      docker push hcsoa/bus
+      docker push hcsoa/approver
+      docker push hcsoa/car
+      docker push hcsoa/flight
+      docker push hcsoa/hotel
+      docker push hcsoa/mail
+  fi
 fi
