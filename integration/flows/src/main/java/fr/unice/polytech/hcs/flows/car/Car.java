@@ -11,7 +11,7 @@ public class Car implements SerializableComparable<Car> {
     @JsonProperty public String city;
     @JsonProperty public String model;
     @JsonProperty public String numberPlate;
-    @JsonProperty public Integer price;
+    @JsonProperty public Double price;
 
     @Override
     public boolean equals(Object o) {

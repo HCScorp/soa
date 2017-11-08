@@ -4,10 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.SpecificSearchTest;
 import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 import fr.unice.polytech.hcs.flows.car.CarSearchResponse;
-import fr.unice.polytech.hcs.flows.utils.Endpoints;
-import org.apache.camel.builder.RouteBuilder;
-import org.junit.Before;
-import org.junit.Test;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
@@ -24,14 +20,14 @@ public class HCSSearchCarTest extends SpecificSearchTest {
             "      \"company\": \"Tesla location\"," +
             "      \"city\": \"Nice\"," +
             "      \"model\": \"S P100D\"," +
-            "      \"price\": 35," +
+            "      \"price\": 35.0," +
             "      \"numberPlate\": \"888-999\"" +
             "    }," +
             "    {" +
             "      \"company\": \"Mercedes location\"," +
             "      \"city\": \"Nice\"," +
             "      \"model\": \"Class A\"," +
-            "      \"price\": 40," +
+            "      \"price\": 40.0," +
             "      \"numberPlate\": \"555-444\"" +
             "    }" +
             "  ]" +

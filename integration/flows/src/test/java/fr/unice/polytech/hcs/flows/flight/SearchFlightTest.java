@@ -29,7 +29,7 @@ public class SearchFlightTest extends SplittatorRouteTest<Flight> {
             "      \"destination\": \"Paris\",\n" +
             "      \"date\": \"2017-08-14\",\n" +
             "      \"time\": \"12:30:00\",\n" +
-            "      \"price\": \"89\",\n" +
+            "      \"price\": 89.0,\n" +
             "      \"journeyType\": \"DIRECT\",\n" +
             "      \"duration\": 92,\n" +
             "      \"category\": \"ECO\",\n" +
@@ -40,7 +40,7 @@ public class SearchFlightTest extends SplittatorRouteTest<Flight> {
             "      \"destination\": \"Paris\",\n" +
             "      \"date\": \"2017-08-14\",\n" +
             "      \"time\": \"08:45:00\",\n" +
-            "      \"price\": \"63\",\n" +
+            "      \"price\": 63.0,\n" +
             "      \"journeyType\": \"DIRECT\",\n" +
             "      \"duration\": 105,\n" +
             "      \"category\": \"ECO\",\n" +
@@ -156,7 +156,7 @@ public class SearchFlightTest extends SplittatorRouteTest<Flight> {
         expected.destination = "Paris";
         expected.date = "2017-08-14";
         expected.time = "08:45:00";
-        expected.price = 63.00;
+        expected.price = 63.0;
         expected.journeyType = "DIRECT";
         expected.duration = 105;
         expected.category = "ECO";
