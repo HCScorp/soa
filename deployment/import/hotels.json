@@ -4,13 +4,15 @@
     "city": "Nice",
     "zipCode": "06046",
     "address": "1, promenade des Anglais",
-    "nightPrice": 200
+    "nightPrice": 200.0,
+    "fullBookedDays": []
   },
   {
     "name": "Négresco",
     "city": "Nice",
     "zipCode": "06000",
     "address": "37, promenade des Anglais",
-    "nightPrice": 300
+    "nightPrice": 300.0,
+    "fullBookedDays": []
   }
 ]

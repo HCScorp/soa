@@ -3,14 +3,14 @@
     "company": "Tesla location",
     "city": "Nice",
     "model": "S P100D",
-    "price": 35,
+    "price": 35.0,
     "numberPlate": "888-999"
   },
   {
     "company": "Mercedes location",
     "city": "Nice",
     "model": "Class A",
-    "price": 40,
+    "price": 40.0,
     "numberPlate": "555-444"
   }
 ]

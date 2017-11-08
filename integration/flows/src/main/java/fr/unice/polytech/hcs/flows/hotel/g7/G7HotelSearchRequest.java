@@ -1,5 +1,6 @@
 package fr.unice.polytech.hcs.flows.hotel.g7;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
 
@@ -7,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class G7HotelSearchRequest implements Serializable {
 
     @JsonProperty public String address;

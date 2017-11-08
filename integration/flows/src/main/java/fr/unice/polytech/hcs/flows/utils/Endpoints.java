@@ -32,25 +32,15 @@ public class Endpoints {
     public static final String SEARCH_CAR_INPUT = "direct:search-car";
 
     // External partners (HCS)
-    public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
-    public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
-    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
+    public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight";
+    public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel";
+    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car";
 
     // External partners (other groups)
-    public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
-    public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/soa-service-hotels/HotelSearchImplService"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
-    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/voiture"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
+    public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/tcs-service-flights/flights";
+    public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/soa-service-hotels/HotelSearchImplService";
+    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/voiture";
 
-
-//    public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight?bridgeEndpoint=true&throwExceptionOnFailure=false";
-//    public static final String HCS_SEARCH_HOTEL_EP = "http:hcs-hotel:8080/hotel-service-document/hotel?bridgeEndpoint=true&throwExceptionOnFailure=false";
-//    public static final String HCS_SEARCH_CAR_EP = "http:hcs-car:8080/car-service-document/car?bridgeEndpoint=true&throwExceptionOnFailure=false";
-//
-//    public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight?bridgeEndpoint=true&throwExceptionOnFailure=false";
-//    public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/soa-service-hotels/HotelSearchImplService?bridgeEndpoint=true&throwExceptionOnFailure=false";
-//    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/car-service-rest/car?bridgeEndpoint=true&throwExceptionOnFailure=false";
-
-    // "http:travel-hotel:8080/soa-service-hotels/HotelSearchImplService?
     // MoneySaver Message Queue
     public static final String MONEY_ANALYSER_MQ = "activemq:money-savior";
     public static final String MONEY_ANALYSER_EP = "file:/servicemix/camel/input?fileName=out.csv";

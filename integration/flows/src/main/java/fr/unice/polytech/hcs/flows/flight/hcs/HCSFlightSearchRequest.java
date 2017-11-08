@@ -1,10 +1,12 @@
 package fr.unice.polytech.hcs.flows.flight.hcs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HCSFlightSearchRequest implements Serializable {
 
     @JsonProperty private String origin;

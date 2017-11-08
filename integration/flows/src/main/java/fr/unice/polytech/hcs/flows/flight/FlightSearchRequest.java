@@ -12,7 +12,7 @@ public class FlightSearchRequest implements Serializable {
     @JsonProperty public String timeFrom;
     @JsonProperty public String timeTo;
     @JsonProperty public String journeyType;
-    @JsonProperty public int maxTravelTime; // in minutes
+    @JsonProperty public Integer maxTravelTime; // in minutes
     @JsonProperty public String category;
     @JsonProperty public String airline;
     @JsonProperty public String order;
@@ -24,7 +24,7 @@ public class FlightSearchRequest implements Serializable {
 
         FlightSearchRequest that = (FlightSearchRequest) o;
 
-        if (maxTravelTime != that.maxTravelTime) return false;
+        if (maxTravelTime != null ? !maxTravelTime.equals(that.maxTravelTime) : that.maxTravelTime != null) return false;
         if (origin != null ? !origin.equals(that.origin) : that.origin != null) return false;
         if (destination != null ? !destination.equals(that.destination) : that.destination != null) return false;
         if (date != null ? !date.equals(that.date) : that.date != null) return false;
@@ -44,7 +44,7 @@ public class FlightSearchRequest implements Serializable {
         result = 31 * result + (timeFrom != null ? timeFrom.hashCode() : 0);
         result = 31 * result + (timeTo != null ? timeTo.hashCode() : 0);
         result = 31 * result + (journeyType != null ? journeyType.hashCode() : 0);
-        result = 31 * result + maxTravelTime;
+        result = 31 * result + (maxTravelTime != null ? maxTravelTime.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (airline != null ? airline.hashCode() : 0);
         result = 31 * result + (order != null ? order.hashCode() : 0);

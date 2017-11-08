@@ -1,10 +1,12 @@
 package fr.unice.polytech.hcs.flows.car.hcs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HCSCarSearchRequest implements Serializable {
 
     @JsonProperty private String city;

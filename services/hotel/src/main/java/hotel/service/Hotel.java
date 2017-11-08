@@ -1,6 +1,7 @@
 package hotel.service;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,9 +56,10 @@ public class Hotel {
                 .append("zipCode", zipCode).append("address", address);
     }
 
-    public static String convertToWebResult(Document hotelBson) {
+    public static JSONObject convertToWebResult(Document hotelBson) {
         hotelBson.remove("fullBookedDays");
-        return hotelBson.toJson();
+        hotelBson.remove("_id");
+        return new JSONObject(hotelBson.toJson());
     }
 
     public String getName() {

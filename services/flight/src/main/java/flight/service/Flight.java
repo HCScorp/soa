@@ -1,6 +1,7 @@
 package flight.service;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -77,6 +78,11 @@ public class Flight {
                 .append("duration", duration.toMinutes())
                 .append("category", category.toString())
                 .append("airline", airline);
+    }
+
+    public static JSONObject convertToWebResult(Document flightBson) {
+        flightBson.remove("_id");
+        return new JSONObject(flightBson.toJson());
     }
 
     public String getOrigin() {

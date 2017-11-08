@@ -1,6 +1,7 @@
 package car.service;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,9 +54,10 @@ public class Car {
                         .collect(Collectors.toList()));
     }
 
-    public static String convertToWebResult(Document carBson) {
+    public static JSONObject convertToWebResult(Document carBson) {
         carBson.remove("bookedDays");
-        return carBson.toJson();
+        carBson.remove("_id");
+        return new JSONObject(carBson.toJson());
     }
 
     public String getCompany() {

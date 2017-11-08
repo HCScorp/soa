@@ -1,10 +1,12 @@
 package fr.unice.polytech.hcs.flows.hotel.hcs;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
 
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HCSHotelSearchRequest implements Serializable {
 
     @JsonProperty private String city;

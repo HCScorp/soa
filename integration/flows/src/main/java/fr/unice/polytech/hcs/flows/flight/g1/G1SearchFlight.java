@@ -35,7 +35,6 @@ public class G1SearchFlight extends SimpleJsonPostRoute<FlightSearchRequest, Fli
 
         FlightSearchResponse fsr = new FlightSearchResponse();
         fsr.result = new ArrayList<>();
-        int i = 0;
         for (Map<String, Object> m : flights) {
             Flight f = new Flight();
             f.origin = (String) m.get("from");
