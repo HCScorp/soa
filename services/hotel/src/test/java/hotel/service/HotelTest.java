@@ -23,12 +23,12 @@ class HotelTest {
         negrescoBson.put("city", "Nice");
         negrescoBson.put("zipCode", "06000");
         negrescoBson.put("address", "37, promenade des Anglais");
-        negrescoBson.put("nightPrice", 300);
+        negrescoBson.put("nightPrice", 300.0);
         negrescoBson.put("fullBookedDays", Collections.singletonList(new Document("date", LocalDate.of(2017, 12, 24).toString())));
 
         negresco = new Hotel(
                 "Negresco", "Nice", "06000", "37, promenade des Anglais",
-                300, Collections.singletonList(LocalDate.of(2017, 12, 24)));
+                300.0, Collections.singletonList(LocalDate.of(2017, 12, 24)));
     }
 
     @Test

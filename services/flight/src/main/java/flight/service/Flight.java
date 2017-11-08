@@ -25,7 +25,7 @@ public class Flight {
     private LocalDate date;
     private LocalTime time;
     private int secondOfDay;
-    private int price;
+    private Double price;
     private JourneyType journeyType;
     private Duration duration;
     private Category category;
@@ -37,7 +37,7 @@ public class Flight {
 
     public Flight(String origin, String destination,
                   LocalDate date, LocalTime time,
-                  int price,
+                  Double price,
                   JourneyType journeyType, Duration duration,
                   Category category, String airline) {
         this.origin = origin;
@@ -58,7 +58,7 @@ public class Flight {
         this.date = LocalDate.parse(bson.getString("date"));
         this.time = LocalTime.parse(bson.getString("time"));
         this.secondOfDay = bson.getInteger("secondOfDay");
-        this.price = bson.getInteger("price");
+        this.price = bson.getDouble("price");
         this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
         this.duration = Duration.ofMinutes(bson.getLong("duration"));
         this.category = Category.valueOf(bson.getString("category"));
@@ -99,7 +99,7 @@ public class Flight {
         return secondOfDay;
     }
 
-    public int getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -126,7 +126,7 @@ public class Flight {
 
         Flight flight = (Flight) o;
 
-        if (price != flight.price) return false;
+        if (price != null ? !price.equals(flight.price) : flight.price != null) return false;
         if (origin != null ? !origin.equals(flight.origin) : flight.origin != null) return false;
         if (destination != null ? !destination.equals(flight.destination) : flight.destination != null) return false;
         if (date != null ? !date.equals(flight.date) : flight.date != null) return false;
@@ -143,7 +143,7 @@ public class Flight {
         result = 31 * result + (destination != null ? destination.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + price;
+        result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (journeyType != null ? journeyType.hashCode() : 0);
         result = 31 * result + (duration != null ? duration.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);

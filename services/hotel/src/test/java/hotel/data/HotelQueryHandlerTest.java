@@ -32,7 +32,7 @@ public class HotelQueryHandlerTest {
         db.drop();
         hotels = db.getCollection("hotels");
 
-        Hotel negresco = new Hotel("Negresco", "Nice", "06000", "37, promenade des Anglais", 300,
+        Hotel negresco = new Hotel("Negresco", "Nice", "06000", "37, promenade des Anglais", 300.0,
                 Collections.singletonList(LocalDate.of(2017, 12, 24)));
         hotels.insertOne(negresco.toBson());
 
@@ -40,7 +40,7 @@ public class HotelQueryHandlerTest {
                 LocalDate.of(2017, 7, 14),
                 LocalDate.of(2017, 8, 15)
         );
-        Hotel meridien = new Hotel("Le Méridien", "Nice", "06046", "1, promenade des Anglais", 200, fBookedDays);
+        Hotel meridien = new Hotel("Le Méridien", "Nice", "06046", "1, promenade des Anglais", 200.0, fBookedDays);
         hotels.insertOne(meridien.toBson());
 
         List<LocalDate> stayDates = Arrays.asList(

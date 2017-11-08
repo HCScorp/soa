@@ -12,14 +12,14 @@ public class Car {
     private String city;
     private String model;
     private String numberPlate;
-    private int price;
+    private Double price;
     private List<LocalDate> bookedDays;
 
     public Car() {
         // empty
     }
 
-    public Car(String company, String city, String model, String numberPlate, int price, List<LocalDate> bookedDays) {
+    public Car(String company, String city, String model, String numberPlate, Double price, List<LocalDate> bookedDays) {
         this.company = company;
         this.city = city;
         this.model = model;
@@ -33,7 +33,7 @@ public class Car {
         this.city = bson.getString("city");
         this.model = bson.getString("model");
         this.numberPlate = bson.getString("numberPlate");
-        this.price = bson.getInteger("price");
+        this.price = bson.getDouble("price");
         this.bookedDays = ((List<Document>) bson.get("bookedDays")).stream()
                 .map(d -> d.getString("date"))
                 .map(LocalDate::parse)
@@ -74,7 +74,7 @@ public class Car {
         return numberPlate;
     }
 
-    public int getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -89,7 +89,7 @@ public class Car {
 
         Car car = (Car) o;
 
-        if (price != car.price) return false;
+        if (price != null ? !price.equals(car.price) : car.price != null) return false;
         if (company != null ? !company.equals(car.company) : car.company != null) return false;
         if (city != null ? !city.equals(car.city) : car.city != null) return false;
         if (model != null ? !model.equals(car.model) : car.model != null) return false;
@@ -102,7 +102,8 @@ public class Car {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (numberPlate != null ? numberPlate.hashCode() : 0);
-        result = 31 * result + price;
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (bookedDays != null ? bookedDays.hashCode() : 0);
         return result;
     }
 }

@@ -32,13 +32,13 @@ public class FlightQueryHandlerTest {
         flights = db.getCollection("flights");
 
         Flight parisNice = new Flight("Paris", "Nice",
-                LocalDate.of(2017, 12, 24), LocalTime.of(11, 25, 0), 50,
+                LocalDate.of(2017, 12, 24), LocalTime.of(11, 25, 0), 50.0,
                 Flight.JourneyType.DIRECT, Duration.ofHours(1), Flight.Category.ECO, "Air France");
-        Flight parisNice2 = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 21), LocalTime.of(8, 50, 0), 45,
+        Flight parisNice2 = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 21), LocalTime.of(8, 50, 0), 45.0,
                 Flight.JourneyType.DIRECT, Duration.ofMinutes(85), Flight.Category.ECO, "Air France");
-        Flight parisNice3 = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 21), LocalTime.of(15, 30, 0), 40,
+        Flight parisNice3 = new Flight("Paris", "Nice", LocalDate.of(2017, 12, 21), LocalTime.of(15, 30, 0), 40.0,
                 Flight.JourneyType.DIRECT, Duration.ofMinutes(80), Flight.Category.ECO, "EasyJet");
-        Flight parisNewYork = new Flight("Paris", "New-York", LocalDate.of(2017, 8, 15), LocalTime.of(18, 45, 0), 156,
+        Flight parisNewYork = new Flight("Paris", "New-York", LocalDate.of(2017, 8, 15), LocalTime.of(18, 45, 0), 156.0,
                 Flight.JourneyType.INDIRECT, Duration.ofHours(11), Flight.Category.FIRST, "Iberia");
         flights.insertMany(Arrays.asList(parisNice.toBson(), parisNice2.toBson(), parisNice3.toBson(), parisNewYork.toBson()));
 

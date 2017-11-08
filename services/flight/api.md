@@ -31,7 +31,7 @@ A flight contains the following fields:
  + destination 	 : string
  + date 		 : string 	(formatted as year-month-day, e.g. 2017-01-21 or 2017-12-09)
  + time 		 : string 	(formatted as hour-minute-second, e.g. 15:30:00)
- + price 	 	 : integer 	(in euro)
+ + price 	 	 : double 	(in euro)
  + journeyType 	 : string 	(can be DIRECT or INDIRECT)
  + duration 	 : integer 	(in minutes)
  + category 	 : string 	(can be ECO, ECO_PREMIUM, BUSINESS, FIRST)
@@ -64,7 +64,7 @@ Output:
       "destination": "Paris",
       "date": "2017-08-14",
       "time": "12:30:00",
-      "price": "89",
+      "price": 89.0,
       "journeyType": "DIRECT",
       "duration": 92,
       "category": "ECO",
@@ -75,7 +75,7 @@ Output:
       "destination": "Paris",
       "date": "2017-08-14",
       "time": "08:45:00",
-      "price": "63",
+      "price": 63.0,
       "journeyType": "DIRECT",
       "duration": 105,
       "category": "ECO",

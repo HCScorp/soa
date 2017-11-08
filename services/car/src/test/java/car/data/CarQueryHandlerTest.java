@@ -31,13 +31,13 @@ public class CarQueryHandlerTest {
         db.drop();
         cars = db.getCollection("cars");
 
-        Car tesla = new Car("Tesla", "Nice", "S", "888-444", 40, Collections.singletonList(LocalDate.of(2017, 12, 24)));
+        Car tesla = new Car("Tesla", "Nice", "S", "888-444", 40.0, Collections.singletonList(LocalDate.of(2017, 12, 24)));
         cars.insertOne(tesla.toBson());
 
         List<LocalDate> bookedDays = Arrays.asList(
                 LocalDate.of(2017, 7, 14), LocalDate.of(2017, 8, 15)
         );
-        Car mercedes = new Car("Mercedes", "Nice", "Class A", "777-666", 50, bookedDays);
+        Car mercedes = new Car("Mercedes", "Nice", "Class A", "777-666", 50.0, bookedDays);
         cars.insertOne(mercedes.toBson());
 
         List<LocalDate> dates = Arrays.asList(

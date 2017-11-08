@@ -25,7 +25,7 @@ An hotel contains the following fields:
  + city 	 	: string
  + zipCode 		: string
  + address		: string
- + nightPrice	: integer	(in euro)
+ + nightPrice	: double	(in euro)
 
 ### Example
 
@@ -48,14 +48,14 @@ Output:
       "city": "Nice",
       "zipCode": "06046",
       "address": "1, promenade des Anglais",
-      "nightPrice": 200
+      "nightPrice": 200.0
 	},
 	{
       "name": "Négresco",
       "city": "Nice",
       "zipCode": "06000",
       "address": "37, promenade des Anglais",
-      "nightPrice": 300
+      "nightPrice": 300.0
 	}
   ]
 }

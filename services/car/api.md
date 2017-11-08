@@ -23,7 +23,7 @@ A car contains the following fields:
  + company 		: string
  + city 	 	: string
  + model 		: string
- + price 		: integer
+ + price 		: double    (in euro)
  + numberPlate	: string
 
 ### Example
@@ -45,14 +45,14 @@ Output:
       "company": "Tesla location",
       "city": "Nice",
       "model": "S P100D",
-      "price": 35,
+      "price": 35.5,
       "numberPlate": "888-999"
     },
     {
       "company": "Mercedes location",
       "city": "Nice",
       "model": "Class A",
-      "price": 40,
+      "price": 40.2,
       "numberPlate": "555-444"
     }
   ]
