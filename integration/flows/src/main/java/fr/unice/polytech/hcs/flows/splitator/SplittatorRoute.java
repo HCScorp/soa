@@ -1,15 +1,11 @@
 package fr.unice.polytech.hcs.flows.splitator;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.converter.stream.InputStreamCache;
-import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

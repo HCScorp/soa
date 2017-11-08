@@ -45,8 +45,8 @@ public class Endpoints {
     public static final String MONEY_ANALYSER_MQ = "activemq:money-savior";
     public static final String MONEY_ANALYSER_EP = "file:/servicemix/camel/input?fileName=out.csv";
 
-    // Dead letters channel TODO
-    // public static final String DEATH_POOL = "activemq:global:dead";
+    // Dead letters channel
+     public static final String ERROR_MQ = "activemq:global:dead";
 
     // Archiver route
     public static final String REFUND_SENDING = "activemq:refund-piece";

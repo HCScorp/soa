@@ -45,32 +45,35 @@ public abstract class SimpleJsonPostRoute<In extends Serializable, Out extends S
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .log("["+routeUri+"] Creating specific request from generic request")
-                .log("["+routeUri+"] IN: ${body}")
-                .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
-                .log("["+routeUri+"] OUT: ${body}")
+                .doTry()
+                    .log("[" + routeUri + "] Creating specific request from generic request")
+                    .log("[" + routeUri + "] IN: ${body}")
+                    .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
+                    .log("[" + routeUri + "] OUT: ${body}")
 
-                .log("["+routeUri+"] Setting up request header")
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
+                    .log("[" + routeUri + "] Setting up request header")
+                    .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                    .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                    .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
 
-                .log("["+routeUri+"] Marshalling body")
-                .marshal().json(JsonLibrary.Jackson)
-                .log("["+routeUri+"] OUT: ${body}")
+                    .log("[" + routeUri + "] Marshalling body")
+                    .marshal().json(JsonLibrary.Jackson)
+                    .log("[" + routeUri + "] OUT: ${body}")
 
+                    .log("[" + routeUri + "] Sending to endpoint")
+                    .inOut(endpoint)
+                    .log("[" + routeUri + "] Received specific request result")
 
-                .log("["+routeUri+"] Sending to endpoint")
-                .inOut(endpoint)
-                .log("["+routeUri+"] Received specific request result")
+                    .log("[" + routeUri + "] Unmarshalling response")
+                    .unmarshal().json(JsonLibrary.Jackson)
+                    .log("[" + routeUri + "] OUT: ${body}")
 
-                .log("["+routeUri+"] Unmarshalling response")
-                .unmarshal().json(JsonLibrary.Jackson)
-                .log("["+routeUri+"] OUT: ${body}")
-
-                .log("["+routeUri+"] Converting to generic response")
-                .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
-                .log("["+routeUri+"] OUT: ${body}")
+                    .log("[" + routeUri + "] Converting to generic response")
+                    .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
+                    .log("[" + routeUri + "] OUT: ${body}")
+                .doCatch(Exception.class)
+                    .log("[" + routeUri + "] Something went wrong, setting response to null")
+                    .process(e -> e.getIn().setBody(null))
         ;
     }
 }

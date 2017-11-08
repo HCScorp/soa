@@ -30,25 +30,29 @@ public class G7SearchHotel extends RouteBuilder {
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .log("["+routeUri+"] Creating specific request from generic request")
-                .process(e -> e.getIn().setBody(genericReqConverter.convert((HotelSearchRequest) e.getIn().getBody())))
+                .doTry()
+                    .log("["+routeUri+"] Creating specific request from generic request")
+                    .process(e -> e.getIn().setBody(genericReqConverter.convert((HotelSearchRequest) e.getIn().getBody())))
 
-                .log("["+routeUri+"] Converting specific request to XML request")
-                .bean(G7SearchHotel.class, "buildXMLRequest(${body})")
+                    .log("["+routeUri+"] Converting specific request to XML request")
+                    .bean(G7SearchHotel.class, "buildXMLRequest(${body})")
 
-                .log("["+routeUri+"] Setting up request header")
-                .setHeader(Exchange.CONTENT_TYPE, constant("application/xml"))
-                .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/xml"))
+                    .log("["+routeUri+"] Setting up request header")
+                    .setHeader(Exchange.CONTENT_TYPE, constant("application/xml"))
+                    .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/xml"))
 
-                .log("["+routeUri+"] Sending to endpoint")
-                .inOut(endpoint)
-                .log("["+routeUri+"] Received specific request result")
+                    .log("["+routeUri+"] Sending to endpoint")
+                    .inOut(endpoint)
+                    .log("["+routeUri+"] Received specific request result")
 
-                .log("["+routeUri+"] Unmarshalling response")
-                .unmarshal().jacksonxml()
+                    .log("["+routeUri+"] Unmarshalling response")
+                    .unmarshal().jacksonxml()
 
-                .log("["+routeUri+"] Converting to generic response")
-                .process(e -> e.getIn().setBody(specificResConverter.convert((Map<String, Map<String, Map>>) e.getIn().getBody())))
+                    .log("["+routeUri+"] Converting to generic response")
+                    .process(e -> e.getIn().setBody(specificResConverter.convert((Map<String, Map<String, Map>>) e.getIn().getBody())))
+                .doCatch(Exception.class)
+                    .log("[" + routeUri + "] Something went wrong, setting response to null")
+                    .process(e -> e.getIn().setBody(null))
         ;
     }
 
