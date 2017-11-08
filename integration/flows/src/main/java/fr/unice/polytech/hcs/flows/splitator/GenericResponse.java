@@ -3,13 +3,14 @@ package fr.unice.polytech.hcs.flows.splitator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GenericResponse<T> implements Serializable, Iterable<T> {
 
-    @JsonProperty public List<T> result;
+    @JsonProperty
+    public List<T> result;
 
     @Override
     public boolean equals(Object o) {
@@ -31,5 +32,12 @@ public class GenericResponse<T> implements Serializable, Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return result.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return "GenericResponse{" +
+                "result=" + result.stream().map(Object::toString).collect(Collectors.joining(",")) +
+                '}';
     }
 }

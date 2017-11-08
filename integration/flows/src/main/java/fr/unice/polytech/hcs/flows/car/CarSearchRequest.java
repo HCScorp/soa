@@ -29,4 +29,13 @@ public class CarSearchRequest implements Serializable {
         result = 31 * result + (dateTo != null ? dateTo.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CarSearchRequest{" +
+                "city='" + city + '\'' +
+                ", dateFrom='" + dateFrom + '\'' +
+                ", dateTo='" + dateTo + '\'' +
+                '}';
+    }
 }

@@ -40,4 +40,14 @@ public class HCSHotelSearchRequest implements Serializable {
         result = 31 * result + (order != null ? order.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "HCSHotelSearchRequest{" +
+                "city='" + city + '\'' +
+                ", dateFrom='" + dateFrom + '\'' +
+                ", dateTo='" + dateTo + '\'' +
+                ", order='" + order + '\'' +
+                '}';
+    }
 }

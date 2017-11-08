@@ -78,7 +78,7 @@ public abstract class SplittatorRoute< In extends Serializable,
                 .log("["+unmarshalUri+"] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("["+unmarshalUri+"] Received generic request: ${body}")
+                .log("["+unmarshalUri+"] Received generic request")
                 .log("["+unmarshalUri+"] Sending generic request to message handler queue")
                 .to(multicastUri)
         ;
@@ -99,6 +99,7 @@ public abstract class SplittatorRoute< In extends Serializable,
                     }
                 })
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .log("["+multicastUri+"] OUT: ${body}")
         ;
     }
 }

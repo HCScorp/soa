@@ -4,21 +4,21 @@ import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class G2CarSearchRequest implements Serializable {
 
     public String destination;
-    public long date;
+    public String date;
     public long duration; // in days
 
     G2CarSearchRequest(CarSearchRequest csr) {
         this.destination = csr.city;
         LocalDate dateFrom = LocalDate.parse(csr.dateFrom);
         LocalDate dateTo = LocalDate.parse(csr.dateTo);
-        this.date = dateFrom.atStartOfDay().atZone(ZoneId.systemDefault()).toEpochSecond();
+        this.date = dateFrom.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         this.duration = DAYS.between(dateFrom, dateTo);
     }
 
@@ -29,16 +29,25 @@ public class G2CarSearchRequest implements Serializable {
 
         G2CarSearchRequest that = (G2CarSearchRequest) o;
 
-        if (date != that.date) return false;
         if (duration != that.duration) return false;
-        return destination != null ? destination.equals(that.destination) : that.destination == null;
+        if (destination != null ? !destination.equals(that.destination) : that.destination != null) return false;
+        return date != null ? date.equals(that.date) : that.date == null;
     }
 
     @Override
     public int hashCode() {
         int result = destination != null ? destination.hashCode() : 0;
-        result = 31 * result + (int) (date ^ (date >>> 32));
+        result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (int) (duration ^ (duration >>> 32));
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "G2CarSearchRequest{" +
+                "destination='" + destination + '\'' +
+                ", date='" + date + '\'' +
+                ", duration=" + duration +
+                '}';
     }
 }

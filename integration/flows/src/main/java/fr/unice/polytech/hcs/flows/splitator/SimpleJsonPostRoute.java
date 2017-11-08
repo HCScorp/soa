@@ -46,7 +46,9 @@ public abstract class SimpleJsonPostRoute<In extends Serializable, Out extends S
                 .routeDescription(routeDescription)
 
                 .log("["+routeUri+"] Creating specific request from generic request")
+                .log("["+routeUri+"] IN: ${body}")
                 .process(e -> e.getIn().setBody(genericRecConverter.convert((In) e.getIn().getBody())))
+                .log("["+routeUri+"] OUT: ${body}")
 
                 .log("["+routeUri+"] Setting up request header")
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
@@ -55,6 +57,8 @@ public abstract class SimpleJsonPostRoute<In extends Serializable, Out extends S
 
                 .log("["+routeUri+"] Marshalling body")
                 .marshal().json(JsonLibrary.Jackson)
+                .log("["+routeUri+"] OUT: ${body}")
+
 
                 .log("["+routeUri+"] Sending to endpoint")
                 .inOut(endpoint)
@@ -62,9 +66,11 @@ public abstract class SimpleJsonPostRoute<In extends Serializable, Out extends S
 
                 .log("["+routeUri+"] Unmarshalling response")
                 .unmarshal().json(JsonLibrary.Jackson)
+                .log("["+routeUri+"] OUT: ${body}")
 
                 .log("["+routeUri+"] Converting to generic response")
                 .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
+                .log("["+routeUri+"] OUT: ${body}")
         ;
     }
 }

@@ -1,6 +1,10 @@
 package fr.unice.polytech.hcs.flows.car.g2;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.car.Car;
 import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 import fr.unice.polytech.hcs.flows.car.CarSearchResponse;
@@ -8,8 +12,12 @@ import fr.unice.polytech.hcs.flows.splitator.SimpleJsonGetRoute;
 import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G2_SEARCH_CAR_EP;
@@ -17,36 +25,42 @@ import static fr.unice.polytech.hcs.flows.utils.Endpoints.G2_SEARCH_CAR_MQ;
 
 public class G2SearchCar extends SimpleJsonGetRoute<CarSearchRequest, CarSearchResponse> {
 
-    // TODO dynamic get url
-
     public G2SearchCar() {
         super(G2_SEARCH_CAR_MQ,
                 G2_SEARCH_CAR_EP,
                 G2CarSearchRequest::new,
                 G2SearchCar::mapToCsRes,
+                G2SearchCar::buildUrl,
                 "g2-search-car-ws",
                 "Send the car search request to the G2 car WS");
     }
 
-    public static CarSearchResponse mapToCsRes(Map<String, Object> map) {
-        Collection<Map<String, Object>> cars = (Collection<Map<String, Object>>) map.get("cars");
+    public static String buildUrl(Object o) {
+        G2CarSearchRequest g2Csr = (G2CarSearchRequest) o;
+        return "/" + g2Csr.destination + "/" + g2Csr.date + "/" + g2Csr.duration;
+    }
 
+    public static CarSearchResponse mapToCsRes(InputStream is) {
         CarSearchResponse csr = new CarSearchResponse();
         csr.result = new ArrayList<>();
-        int i = 0;
-        for (Map<String, Object> m : cars) {
-            Car c = new Car();
-//            c.origin = (String) m.get("from");
-//            f.destination = (String) m.get("to");
-//            Date departure = new Date((Integer) m.get("departure"));
-//            LocalDateTime dateTime = LocalDateTime.ofInstant(departure.toInstant(), ZoneId.systemDefault());
-//            f.date = dateTime.toLocalDate().toString();
-//            f.time = dateTime.toLocalTime().toString();
-//            f.price = Cast.toDouble(m.get("price"));
-//            f.duration = (Integer) m.get("duration");
-//            f.category = (String) m.get("seatClass");
-//            f.airline = (String) m.get("airline");
-            csr.result.add(c);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<G2Car> cars = mapper.readValue(
+                    is,
+                    mapper.getTypeFactory().constructCollectionType(
+                            List.class, G2Car.class));
+            cars.forEach(g2c -> {
+                Car c = new Car();
+                c.company = g2c.name;
+                c.price = g2c.price;
+                c.model = "";
+                c.city = "";
+                c.numberPlate = "";
+                csr.result.add(c);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return csr;

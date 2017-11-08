@@ -32,4 +32,14 @@ public class HotelSearchRequest implements Serializable {
         result = 31 * result + (order != null ? order.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "HotelSearchRequest{" +
+                "city='" + city + '\'' +
+                ", dateFrom='" + dateFrom + '\'' +
+                ", dateTo='" + dateTo + '\'' +
+                ", order='" + order + '\'' +
+                '}';
+    }
 }

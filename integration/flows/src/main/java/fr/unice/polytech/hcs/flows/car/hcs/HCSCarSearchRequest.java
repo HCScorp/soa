@@ -36,4 +36,13 @@ public class HCSCarSearchRequest implements Serializable {
         result = 31 * result + (dateTo != null ? dateTo.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "HCSCarSearchRequest{" +
+                "city='" + city + '\'' +
+                ", dateFrom='" + dateFrom + '\'' +
+                ", dateTo='" + dateTo + '\'' +
+                '}';
+    }
 }

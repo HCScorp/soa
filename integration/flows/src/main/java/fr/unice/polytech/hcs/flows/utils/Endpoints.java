@@ -39,7 +39,7 @@ public class Endpoints {
     // External partners (other groups)
     public static final String G1_SEARCH_FLIGHT_EP = "http:g1-flight:8080/flight-service-document/flight"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
     public static final String G7_SEARCH_HOTEL_EP = "http:g7-hotel:8080/soa-service-hotels/HotelSearchImplService"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
-    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/car-service-rest/car"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
+    public static final String G2_SEARCH_CAR_EP = "http:g2-car:8080/voiture"; //?bridgeEndpoint=true&throwExceptionOnFailure=false
 
 
 //    public static final String HCS_SEARCH_FLIGHT_EP = "http:hcs-flight:8080/flight-service-document/flight?bridgeEndpoint=true&throwExceptionOnFailure=false";

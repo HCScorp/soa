@@ -50,4 +50,20 @@ public class FlightSearchRequest implements Serializable {
         result = 31 * result + (order != null ? order.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "FlightSearchRequest{" +
+                "origin='" + origin + '\'' +
+                ", destination='" + destination + '\'' +
+                ", date='" + date + '\'' +
+                ", timeFrom='" + timeFrom + '\'' +
+                ", timeTo='" + timeTo + '\'' +
+                ", journeyType='" + journeyType + '\'' +
+                ", maxTravelTime=" + maxTravelTime +
+                ", category='" + category + '\'' +
+                ", airline='" + airline + '\'' +
+                ", order='" + order + '\'' +
+                '}';
+    }
 }

@@ -51,4 +51,16 @@ public class G7HotelSearchRequest implements Serializable {
         result = 31 * result + resultNumber;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "G7HotelSearchRequest{" +
+                "address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", checkin='" + checkin + '\'' +
+                ", checkout='" + checkout + '\'' +
+                ", sortOrder='" + sortOrder + '\'' +
+                ", resultNumber=" + resultNumber +
+                '}';
+    }
 }

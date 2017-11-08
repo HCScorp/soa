@@ -48,4 +48,14 @@ public class G1FlightSearchRequest implements Serializable {
         result = 31 * result + (int) (departureTimeStamp ^ (departureTimeStamp >>> 32));
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "G1FlightSearchRequest{" +
+                "event='" + event + '\'' +
+                ", destination='" + destination + '\'' +
+                ", departure='" + departure + '\'' +
+                ", departureTimeStamp=" + departureTimeStamp +
+                '}';
+    }
 }
