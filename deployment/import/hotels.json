@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Le Méridien",
+    "city": "Nice",
+    "zipCode": "06046",
+    "address": "1, promenade des Anglais",
+    "nightPrice": 200
+  },
+  {
+    "name": "Négresco",
+    "city": "Nice",
+    "zipCode": "06000",
+    "address": "37, promenade des Anglais",
+    "nightPrice": 300
+  }
+]
