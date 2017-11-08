@@ -5,6 +5,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class Expense {
-    @JsonProperty public int travelId;
+    @JsonProperty public Integer travelId;
     @JsonProperty public List<Document> documents;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Expense expense = (Expense) o;
+
+        if (travelId != expense.travelId) return false;
+        return documents != null ? documents.equals(expense.documents) : expense.documents == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = travelId;
+        result = 31 * result + (documents != null ? documents.hashCode() : 0);
+        return result;
+    }
 }
