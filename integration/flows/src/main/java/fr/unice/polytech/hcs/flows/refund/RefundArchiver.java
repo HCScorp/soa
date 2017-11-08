@@ -16,6 +16,7 @@ public class RefundArchiver extends RouteBuilder {
                 .routeDescription("where to send your refund piece")
                 .routeId("refund-piece-route")
                 .marshal().json(JsonLibrary.Jackson)
-                .to( "file:./output/" + "?fileName=.json");
+                //.to("file://output?fileName=out.json");
+                .to("ftp://scott@localhost:11021/?password=tiger&binary=true&fileName=out.json&delay=5s");
     }
 }

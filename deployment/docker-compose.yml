@@ -84,6 +84,16 @@ services:
     image: hcsoa/flight-ext
     ports:
       - "9097:8080"
+  ftp:
+    image: mauler/simple-ftp-server
+    ports:
+      - "11021:21"
+    environment:
+      - FTP_PASS=cesarius
+      - FTP_USER=collus
+
+
+
 
   database:
     image: mongo:3.4.9
