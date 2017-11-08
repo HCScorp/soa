@@ -37,7 +37,7 @@ public class RefundArchiverTest extends ActiveMQTest {
     public void TestRefundArchiver() throws InterruptedException {
         assertNotNull(context.hasEndpoint(REFUND_SENDING));
 //        assertNotNull(context.hasEndpoint(REFUND_PIECE_OUTPUT_DIR + "?fileName=ici.txt"));
-//        template.requestBody(REFUND_SENDING, borabora, RefundRequest.class);
+        template.requestBody(REFUND_SENDING, borabora, RefundRequest.class);
 
     }
 
