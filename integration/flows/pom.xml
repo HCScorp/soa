@@ -17,14 +17,11 @@
     </parent>
 
     <dependencies>
-
-        <!-- Dependencies required by Camel -->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.camel</groupId>-->
-            <!--<artifactId>camel-csv</artifactId>-->
-            <!--<version>${camel.version}</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-ftp</artifactId>
+            <version>2.20.0</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
