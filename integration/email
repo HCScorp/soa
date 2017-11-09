@@ -1,0 +1,8 @@
+{
+    "travelId": 100,
+    "documents": [{
+        "category": "restaurant",
+        "evidence": "restaurant.jpg",
+        "price": 25
+    }]
+}
