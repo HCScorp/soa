@@ -1,10 +1,12 @@
 package fr.unice.polytech.hcs.flows.expense;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoClient;
 import org.apache.camel.builder.RouteBuilder;
 
 import java.io.InputStream;
 
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.EXPENSE_DATABASE;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.EXPENSE_EMAIL;
 
 public class ExpenseRegistration extends RouteBuilder {
@@ -20,6 +22,6 @@ public class ExpenseRegistration extends RouteBuilder {
                     InputStream is = exchange.getIn().getBody(InputStream.class);
                     exchange.getIn().setBody(new ObjectMapper().readValue(is , Expense.class));
                 })
-                .log("${body}");
+                .to(EXPENSE_DATABASE);
     }
 }

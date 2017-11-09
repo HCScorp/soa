@@ -65,7 +65,7 @@ public class Endpoints {
     public static final String REFUND_SENDING_EP = "";
 
     public static final String EXPENSE_EMAIL = "file:/servicemix/camel/input/email";
-    //public static final String EXPENSE_EMAIL = "imaps://imap.gmail.com?username=camelexpenses&password=camelexpenses3";
+    public static final String EXPENSE_DATABASE = "mongodb:myDb?database=expense&collection=expenses&operation=insert";
 
 }
 
