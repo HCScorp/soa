@@ -1,7 +1,6 @@
 package fr.unice.polytech.hcs.flows.expense;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.MongoClient;
 import org.apache.camel.builder.RouteBuilder;
 
 import java.io.InputStream;
