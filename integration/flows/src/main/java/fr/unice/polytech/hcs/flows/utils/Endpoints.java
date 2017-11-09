@@ -57,6 +57,8 @@ public class Endpoints {
     public static final String EXPENSE_EMAIL = "file:/servicemix/camel/input/email";
     public static final String EXPENSE_DATABASE = "mongodb:myDb?database=expense&collection=expenses&operation=insert";
 
+    // Travel
+    public static final String SEARCH_TRAVEL = "activemq:search-travel";
 }
 
 
