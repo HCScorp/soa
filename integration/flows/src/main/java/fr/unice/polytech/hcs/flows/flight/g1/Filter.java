@@ -7,8 +7,10 @@ import java.util.Arrays;
 
 public class Filter implements Serializable {
 
-    @JsonProperty public String name;
-    @JsonProperty public String[] args;
+    @JsonProperty
+    public String name;
+    @JsonProperty
+    public String[] args;
 
     @Override
     public boolean equals(Object o) {

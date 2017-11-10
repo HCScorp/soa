@@ -9,9 +9,12 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HCSCarSearchRequest implements Serializable {
 
-    @JsonProperty private String city;
-    @JsonProperty private String dateFrom;
-    @JsonProperty private String dateTo;
+    @JsonProperty
+    private String city;
+    @JsonProperty
+    private String dateFrom;
+    @JsonProperty
+    private String dateTo;
 
     HCSCarSearchRequest(CarSearchRequest csr) {
         this.city = csr.city;

@@ -4,5 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ExplanationAnswer extends Explanation {
 
-    @JsonProperty public int code;
+    @JsonProperty
+    public int code;
 }

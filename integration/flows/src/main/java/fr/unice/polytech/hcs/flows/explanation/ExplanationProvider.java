@@ -1,9 +1,5 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import fr.unice.polytech.hcs.flows.expense.Travel;
-import fr.unice.polytech.hcs.flows.travel.TravelRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
@@ -40,7 +36,9 @@ public class ExplanationProvider extends RouteBuilder {
                 .process(exchange -> {
                     System.out.println(exchange.getIn().getBody().getClass());
                 })
-        .log("We send a mail to the manager");
+                .log("We send a mail to the manager");
+
+
 
 //
 //        from(EXPLANATION_ANSWER)
@@ -66,5 +64,6 @@ public class ExplanationProvider extends RouteBuilder {
 //
 //        from(REFUND_ACCEPT)
 //                .log("refund accepted !");
+
     }
 }
