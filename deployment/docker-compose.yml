@@ -92,7 +92,7 @@ services:
     ports:
       - "9097:8080"
   ftp:
-    image: mauler/simple-ftp-server
+    image: onekilo79/ftpd_test
     ports:
       - "11021:21"
     environment:
