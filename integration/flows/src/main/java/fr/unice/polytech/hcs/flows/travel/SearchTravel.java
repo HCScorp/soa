@@ -1,12 +1,16 @@
 package fr.unice.polytech.hcs.flows.travel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jcraft.jsch.HASH;
 import com.mongodb.DBObject;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.GET_TRAVEL;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.SEARCH_TRAVEL_DATABASE_EP;
@@ -25,7 +29,6 @@ public class SearchTravel extends RouteBuilder {
         rest("/travel")
                 .post("/search")
                 .type(TravelRequest.class)
-                .outType(Travel.class)
                 .to(SEARCH_TRAVEL)
         ;
 
@@ -41,7 +44,6 @@ public class SearchTravel extends RouteBuilder {
                 .unmarshal().json(JsonLibrary.Jackson, HashMap.class)
 
                 .inOut(GET_TRAVEL)
-
 
                 .log("[" + SEARCH_TRAVEL + "] Unmarshalling to TravelResponse")
                 .convertBodyTo(HashMap.class)
