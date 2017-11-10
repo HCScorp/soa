@@ -1,14 +1,16 @@
 package fr.unice.polytech.hcs.flows.travel;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TravelRequest implements Serializable {
 
-    @JsonProperty public String id;
+    @JsonProperty public int travelId;
 
     @Override
     public boolean equals(Object o) {
@@ -17,18 +19,18 @@ public class TravelRequest implements Serializable {
 
         TravelRequest that = (TravelRequest) o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        return travelId == that.travelId;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return travelId;
     }
 
     @Override
     public String toString() {
         return "TravelRequest{" +
-                "id='" + id + '\'' +
+                "travelId=" + travelId +
                 '}';
     }
 }
