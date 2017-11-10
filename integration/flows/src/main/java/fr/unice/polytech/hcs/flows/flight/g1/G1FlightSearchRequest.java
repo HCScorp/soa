@@ -6,8 +6,6 @@ import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 
 import java.io.Serializable;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class G1FlightSearchRequest implements Serializable {

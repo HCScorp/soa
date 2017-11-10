@@ -8,8 +8,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.G7_SEARCH_HOTEL_EP;

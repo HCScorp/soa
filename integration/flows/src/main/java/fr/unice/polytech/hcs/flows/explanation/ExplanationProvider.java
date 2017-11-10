@@ -1,7 +1,5 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 

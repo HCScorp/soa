@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchRequest;
 import fr.unice.polytech.hcs.flows.hotel.HotelSearchResponse;
 import fr.unice.polytech.hcs.flows.splitator.SimpleJsonPostRoute;
-import org.apache.camel.model.dataformat.JsonDataFormat;
-import org.apache.camel.model.dataformat.JsonLibrary;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_HOTEL_EP;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_HOTEL_MQ;
 
 public class HCSSearchHotel extends SimpleJsonPostRoute<HotelSearchRequest, HotelSearchResponse> {
 

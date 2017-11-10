@@ -6,8 +6,6 @@ import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 import fr.unice.polytech.hcs.flows.flight.FlightSearchResponse;
 import fr.unice.polytech.hcs.flows.splitator.SimpleJsonPostRoute;
 import fr.unice.polytech.hcs.flows.utils.Cast;
-import org.apache.camel.model.dataformat.JsonDataFormat;
-import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
