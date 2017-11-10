@@ -4,6 +4,7 @@ package fr.unice.polytech.hcs.flows;
 import fr.unice.polytech.hcs.flows.car.SearchCar;
 import fr.unice.polytech.hcs.flows.car.g2.G2SearchCar;
 import fr.unice.polytech.hcs.flows.car.hcs.HCSSearchCar;
+import fr.unice.polytech.hcs.flows.explanation.ExplanationProvider;
 import fr.unice.polytech.hcs.flows.flight.SearchFlight;
 import fr.unice.polytech.hcs.flows.flight.g1.G1SearchFlight;
 import fr.unice.polytech.hcs.flows.flight.hcs.HCSSearchFlight;
@@ -64,6 +65,7 @@ public abstract class ActiveMQTest extends CamelTestSupport {
                 this.includeRoutes(new HCSSearchCar());
                 this.includeRoutes(new G2SearchCar());
                 this.includeRoutes(new SearchCar());
+                this.includeRoutes(new ExplanationProvider());
                 // TODO
             }
         };
