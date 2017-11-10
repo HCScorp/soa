@@ -8,5 +8,6 @@ import java.io.Serializable;
 public class Explanation  implements Serializable  {
 
     @JsonProperty public String explanation;
-    @JsonProperty public Travel travel;
+    @JsonProperty public int id;
+
 }
