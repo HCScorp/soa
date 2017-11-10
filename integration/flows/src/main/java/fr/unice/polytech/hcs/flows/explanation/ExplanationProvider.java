@@ -1,5 +1,7 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
@@ -23,7 +25,7 @@ public class ExplanationProvider extends RouteBuilder {
 
                 })
                 .to(EXPLANATION_CHECKER)
-                .log("We send a mail to the manager");
+        .log("We send a mail to the manager");
 
 
         from(EXPLANATION_ANSWER)
@@ -44,6 +46,7 @@ public class ExplanationProvider extends RouteBuilder {
                 .setHeader("Content-Type", constant("application/json"))
                 .setHeader("Accept", constant("application/json"))
                 .to(EXPLANATION_REFUSED_EP);
+
 
 
         from(REFUND_ACCEPT)

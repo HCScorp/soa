@@ -4,19 +4,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.hcs.flows.splitator.SerializableComparable;
 
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Hotel implements SerializableComparable<Hotel> {
 
-    @JsonProperty
-    public String name;
-    @JsonProperty
-    public String city;
-    @JsonProperty
-    public String zipCode;
-    @JsonProperty
-    public String address;
-    @JsonProperty
-    public Double nightPrice;
+    @JsonProperty public String name;
+    @JsonProperty public String city;
+    @JsonProperty public String zipCode;
+    @JsonProperty public String address;
+    @JsonProperty public Double nightPrice;
 
     @Override
     public boolean equals(Object o) {

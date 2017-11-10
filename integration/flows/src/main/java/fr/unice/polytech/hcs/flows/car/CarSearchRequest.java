@@ -6,12 +6,9 @@ import java.io.Serializable;
 
 public class CarSearchRequest implements Serializable {
 
-    @JsonProperty
-    public String city;
-    @JsonProperty
-    public String dateFrom;
-    @JsonProperty
-    public String dateTo;
+    @JsonProperty public String city;
+    @JsonProperty public String dateFrom;
+    @JsonProperty public String dateTo;
 
     @Override
     public boolean equals(Object o) {

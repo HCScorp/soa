@@ -4,13 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
-public class Expense implements Serializable {
-    @JsonProperty
-    public String category;
-    @JsonProperty
-    public String evidence;
-    @JsonProperty
-    public Integer price;
+public class Expense implements Serializable{
+    @JsonProperty public String category;
+    @JsonProperty public String evidence;
+    @JsonProperty public Integer price;
 
     @Override
     public boolean equals(Object o) {
