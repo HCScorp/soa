@@ -3,9 +3,9 @@ package fr.unice.polytech.hcs.flows.travel;
 import com.mongodb.DBObject;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.model.rest.RestBindingMode;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
@@ -16,12 +16,10 @@ public class SearchTravel extends RouteBuilder {
 
         restConfiguration()
                 .component("servlet")
-                .bindingMode(RestBindingMode.json)
         ;
 
         rest("/travel")
-                .post("/search")
-                .type(TravelRequest.class)
+                .get("/{travelId}")
                 .to(SEARCH_TRAVEL)
         ;
 
@@ -32,19 +30,19 @@ public class SearchTravel extends RouteBuilder {
                 .log("[" + SEARCH_TRAVEL + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + SEARCH_TRAVEL + "] Convert TravelRequest to HashMap")
-                .marshal().json(JsonLibrary.Jackson)
-                .unmarshal().json(JsonLibrary.Jackson, HashMap.class)
+                .log("[" + SEARCH_TRAVEL + "] Put header id into body")
+                .process(e -> e.getIn().setBody(Collections.singletonMap("travelId", e.getIn().getHeader("travelId", Integer.class))))
 
                 .inOut(GET_TRAVEL)
 
-                .log("[" + SEARCH_TRAVEL + "] Unmarshalling to TravelResponse")
-                .convertBodyTo(HashMap.class)
+                .log("[" + SEARCH_TRAVEL + "] Unmarshalling to Travel")
                 .process(e -> {
-                    HashMap map = (HashMap) e.getIn().getBody();
+                    Map map = e.getIn().getBody(Map.class);
                     map.remove("_id");
                     e.getIn().setBody(map);
                 })
+
+                .marshal().json(JsonLibrary.Jackson)
         ;
 
         from(GET_TRAVEL)
@@ -55,6 +53,12 @@ public class SearchTravel extends RouteBuilder {
                 .convertBodyTo(DBObject.class)
 
                 .to(SEARCH_TRAVEL_DATABASE_EP)
+
+                .process(e -> {
+                    if (e.getIn().getBody() == null) {
+                        e.getIn().setBody(Collections.emptyMap());
+                    }
+                })
         ;
 
     }
