@@ -19,7 +19,7 @@ public class ExplanationProviderTest extends ActiveMQTest {
 
     @Override
     public String isMockEndpointsAndSkip() {
-        return EXPLANATION_CHECKER + "|" + EXPLANATION_REFUSED + "|" + EXPENSE_DATABASE + "|" + EXPLANATION_REFUSED_EP;
+        return EXPLANATION_CHECKER + "|" + EXPLANATION_REFUSED  + "|" + EXPLANATION_REFUSED_EP;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ExplanationProviderTest extends ActiveMQTest {
     @Test
     public void TestExplanationProviderChecker() throws InterruptedException {
         isAvailableAndMocked(EXPLANATION_CHECKER);
-
+        assertNotNull(context.hasEndpoint(EXPLANATION_PROVIDER));
         mock(EXPLANATION_CHECKER).expectedMessageCount(1);
         mock(EXPLANATION_CHECKER).expectedHeaderReceived(Exchange.HTTP_METHOD, constant("POST"));
         template.sendBody(EXPLANATION_PROVIDER, explanation);
