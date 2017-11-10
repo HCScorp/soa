@@ -1,18 +1,15 @@
 package fr.unice.polytech.hcs.flows.travel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
 
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.GET_TRAVEL;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.EP_SEARCH_TRAVEL_DATABASE;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.SEARCH_TRAVEL;
 
 public class SearchTravel extends RouteBuilder {
@@ -39,18 +36,30 @@ public class SearchTravel extends RouteBuilder {
                 .log("[" + SEARCH_TRAVEL + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + SEARCH_TRAVEL + "] Unmarshalling body to HashMap")
+                .log("[" + SEARCH_TRAVEL + "] Convert TravelRequest to HashMap")
                 .marshal().json(JsonLibrary.Jackson)
                 .unmarshal().json(JsonLibrary.Jackson, HashMap.class)
 
-                .log("[" + SEARCH_TRAVEL + "] Converting HashMap to DBObject")
-                .convertBodyTo(DBObject.class)
-                .log("REQUEST : ${body}")
+                .inOut(GET_TRAVEL)
 
-                .to(Endpoints.SEARCH_TRAVEL_DATABASE)
 
                 .log("[" + SEARCH_TRAVEL + "] Unmarshalling to TravelResponse")
-                .unmarshal().json(JsonLibrary.Jackson, TravelResponse.class)
+                .convertBodyTo(HashMap.class)
+                .process(e -> {
+                    HashMap map = (HashMap) e.getIn().getBody();
+                    map.remove("_id");
+                    e.getIn().setBody(map);
+                })
+        ;
+
+        from(GET_TRAVEL)
+                .routeId("get-travel")
+                .routeDescription("Get travel in database")
+
+                .log("[" + GET_TRAVEL + "] Converting HashMap to DBObject")
+                .convertBodyTo(DBObject.class)
+
+                .to(EP_SEARCH_TRAVEL_DATABASE)
         ;
 
     }

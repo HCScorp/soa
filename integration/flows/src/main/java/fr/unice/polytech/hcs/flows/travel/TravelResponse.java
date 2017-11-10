@@ -3,33 +3,34 @@ package fr.unice.polytech.hcs.flows.travel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.hcs.flows.expense.Document;
 
 import java.io.Serializable;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TravelResponse implements Serializable {
 
-    @JsonProperty public Integer travelId;
-    @JsonProperty public String status;
+    @JsonProperty public int travelId;
+    //@JsonProperty public String status;
+    @JsonProperty public List<Document> documents;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         TravelResponse response = (TravelResponse) o;
 
-        if (travelId != null ? !travelId.equals(response.travelId) : response.travelId != null) return false;
-        return status != null ? status.equals(response.status) : response.status == null;
+        if (travelId != response.travelId) return false;
+        return documents != null ? documents.equals(response.documents) : response.documents == null;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (travelId != null ? travelId.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        int result = travelId;
+        result = 31 * result + (documents != null ? documents.hashCode() : 0);
         return result;
     }
 
@@ -37,7 +38,7 @@ public class TravelResponse implements Serializable {
     public String toString() {
         return "TravelResponse{" +
                 "travelId=" + travelId +
-                ", status='" + status + '\'' +
+                ", documents=" + documents +
                 '}';
     }
 }
