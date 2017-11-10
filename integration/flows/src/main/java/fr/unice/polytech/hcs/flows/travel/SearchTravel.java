@@ -1,17 +1,21 @@
 package fr.unice.polytech.hcs.flows.travel;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+import fr.unice.polytech.hcs.flows.expense.Expense;
+import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.SEARCH_TRAVEL;
 
 public class SearchTravel extends RouteBuilder {
-
-    private static final String host = "myDb";
-    private static final String database = "hotel";
-    private static final String collection = "hotels";
 
     @Override
     public void configure() throws Exception {
@@ -34,25 +38,20 @@ public class SearchTravel extends RouteBuilder {
 
                 .log("[" + SEARCH_TRAVEL + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
-                //.process(retrieveTravel)
-                .to("mongodb:" + host + "?database=" + database + "&collection=" + collection + "&operation=findAll")
-        //.to(Endpoints.SEARCH_TRAVEL_RESPONSE)
+
+                .log("[" + SEARCH_TRAVEL + "] Unmarshalling body to HashMap")
+                .marshal().json(JsonLibrary.Jackson)
+                .unmarshal().json(JsonLibrary.Jackson, HashMap.class)
+
+                .log("[" + SEARCH_TRAVEL + "] Converting HashMap to DBObject")
+                .convertBodyTo(DBObject.class)
+                .log("REQUEST : ${body}")
+
+                .to(Endpoints.SEARCH_TRAVEL_DATABASE)
+
+                .log("[" + SEARCH_TRAVEL + "] Unmarshalling to TravelResponse")
+                .unmarshal().json(JsonLibrary.Jackson, TravelResponse.class)
         ;
 
     }
-
-    private static Processor retrieveTravel = new Processor() {
-        @Override
-        public void process(Exchange exchange) throws Exception {
-            TravelRequest request = (TravelRequest) exchange.getIn().getBody();
-            TravelResponse response = retrieve(request);
-            exchange.getIn().setBody(response);
-        }
-
-        private TravelResponse retrieve(TravelRequest request) {
-            TravelResponse response = new TravelResponse();
-
-            return response;
-        }
-    };
 }
