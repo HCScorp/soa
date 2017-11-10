@@ -54,7 +54,13 @@ public class Endpoints {
 
     public static final String REFUND_SENDING_EP = "";
 
+    public static final String EXPENSE_EMAIL = "file:/servicemix/camel/input/email";
+    public static final String EXPENSE_DATABASE = "mongodb:myDb?database=expense&collection=expenses&operation=insert";
 
+    // Travel
+    public static final String SEARCH_TRAVEL = "activemq:search-travel";
+    public static final String GET_TRAVEL = "direct:get-travel";
+    public static final String EP_SEARCH_TRAVEL_DATABASE = "mongodb:myDb?database=expense&collection=expenses&operation=findOneByQuery";
 }
 
 

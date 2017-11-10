@@ -9,6 +9,7 @@ services:
       - ./data/deploy:/servicemix/deploy # DEBUG
       - ./data/input:/servicemix/camel/input
       - ./data/output:/servicemix/camel/output
+      - ./data/input/email:/servicemix/camel/input/email
     ports:
       - "8181:8181"
     links:
@@ -18,6 +19,7 @@ services:
       - flight-ext:g1-flight
       - hotel:hcs-hotel
       - hotel-ext:g7-hotel
+      - database:db
 
     environment:
       - FTP_PASS=cesarius
@@ -99,9 +101,13 @@ services:
 
   database:
     image: mongo:3.4.9
+    ports:
+      - "27017:27017"
     volumes:
       - "./mongo_data:/data/db"
       - "./import:/import"
+    ports:
+      - "27017:27017"
 
   cadvisor:
     image: petitroll/cadvisor

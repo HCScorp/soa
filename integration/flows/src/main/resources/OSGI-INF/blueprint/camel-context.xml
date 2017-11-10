@@ -55,4 +55,7 @@
 
     <bean id="camelServlet" class="org.apache.camel.component.servlet.CamelHttpTransportServlet"/>
 
+    <bean id="myDb" class="com.mongodb.MongoClient">
+        <argument index="0" value="database" />
+    </bean>
 </blueprint>
