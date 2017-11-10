@@ -1,7 +1,7 @@
 package fr.unice.polytech.hcs.flows.travel;
 
 import com.mongodb.DBObject;
-import fr.unice.polytech.hcs.flows.utils.Endpoints;
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
@@ -9,7 +9,7 @@ import org.apache.camel.model.rest.RestBindingMode;
 import java.util.HashMap;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.GET_TRAVEL;
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.EP_SEARCH_TRAVEL_DATABASE;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.SEARCH_TRAVEL_DATABASE_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.SEARCH_TRAVEL;
 
 public class SearchTravel extends RouteBuilder {
@@ -25,7 +25,7 @@ public class SearchTravel extends RouteBuilder {
         rest("/travel")
                 .post("/search")
                 .type(TravelRequest.class)
-                .outType(TravelResponse.class)
+                .outType(Travel.class)
                 .to(SEARCH_TRAVEL)
         ;
 
@@ -59,7 +59,7 @@ public class SearchTravel extends RouteBuilder {
                 .log("[" + GET_TRAVEL + "] Converting HashMap to DBObject")
                 .convertBodyTo(DBObject.class)
 
-                .to(EP_SEARCH_TRAVEL_DATABASE)
+                .to(SEARCH_TRAVEL_DATABASE_EP)
         ;
 
     }

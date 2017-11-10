@@ -53,6 +53,7 @@ public class G7SearchHotel extends RouteBuilder {
                 .doCatch(Exception.class)
                     .log("[" + routeUri + "] Something went wrong, setting response to null")
                     .process(e -> e.getIn().setBody(null))
+                .end()
         ;
     }
 
