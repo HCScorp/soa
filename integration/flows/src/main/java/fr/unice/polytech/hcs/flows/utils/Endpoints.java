@@ -1,5 +1,6 @@
 package fr.unice.polytech.hcs.flows.utils;
 
+
 public class Endpoints {
 
     // File inputs
@@ -57,6 +58,22 @@ public class Endpoints {
     public static final String EXPENSE_EMAIL = "file:/servicemix/camel/input/email";
     public static final String EXPENSE_DATABASE = "mongodb:myDb?database=expense&collection=expenses&operation=insert";
 
+    public static final String EXPLANATION_PROVIDER = "activemq:explanation-provider";
+    public static final String EXPLANATION_CHECKER = "activemq:explanation-checker";
+
+    public static final String EXPLANATION_ANSWER = "activemq:explanation-answer";
+
+    public static final String EXPLANATION_REFUSED = "activemq:explanation-refused";
+    public static final String EXPLANATION_REFUSED_EP = "activemq:explanation-refused-ep";
+
+
+    public static final String REFUND_ACCEPT = "activemq:accepting";
+
+
+    // Travel
+    public static final String SEARCH_TRAVEL = "activemq:search-travel";
+    public static final String GET_TRAVEL = "direct:get-travel";
+    public static final String SEARCH_TRAVEL_DATABASE_EP = "mongodb:myDb?database=expense&collection=expenses&operation=findOneByQuery";
 }
 
 
