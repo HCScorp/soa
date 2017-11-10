@@ -75,7 +75,7 @@ public abstract class SimpleJsonPostRoute<In extends Serializable, Out extends S
                     .process(e -> e.getIn().setBody(specificResConverter.convert((Map) e.getIn().getBody())))
                     .log(l("OUT: ${body}"))
                 .doCatch(Exception.class)
-                    .log(l("Something went wrong, setting response to null"))
+                    .log(l("Something went wrong, setting response to null (${exception.message})"))
                     .process(e -> e.getIn().setBody(null))
                 .end()
         ;

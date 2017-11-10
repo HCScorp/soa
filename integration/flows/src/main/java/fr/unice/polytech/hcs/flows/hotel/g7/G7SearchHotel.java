@@ -49,7 +49,7 @@ public class G7SearchHotel extends RouteBuilder {
                     .log("["+routeUri+"] Converting to generic response")
                     .process(e -> e.getIn().setBody(specificResConverter.convert((Map<String, Map<String, Map>>) e.getIn().getBody())))
                 .doCatch(Exception.class)
-                    .log("[" + routeUri + "] Something went wrong, setting response to null")
+                    .log("[" + routeUri + "] Something went wrong, setting response to null (${exception.message})")
                     .process(e -> e.getIn().setBody(null))
                 .end()
         ;
