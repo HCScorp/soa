@@ -91,7 +91,7 @@ services:
     image: hcsoa/flight-ext
     ports:
       - "9097:8080"
-  ftp:
+  ftp-server:
     image: onekilo79/ftpd_test
     ports:
       - "11021:21"

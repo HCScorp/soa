@@ -1,5 +1,6 @@
 package fr.unice.polytech.hcs.flows.refund;
 
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
@@ -15,11 +16,12 @@ public class RefundArchiver extends RouteBuilder {
         from(REFUND_SENDING)
                 .routeDescription("where to send your refund piece")
                 .routeId("refund-piece-route")
-                .marshal().json(JsonLibrary.Jackson)
-                .process(p ->
-                {
-                    System.out.println(p.getIn().getBody().getClass());
+                .process(exchange -> {
+
+                    Travel travel = exchange.getIn().getBody(Travel.class);
+                    exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
                 })
-                .toD("ftp://localhost:11021/out?username=test&password=test&passiveMode=true");
+                .marshal().json(JsonLibrary.Jackson)
+                .toD("ftp://ftp-server:11021/${header.id}?username=test&password=test&passiveMode=true");
     }
 }

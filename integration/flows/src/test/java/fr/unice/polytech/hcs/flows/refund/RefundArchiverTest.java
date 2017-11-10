@@ -2,26 +2,22 @@
 package fr.unice.polytech.hcs.flows.refund;
 
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
-import org.apache.camel.Exchange;
+import fr.unice.polytech.hcs.flows.expense.Expense;
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.DefaultExchange;
-import org.junit.Before;
 import org.junit.Test;
+import java.util.ArrayList;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_PIECE_OUTPUT_DIR;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_SENDING;
 
 public class RefundArchiverTest extends ActiveMQTest {
 
 
-    RefundRequest borabora;
+    Travel borabora;
 
     @Override
     public String isMockEndpoints() {
-        return REFUND_SENDING;
+        return "";
     }
 
     @Override
@@ -29,22 +25,26 @@ public class RefundArchiverTest extends ActiveMQTest {
         return new RefundArchiver();
     }
 
-    @Before
-    public void init() {
-        borabora = new RefundRequest();
-        borabora.setAmount(10000);
-        borabora.setName("cesar");
-        borabora.setCity("bora bora");
-        borabora.setDate("2017-10-12");
-        borabora.setReason("business");
-    }
 
     @Test
     public void TestRefundArchiver() throws InterruptedException {
-        assertNotNull(context.hasEndpoint(REFUND_SENDING));
-//        assertNotNull(context.hasEndpoint(REFUND_PIECE_OUTPUT_DIR + "?fileName=ici.txt"));
-
-        template.sendBody(REFUND_SENDING, borabora);
+        borabora = new Travel();
+        Expense expense = new Expense();
+        expense.category = "plage-vietnamien";
+        expense.evidence = "LaRue/Tiger/Pina-Colada";
+        expense.price = 120;
+        Expense expense1 = new Expense();
+        expense1.category = "playa";
+        expense1.evidence = "pina-colada";
+        expense1.price = 156;
+        ArrayList<Expense> expenseArrayList = new ArrayList<>();
+        expenseArrayList.add(expense);
+        expenseArrayList.add(expense1);
+        borabora.documents = expenseArrayList;
+        borabora.status = "cocotier-vietnam";
+        borabora.travelId = 10;
+        // how can I mock a dynamick URI in camel, that's the question.....
+        // template.sendBody(REFUND_SENDING, borabora);
 
     }
 
