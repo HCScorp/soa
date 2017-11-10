@@ -10,9 +10,9 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class SplittatorRoute< In extends Serializable,
-                                Mid extends Iterable<Out>,
-                                Out extends SerializableComparable<Out> >
+public abstract class SplittatorRoute<In extends Serializable,
+        Mid extends Iterable<Out>,
+        Out extends SerializableComparable<Out>>
         extends RouteBuilder {
 
     private final String name;
@@ -29,12 +29,12 @@ public abstract class SplittatorRoute< In extends Serializable,
     private final String routeDescription;
 
     protected SplittatorRoute(String restEndpoint,
-                            Class<In> inClass, Class<Out> outClass,
-                            AggregationStrategy aggregationStrategy,
-                            String unmarshalUri, String multicastUri,
-                            Collection<String> targets,
-                            int threadPoolSize, long timeout,
-                            String routeId, String routeDescription) {
+                              Class<In> inClass, Class<Out> outClass,
+                              AggregationStrategy aggregationStrategy,
+                              String unmarshalUri, String multicastUri,
+                              Collection<String> targets,
+                              int threadPoolSize, long timeout,
+                              String routeId, String routeDescription) {
         this.name = inClass.getSimpleName() + "__" + outClass.getSimpleName();
         this.restEndpoint = restEndpoint;
         this.inClass = inClass;
@@ -71,31 +71,31 @@ public abstract class SplittatorRoute< In extends Serializable,
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .log("["+unmarshalUri+"] Remove shitty headers (thx camel)")
+                .log("[" + unmarshalUri + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("["+unmarshalUri+"] Received generic request")
-                .log("["+unmarshalUri+"] Sending generic request to message handler queue")
+                .log("[" + unmarshalUri + "] Received generic request")
+                .log("[" + unmarshalUri + "] Sending generic request to message handler queue")
                 .to(multicastUri)
         ;
 
         from(multicastUri)
-                .log("["+multicastUri+"] Multicast request to the services")
+                .log("[" + multicastUri + "] Multicast request to the services")
                 .multicast(aggregationStrategy)
                     .parallelProcessing()
                     .executorService(workers)
                     .timeout(timeout)
                     .inOut(targets.toArray(new String[targets.size()]))
                     .end()
-                .log("["+multicastUri+"] End of multicast")
-                .log("["+multicastUri+"] Sending generic response")
+                .log("[" + multicastUri + "] End of multicast")
+                .log("[" + multicastUri + "] Sending generic response")
                 .process(e -> {
                     if (e.getIn().getBody() == null) {
-                        e.getIn().setBody("{}");
+                        e.getIn().setBody(outClass.getConstructor().newInstance());
                     }
                 })
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .log("["+multicastUri+"] OUT: ${body}")
+                .log("[" + multicastUri + "] OUT: ${body}")
         ;
     }
 }

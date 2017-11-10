@@ -23,6 +23,7 @@ public abstract class SimpleJsonGetRoute<In extends Serializable, Out extends Se
     private final Function<Object, String> urlGenerator;
     private final String routeId;
     private final String routeDescription;
+    private final String prefix;
 
     public SimpleJsonGetRoute(String routeUri,
                               String endpoint,
@@ -38,41 +39,47 @@ public abstract class SimpleJsonGetRoute<In extends Serializable, Out extends Se
         this.urlGenerator = urlGenerator;
         this.routeId = routeId;
         this.routeDescription = routeDescription;
+        this.prefix = "[" + routeUri + "] ";
     }
 
     @Override
     public void configure() throws Exception {
+
         from(routeUri)
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
                 .doTry()
-                    .log("[" + routeUri + "] Creating specific request from generic request")
-                    .log("[" + routeUri + "] IN: ${body}")
+                    .log(l("Creating specific request from generic request"))
+                    .log(l("IN: ${body}"))
                     .process(e -> e.getIn().setBody(genericRecConverter.apply((In) e.getIn().getBody())))
                     .process(e -> e.getIn().setHeader("dynamicUrl", urlGenerator.apply(e.getIn().getBody())))
-                    .log("[" + routeUri + "] OUT: ${body}")
+                    .log(l("OUT: ${body}"))
 
-                    .log("[" + routeUri + "] Setting up request header")
+                    .log(l("Setting up request header"))
                     .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                     .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                     .setHeader(Exchange.ACCEPT_CONTENT_TYPE, constant("application/json"))
 
-                    .log("[" + routeUri + "] Preparing url to request")
+                    .log(l("Preparing url to request"))
                     .marshal().json(JsonLibrary.Jackson)
-                    .log("[" + routeUri + "] OUT: ${body}")
+                    .log(l("OUT: ${body}"))
 
-                    .log("[" + routeUri + "] Sending to endpoint")
+                    .log(l("Sending to endpoint"))
                     .toD(endpoint + "${header.dynamicUrl}")
-                    .log("[" + routeUri + "] Received specific request result")
+                    .log(l("Received specific request result"))
 
-                    .log("[" + routeUri + "] Unmarshalling response && converting to generic response")
+                    .log(l("Unmarshalling response && converting to generic response"))
                     .process(e -> e.getIn().setBody(specificResConverter.apply((InputStream) e.getIn().getBody())))
-                    .log("[" + routeUri + "] OUT: ${body}")
+                    .log(l("OUT: ${body}"))
                 .doCatch(Exception.class)
-                    .log("[" + routeUri + "] Something went wrong, setting response to null")
+                    .log(l("Something went wrong, setting response to null"))
                     .process(e -> e.getIn().setBody(null))
+                .end()
         ;
     }
 
+    private String l(String msg) {
+        return prefix + msg;
+    }
 }

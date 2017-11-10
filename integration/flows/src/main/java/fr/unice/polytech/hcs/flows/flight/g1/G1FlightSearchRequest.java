@@ -6,6 +6,8 @@ import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 
 import java.io.Serializable;
 import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class G1FlightSearchRequest implements Serializable {
@@ -15,7 +17,7 @@ public class G1FlightSearchRequest implements Serializable {
     @JsonProperty private String departure;
     @JsonProperty private String orderBy;
     @JsonProperty private Long departureTimeStamp;
-    @JsonProperty private Filter filterBy;
+//    @JsonProperty private List<Filter> filterBy;
 
     G1FlightSearchRequest(FlightSearchRequest fsr) {
         this.event = "list";
@@ -32,11 +34,13 @@ public class G1FlightSearchRequest implements Serializable {
             this.departureTimeStamp = Instant.now().getEpochSecond();
         }
 
-        if(fsr.maxTravelTime != null) {
-            this.filterBy = new Filter();
-            this.filterBy.name = "max_duration";
-            this.filterBy.args = new String[]{fsr.maxTravelTime.toString()};
-        }
+//        if(fsr.maxTravelTime != null) {
+//            this.filterBy = new ArrayList<>();
+//            Filter f = new Filter();
+//            f.name = "max_duration";
+//            f.args = new String[]{fsr.maxTravelTime.toString()};
+//            this.filterBy.add(f);
+//        }
     }
 
     @Override
@@ -71,7 +75,7 @@ public class G1FlightSearchRequest implements Serializable {
                 ", departure='" + departure + '\'' +
                 ", orderBy='" + orderBy + '\'' +
                 ", departureTimeStamp=" + departureTimeStamp +
-                ", filterBy=" + filterBy +
+//                ", filterBy=" + filterBy +
                 '}';
     }
 }
