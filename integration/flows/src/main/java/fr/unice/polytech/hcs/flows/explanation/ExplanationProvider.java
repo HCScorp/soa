@@ -33,10 +33,10 @@ public class ExplanationProvider extends RouteBuilder {
                     exchange.getIn().setBody(h);
                 })
                 .inOut(GET_TRAVEL)
-                .process(exchange -> {
-                    System.out.println(exchange.getIn().getBody().getClass());
-                })
-                .log("We send a mail to the manager");
+
+        .log("We send a mail to the manager");
+
+
 
 
 
@@ -64,6 +64,7 @@ public class ExplanationProvider extends RouteBuilder {
 //
 //        from(REFUND_ACCEPT)
 //                .log("refund accepted !");
+
 
     }
 }

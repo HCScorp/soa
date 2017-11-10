@@ -9,14 +9,10 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HCSHotelSearchRequest implements Serializable {
 
-    @JsonProperty
-    private String city;
-    @JsonProperty
-    private String dateFrom;
-    @JsonProperty
-    private String dateTo;
-    @JsonProperty
-    private String order;
+    @JsonProperty private String city;
+    @JsonProperty private String dateFrom;
+    @JsonProperty private String dateTo;
+    @JsonProperty private String order;
 
     HCSHotelSearchRequest(HotelSearchRequest hsr) {
         this.city = hsr.city;

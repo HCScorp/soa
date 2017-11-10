@@ -7,16 +7,11 @@ import fr.unice.polytech.hcs.flows.splitator.SerializableComparable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Car implements SerializableComparable<Car> {
 
-    @JsonProperty
-    public String company;
-    @JsonProperty
-    public String city;
-    @JsonProperty
-    public String model;
-    @JsonProperty
-    public String numberPlate;
-    @JsonProperty
-    public Double price;
+    @JsonProperty public String company;
+    @JsonProperty public String city;
+    @JsonProperty public String model;
+    @JsonProperty public String numberPlate;
+    @JsonProperty public Double price;
 
     @Override
     public boolean equals(Object o) {

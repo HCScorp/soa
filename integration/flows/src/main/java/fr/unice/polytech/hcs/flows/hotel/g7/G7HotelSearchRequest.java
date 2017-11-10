@@ -11,18 +11,12 @@ import java.time.format.DateTimeFormatter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class G7HotelSearchRequest implements Serializable {
 
-    @JsonProperty
-    public String address;
-    @JsonProperty
-    public String city;
-    @JsonProperty
-    public String checkin;
-    @JsonProperty
-    public String checkout;
-    @JsonProperty
-    public String sortOrder;
-    @JsonProperty
-    public int resultNumber;
+    @JsonProperty public String address;
+    @JsonProperty public String city;
+    @JsonProperty public String checkin;
+    @JsonProperty public String checkout;
+    @JsonProperty public String sortOrder;
+    @JsonProperty public int resultNumber;
 
     G7HotelSearchRequest(HotelSearchRequest hsr) {
         this.city = hsr.city;

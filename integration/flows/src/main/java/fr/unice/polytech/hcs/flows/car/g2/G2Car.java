@@ -5,10 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class G2Car {
-    @JsonProperty
-    public Double price;
-    @JsonProperty
-    public String name;
+    @JsonProperty public Double price;
+    @JsonProperty public String name;
 
     @Override
     public String toString() {

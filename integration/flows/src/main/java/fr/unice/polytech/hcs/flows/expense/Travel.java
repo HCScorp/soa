@@ -10,12 +10,9 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Travel implements Serializable {
-    @JsonProperty
-    public Integer travelId;
-    @JsonProperty
-    public List<Expense> documents;
-    @JsonProperty
-    public String status;
+    @JsonProperty public Integer travelId;
+    @JsonProperty public List<Expense> documents;
+    @JsonProperty public String status;
 
     @Override
     public boolean equals(Object o) {
