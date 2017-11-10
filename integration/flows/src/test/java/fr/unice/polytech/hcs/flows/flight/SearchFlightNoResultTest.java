@@ -57,6 +57,6 @@ public class SearchFlightNoResultTest extends SplittatorRouteTest<Flight> {
                 entry(HCS_SEARCH_FLIGHT_MQ, HCSfsRes),
                 entry(G1_SEARCH_FLIGHT_MQ, G1fsRes));
         this.expectedResultClass = Flight.class;
-        this.expectedResult = null;
+        this.expectedResult = new Flight();
     }
 }
