@@ -21,6 +21,6 @@ public class ExpenseRegistration extends RouteBuilder {
                     InputStream is = exchange.getIn().getBody(InputStream.class);
                     exchange.getIn().setBody(new ObjectMapper().readValue(is , Travel.class));
                 })
-                .to(EXPENSE_DATABASE);
+                .inOut(EXPENSE_DATABASE);
     }
 }

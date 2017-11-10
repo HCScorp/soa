@@ -8,7 +8,6 @@ public class ManageBTR extends RouteBuilder {
 
     private CamelContext camelContext;
 
-
     public ManageBTR() {
         camelContext = new DefaultCamelContext();
     }
