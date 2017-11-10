@@ -6,10 +6,14 @@ import java.io.Serializable;
 
 public class HotelSearchRequest implements Serializable {
 
-    @JsonProperty public String city;
-    @JsonProperty public String dateFrom;
-    @JsonProperty public String dateTo;
-    @JsonProperty public String order;
+    @JsonProperty
+    public String city;
+    @JsonProperty
+    public String dateFrom;
+    @JsonProperty
+    public String dateTo;
+    @JsonProperty
+    public String order;
 
     @Override
     public boolean equals(Object o) {

@@ -7,15 +7,24 @@ import fr.unice.polytech.hcs.flows.splitator.SerializableComparable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Flight implements SerializableComparable<Flight> {
 
-    @JsonProperty public String origin;
-    @JsonProperty public String destination;
-    @JsonProperty public String date;
-    @JsonProperty public String time;
-    @JsonProperty public Double price;
-    @JsonProperty public String journeyType;
-    @JsonProperty public Integer duration; // in minutes
-    @JsonProperty public String category;
-    @JsonProperty public String airline;
+    @JsonProperty
+    public String origin;
+    @JsonProperty
+    public String destination;
+    @JsonProperty
+    public String date;
+    @JsonProperty
+    public String time;
+    @JsonProperty
+    public Double price;
+    @JsonProperty
+    public String journeyType;
+    @JsonProperty
+    public Integer duration; // in minutes
+    @JsonProperty
+    public String category;
+    @JsonProperty
+    public String airline;
 
     @Override
     public boolean equals(Object o) {

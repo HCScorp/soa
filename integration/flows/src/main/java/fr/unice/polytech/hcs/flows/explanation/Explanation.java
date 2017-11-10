@@ -5,8 +5,10 @@ import fr.unice.polytech.hcs.flows.expense.Travel;
 
 import java.io.Serializable;
 
-public class Explanation  implements Serializable  {
+public class Explanation implements Serializable {
 
-    @JsonProperty public String explanation;
-    @JsonProperty public Travel travel;
+    @JsonProperty
+    public String explanation;
+    @JsonProperty
+    public Travel travel;
 }

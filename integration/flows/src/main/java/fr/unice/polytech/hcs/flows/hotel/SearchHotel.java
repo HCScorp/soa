@@ -2,18 +2,8 @@ package fr.unice.polytech.hcs.flows.hotel;
 
 import fr.unice.polytech.hcs.flows.splitator.CheapestAggregator;
 import fr.unice.polytech.hcs.flows.splitator.SplittatorRoute;
-import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonDataFormat;
-import org.apache.camel.processor.aggregate.AggregationStrategy;
-import org.apache.camel.processor.aggregate.GroupedExchangeAggregationStrategy;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 

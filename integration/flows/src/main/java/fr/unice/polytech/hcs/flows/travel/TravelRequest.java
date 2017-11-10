@@ -10,7 +10,8 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TravelRequest implements Serializable {
 
-    @JsonProperty public int travelId;
+    @JsonProperty
+    public int travelId;
 
     @Override
     public boolean equals(Object o) {

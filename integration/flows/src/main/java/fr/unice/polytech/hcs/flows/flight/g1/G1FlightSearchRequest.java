@@ -6,17 +6,20 @@ import fr.unice.polytech.hcs.flows.flight.FlightSearchRequest;
 
 import java.io.Serializable;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class G1FlightSearchRequest implements Serializable {
 
-    @JsonProperty private String event;
-    @JsonProperty private String destination;
-    @JsonProperty private String departure;
-    @JsonProperty private String orderBy;
-    @JsonProperty private Long departureTimeStamp;
+    @JsonProperty
+    private String event;
+    @JsonProperty
+    private String destination;
+    @JsonProperty
+    private String departure;
+    @JsonProperty
+    private String orderBy;
+    @JsonProperty
+    private Long departureTimeStamp;
 //    @JsonProperty private List<Filter> filterBy;
 
     G1FlightSearchRequest(FlightSearchRequest fsr) {
@@ -25,7 +28,7 @@ public class G1FlightSearchRequest implements Serializable {
         this.departure = fsr.origin != null ? fsr.origin : "";
         this.orderBy = "price";
 
-        if(fsr.date != null && fsr.timeFrom != null) {
+        if (fsr.date != null && fsr.timeFrom != null) {
             LocalDateTime dateTime = LocalDateTime.of(
                     LocalDate.parse(fsr.date),
                     LocalTime.parse(fsr.timeFrom));

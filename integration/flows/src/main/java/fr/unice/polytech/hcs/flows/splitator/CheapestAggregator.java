@@ -36,7 +36,7 @@ public class CheapestAggregator<In extends Iterable<Out>, Out extends Serializab
     private Out cheapestList(In r1, In r2) {
         Out cheapest = null;
 
-        if(r1 != null) {
+        if (r1 != null) {
             for (Out p : r1) {
                 if (cheapest == null || p.compareTo(cheapest) < 0) {
                     cheapest = p;
@@ -44,7 +44,7 @@ public class CheapestAggregator<In extends Iterable<Out>, Out extends Serializab
             }
         }
 
-        if(r2 != null) {
+        if (r2 != null) {
             for (Out p : r2) {
                 if (cheapest == null || p.compareTo(cheapest) < 0) {
                     cheapest = p;
@@ -58,7 +58,7 @@ public class CheapestAggregator<In extends Iterable<Out>, Out extends Serializab
     private Out cheapest(Out o1, In r) {
         Out cheapest = o1;
 
-        if(r != null) {
+        if (r != null) {
             for (Out p : r) {
                 if (cheapest == null || p.compareTo(cheapest) < 0) {
                     cheapest = p;

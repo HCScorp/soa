@@ -4,7 +4,6 @@ import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_PIECE_OUTPUT_DIR;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_SENDING;
 
 public class RefundArchiver extends RouteBuilder {

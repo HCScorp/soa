@@ -4,10 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.car.CarSearchRequest;
 import fr.unice.polytech.hcs.flows.car.CarSearchResponse;
 import fr.unice.polytech.hcs.flows.splitator.SimpleJsonPostRoute;
-import org.apache.camel.model.dataformat.JsonDataFormat;
-import org.apache.camel.model.dataformat.JsonLibrary;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_EP;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.HCS_SEARCH_CAR_MQ;
 
 public class HCSSearchCar extends SimpleJsonPostRoute<CarSearchRequest, CarSearchResponse> {
 
