@@ -16,6 +16,10 @@ public class RefundArchiver extends RouteBuilder {
                 .routeDescription("where to send your refund piece")
                 .routeId("refund-piece-route")
                 .marshal().json(JsonLibrary.Jackson)
-                .toD("ftp://localhost:11021/out?username=test&password=test&passiveMode=true&fileName=out.json");
+                .process(p ->
+                {
+                    System.out.println(p.getIn().getBody().getClass());
+                })
+                .toD("ftp://localhost:11021/out?username=test&password=test&passiveMode=true");
     }
 }

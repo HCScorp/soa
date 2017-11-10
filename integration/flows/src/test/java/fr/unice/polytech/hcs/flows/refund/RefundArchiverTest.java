@@ -2,9 +2,14 @@
 package fr.unice.polytech.hcs.flows.refund;
 
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultExchange;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_PIECE_OUTPUT_DIR;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_SENDING;
@@ -16,7 +21,7 @@ public class RefundArchiverTest extends ActiveMQTest {
 
     @Override
     public String isMockEndpoints() {
-        return REFUND_PIECE_OUTPUT_DIR + "?fileName=ici.txt" + "|" + REFUND_SENDING;
+        return REFUND_SENDING;
     }
 
     @Override
@@ -38,7 +43,8 @@ public class RefundArchiverTest extends ActiveMQTest {
     public void TestRefundArchiver() throws InterruptedException {
         assertNotNull(context.hasEndpoint(REFUND_SENDING));
 //        assertNotNull(context.hasEndpoint(REFUND_PIECE_OUTPUT_DIR + "?fileName=ici.txt"));
-        template.requestBody(REFUND_SENDING, borabora, RefundRequest.class);
+
+        template.sendBody(REFUND_SENDING, borabora);
 
     }
 
