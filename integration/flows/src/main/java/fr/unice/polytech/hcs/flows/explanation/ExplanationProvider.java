@@ -3,12 +3,14 @@ package fr.unice.polytech.hcs.flows.explanation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.Travel;
+import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.bson.types.ObjectId;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,14 +66,14 @@ public class ExplanationProvider extends RouteBuilder {
 
                     // Cast to a MAP because the POJO is quiet complexe.
                     Map body = exchange.getIn().getBody(Map.class);
-                    body.put("explanation", exchange.getIn().getHeader("explanation") );
-                    
+                    body.put("explanation", exchange.getIn().getHeader("explanation"));
+
                     exchange.getIn().setBody(body);
                     System.out.println("send : " + body);
                 })
-        .log("[ " + EXPLANATION_PROVIDER + "]" + "Object updated  !")
+                .log("[ " + EXPLANATION_PROVIDER + "]" + "Object updated  !")
 
-        .to(SAVE_TRAVEL_DATABASE_EP)
+                .to(SAVE_TRAVEL_DATABASE_EP)
 
         ;
 
@@ -84,13 +86,14 @@ public class ExplanationProvider extends RouteBuilder {
         rest("/explanation")
                 .post("/answer")
                 .to(EXPLANATION_ANSWER)
+
         ;
         from(EXPLANATION_ANSWER)
                 .routeId("explanation-answer")
                 .routeDescription("answer to an explanation.")
                 .log("[" + EXPLANATION_ANSWER + "] Received answer")
 
-                .log("[" + EXPLANATION_ANSWER+ "] Remove shitty headers (thx camel)")
+                .log("[" + EXPLANATION_ANSWER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
                 .log("[" + EXPLANATION_ANSWER + "] Prepare request parameters for DB search travel")
@@ -114,24 +117,68 @@ public class ExplanationProvider extends RouteBuilder {
                 .log("[" + EXPLANATION_ANSWER + "]" + "Make a choice.")
 
                 .choice()
-                .when(simple("${header.code} == 1"))
                 .process(exchange -> {
                     Map body = exchange.getIn().getBody(Map.class);
                     Travel travel = new Travel();
                     travel.documents = (List<Expense>) body.get("documents");
                     travel.status = (String) body.get("status");
                     travel.travelId = (Integer) body.get("travelId");
-
-
                     exchange.getIn().setBody(travel);
                 })
+                .when(simple("${header.code} == 1"))
                 .log("ACCEPT : refundement : ${header.explanation} is correct and accepted, well done :D")
-                .to(ACCEPT_REFUND)
-                .when(simple("${header.code} == 0"))
-                .log("ERROR refundement : ${header.explanation} is not correct for your manager ;-) " );
+                .to(EXPLANATION_ACCEPTED)
+                .otherwise()
+                .log("ERROR refundement : ${header.explanation} is not correct for your manager ;-) ")
+                .to(EXPLANATION_REFUSED)
+                .end()
+                .marshal().json(JsonLibrary.Jackson);
 
 
+        from(EXPLANATION_REFUSED)
+                .routeId("explanation-refused")
+                .routeDescription("reject explanation")
+
+                .log("[" + EXPLANATION_REFUSED + "] Reject explanation")
+                .process(e -> {
+                    Travel travel = e.getIn().getBody(Travel.class);
+                    travel.status = "Rejected";
+                    e.getIn().setBody(travel);
+                })
+
+                .log("[" + EXPLANATION_REFUSED + "] ")
+                .to(UPDATE_TRAVEL)
+                .process(e -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("status", "Reject");
+                    response.put("message", "Refund Reject.");
+
+                    e.getIn().setBody(response);
+                })
+        ;
 
 
+        from(EXPLANATION_ACCEPTED)
+                .routeId("explanation-accepted")
+                .routeDescription("Accept a explanation")
+
+                .log("[" + EXPLANATION_ACCEPTED + "] Accept explanation")
+                .process(e -> {
+                    Travel travel = e.getIn().getBody(Travel.class);
+                    travel.status = "Done";
+                    e.getIn().setBody(travel);
+                })
+
+                .log("[" + EXPLANATION_ACCEPTED + "] : update travel with new status")
+                .to(UPDATE_TRAVEL)
+
+                .process(e -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("status", "Done");
+                    response.put("message", "Refund accepted.");
+
+                    e.getIn().setBody(response);
+                })
+        ;
     }
 }

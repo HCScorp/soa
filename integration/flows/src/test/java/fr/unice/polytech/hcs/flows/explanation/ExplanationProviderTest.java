@@ -19,7 +19,7 @@ public class ExplanationProviderTest extends ActiveMQTest {
 
     @Override
     public String isMockEndpointsAndSkip() {
-        return EXPLANATION_CHECKER + "|" + EXPLANATION_REFUSED  + "|" + EXPLANATION_REFUSED_EP;
+        return EXPLANATION_CHECKER + "|" + EXPLANATION_REFUSED  + "|" ;
     }
 
 //    @Before
