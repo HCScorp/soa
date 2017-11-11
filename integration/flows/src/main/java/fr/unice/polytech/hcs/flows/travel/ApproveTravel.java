@@ -30,14 +30,20 @@ public class ApproveTravel extends RouteBuilder {
                 .routeId("approve-travel")
                 .routeDescription("End a travel and check refund")
 
-                .log("[" + SEARCH_TRAVEL + "] Remove shitty headers (thx camel)")
+                .log("[" + END_TRAVEL + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + SEARCH_TRAVEL + "] Convert to Travel Request")
+                .log("[" + END_TRAVEL + "] Convert to Travel Request")
                 .process(e -> e.getIn().setBody(new TravelRequest(e.getIn().getHeader("travelId", String.class))))
 
                 .log("[" + END_TRAVEL + "] Load travel")
                 .inOut(GET_TRAVEL)
+
+                .choice().when(simple("${body} == null"))
+                    .process(e -> e.getIn().setBody(null))
+                    .to(BAD_REQUEST)
+                    .stop()
+                .end()
 
                 .log("[" + END_TRAVEL + "] Sum expenses")
                 .process(sumExpensesTravel)
@@ -45,7 +51,7 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + END_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
 
-                .log("[" + ACCEPT_REFUND + "] Extract travel")
+                .log("[" + END_TRAVEL + "] Extract travel")
                 .process(e -> {
                     Approval approval = e.getIn().getBody(Approval.class);
                     e.getIn().setBody(approval.travel);
@@ -89,14 +95,14 @@ public class ApproveTravel extends RouteBuilder {
                 .routeId("manual-refund")
                 .routeDescription("Manual refund")
 
-                .log("[" + ACCEPT_REFUND + "] Update travel status to Done")
+                .log("[" + MANUAL_REFUND + "] Update travel status to Done")
                 .process(e -> {
                     Travel travel = e.getIn().getBody(Travel.class);
                     travel.status = Status.DONE;
                     e.getIn().setBody(travel);
                 })
 
-                .log("[" + ACCEPT_REFUND + "] Save travel")
+                .log("[" + MANUAL_REFUND + "] Save travel")
                 .to(UPDATE_TRAVEL)
 
                 .process(e -> {

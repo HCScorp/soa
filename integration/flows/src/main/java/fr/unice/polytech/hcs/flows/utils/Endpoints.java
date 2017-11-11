@@ -80,6 +80,8 @@ public class Endpoints {
 
     public static final String OCR_IN = "direct:ocr-in";
     public static final String OCR_OUT = "direct:ocr-out";
+
+    public static final String BAD_REQUEST = "direct:bad-request";
 }
 
 
