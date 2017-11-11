@@ -1,12 +1,9 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.Travel;
-import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.model.rest.RestBindingMode;
 import org.bson.types.ObjectId;
 
 import java.util.Collections;
@@ -59,7 +56,7 @@ public class ExplanationProvider extends RouteBuilder {
 
                 .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
 
-                .inOut(GET_TRAVEL)
+                .inOut(GET_TRAVEL_DB_OBJECT)
                 .removeHeader("CamelHttp*")
                 .log("[ " + EXPLANATION_PROVIDER + "]" + " We receive the data from the database.")
 
@@ -115,7 +112,7 @@ public class ExplanationProvider extends RouteBuilder {
 
                 .log("[" + EXPLANATION_ANSWER + "]" + "request to the database send.")
                 //take the result from the DB request.
-                .inOut(GET_TRAVEL)
+                .inOut(GET_TRAVEL_DB_OBJECT)
 
                 .log("[" + EXPLANATION_ANSWER + "]" + "Value retrieve from Db !")
                 // Get the content of the travel that the manager have accepted or rejected.
