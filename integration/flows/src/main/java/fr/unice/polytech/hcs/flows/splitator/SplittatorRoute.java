@@ -57,10 +57,10 @@ public abstract class SplittatorRoute<In extends Serializable,
     public void configure() throws Exception {
         restConfiguration()
                 .component("servlet")
-                .bindingMode(RestBindingMode.json)
         ;
 
         rest(restEndpoint)
+                .bindingMode(RestBindingMode.json)
                 .post()
                 .type(inClass)
                 .outType(outClass)

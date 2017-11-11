@@ -2,6 +2,7 @@ package fr.unice.polytech.hcs.flows.explanation;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.rest.RestBindingMode;
 import org.bson.types.ObjectId;
 
 import java.util.Collections;
@@ -12,24 +13,21 @@ public class ExplanationProvider extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        restConfiguration()
-                .component("servlet")
-        ;
-
         rest("/explanation")
+                .bindingMode(RestBindingMode.json)
+                .type(Explanation.class)
                 .post()
                 .to(EXPLANATION_PROVIDER)
         ;
 
         from(EXPLANATION_PROVIDER)
                 .routeId("explanation-provider")
-                .log("[" + EXPLANATION_PROVIDER + "] Received explanation")
+                .log("[" + EXPLANATION_PROVIDER + "] Received explanation: ${body}")
 
                 .log("[" + EXPLANATION_PROVIDER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
                 .log("[" + EXPLANATION_PROVIDER + "] Prepare request parameters for DB search route")
-                .unmarshal().json(JsonLibrary.Jackson, Explanation.class)
                 .process(e -> e.getIn().setBody(
                         Collections.singletonMap("_id", new ObjectId(e.getIn().getBody(Explanation.class).id))))
 

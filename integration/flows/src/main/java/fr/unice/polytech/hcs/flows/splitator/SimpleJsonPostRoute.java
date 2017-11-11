@@ -44,6 +44,7 @@ public abstract class SimpleJsonPostRoute<In extends Serializable, Out extends S
 
     @Override
     public void configure() throws Exception {
+
         from(routeUri)
                 .routeId(routeId)
                 .routeDescription(routeDescription)
