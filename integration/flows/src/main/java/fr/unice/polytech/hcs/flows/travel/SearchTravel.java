@@ -5,7 +5,6 @@ import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
-import java.util.Collections;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
@@ -56,22 +55,6 @@ public class SearchTravel extends RouteBuilder {
                     Travel travel = new ObjectMapper().convertValue(map, Travel.class);
                     e.getIn().setBody(travel);
                 })
-        ;
-
-        from(GET_TRAVEL_DB_OBJECT)
-                .routeId("get-travel-db-object")
-                .routeDescription("Get travel in database")
-
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] Translating TravelRequest to Map")
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] IN: ${body}")
-                .process(e -> {
-                    TravelRequest travelRequest = e.getIn().getBody(TravelRequest.class);
-                    e.getIn().setBody(new ObjectMapper().convertValue(travelRequest, Map.class));
-                })
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] OUT: ${body}")
-
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] Sending request to DB")
-                .inOut(SEARCH_TRAVEL_DATABASE_EP)
         ;
 
     }

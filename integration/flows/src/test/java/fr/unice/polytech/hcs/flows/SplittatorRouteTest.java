@@ -67,7 +67,8 @@ public abstract class SplittatorRouteTest<T extends Serializable> extends Active
                 .collect(Collectors.toList());
 
         // The generic request is sent to the target
-        T out = template.requestBody(target, genericRequest, expectedResultClass);
+        String outStr = template.requestBody(target, genericRequest, String.class);
+        T out = new ObjectMapper().readValue(outStr, expectedResultClass);
 
         // Do I receive the proper request ? (type, post, ... )
         for (String mock : mocks) {

@@ -5,11 +5,10 @@ public interface Status {
 
     // Pre BT
     String WAITING = "WAITING";     // Waiting for a manager to approve this BT
-    String APPROVED = "APPROVED";   // BT approved, not yet started
+    String APPROVED = "APPROVED";   // BT approved
     String DENIED = "DENIED";       // BT refused, end of story.
 
     // During BT
-    String ONGOING = "ONGOING"; // BT started and still ongoing
     String DONE = "DONE";       // BT ended, waiting for a refund approval
 
     // Post BT

@@ -1,15 +1,12 @@
 package fr.unice.polytech.hcs.flows.travel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
-import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,8 +42,6 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + END_TRAVEL + "] Sum expenses")
                 .process(sumExpensesTravel)
 
-                .log("OUT : ${body}")
-
                 .log("[" + END_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
 
@@ -76,7 +71,7 @@ public class ApproveTravel extends RouteBuilder {
                 .process(e -> e.getIn().getBody(Travel.class).status = Status.REFUND_ACCEPTED)
 
                 .log("[" + ACCEPT_REFUND + "] Save travel")
-                //.to(UPDATE_TRAVEL)
+                .to(UPDATE_TRAVEL)
 
                 .log("[" + ACCEPT_REFUND + "] Refund accepted")
                 .to(REFUND_SENDING)
@@ -85,6 +80,8 @@ public class ApproveTravel extends RouteBuilder {
                     Map<String, Object> response = new HashMap<>();
                     response.put("status", "ok");
                     response.put("message", "Refund accepted.");
+
+                    e.getIn().setBody(response);
                 })
         ;
 
@@ -100,7 +97,7 @@ public class ApproveTravel extends RouteBuilder {
                 })
 
                 .log("[" + ACCEPT_REFUND + "] Save travel")
-                //.to(UPDATE_TRAVEL)
+                .to(UPDATE_TRAVEL)
 
                 .process(e -> {
                     Map<String, Object> response = new HashMap<>();
@@ -111,39 +108,6 @@ public class ApproveTravel extends RouteBuilder {
                 })
         ;
 
-        from(UPDATE_TRAVEL)
-                .routeId("update-travel")
-                .routeDescription("Update travel in database from Travel object")
-
-                .log("[" + UPDATE_TRAVEL + "] Backup new travel")
-                .process(e -> e.getIn().setHeader("travel", e.getIn().getBody()))
-
-                .log("[" + UPDATE_TRAVEL + "] Put travel id into body")
-                .process(e -> {
-                    Travel travel = e.getIn().getHeader("travel", Travel.class);
-                    e.getIn().setBody(Collections.singletonMap("travelId", travel.travelId));
-                })
-
-                .log("[" + UPDATE_TRAVEL + "] Load database travel")
-                .inOut(GET_TRAVEL_DB_OBJECT)
-
-                .process(e -> {
-                    Map db = e.getIn().getBody(Map.class);
-                    Travel travel = e.getIn().getHeader("travel", Travel.class);
-
-                    // merging travel into db object
-                    Map travel_db = new ObjectMapper().convertValue(travel, Map.class);
-                    travel_db.put("_id", db.get("_id"));
-
-                    e.getIn().setBody(travel_db);
-                })
-
-                .to(SAVE_TRAVEL_DATABASE_EP)
-                .process(e -> {
-                    Travel travel = e.getIn().getHeader("travel", Travel.class);
-                    e.getIn().setBody(travel);
-                })
-        ;
     }
 
     private static Processor sumExpensesTravel = (exchange -> {
