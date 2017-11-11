@@ -1,18 +1,10 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.DBObject;
-import fr.unice.polytech.hcs.flows.expense.Travel;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.model.rest.RestBindingMode;
+import org.bson.types.ObjectId;
 
-import java.io.InputStream;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
@@ -20,53 +12,32 @@ public class ExplanationProvider extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-
         restConfiguration()
                 .component("servlet")
         ;
 
-        rest("/send")
-                .post("/explain")
+        rest("/explanation")
+                .post()
                 .to(EXPLANATION_PROVIDER)
         ;
-        // we suppose that the manager contact directly the user to send him a explanation for his voyage.
-        // But into a Db
 
         from(EXPLANATION_PROVIDER)
                 .routeId("explanation-provider")
+                .log("[" + EXPLANATION_PROVIDER + "] Received explanation")
 
-                .log("Explanation provider ")
-                .unmarshal().json(JsonLibrary.Jackson)
-                .process(exchange -> {
-                    System.out.println(exchange.getIn().getBody());
-                    Map map = exchange.getIn().getBody(Map.class);
-                    System.out.println("map = " + map);
-                    HashMap<String, Object> h = new HashMap<>();
-                    h.put("travelId", map.get("id"));
+                .log("[" + EXPLANATION_PROVIDER + "] Remove shitty headers (thx camel)")
+                .removeHeaders("CamelHttp*")
 
-                    // exchange.getIn().setHeader("explain", map.get("explanation"));
-                    Map travel_db = new ObjectMapper().convertValue(h, Map.class);
-                    exchange.getIn().setBody(travel_db);
+                .log("[" + EXPLANATION_PROVIDER + "] Prepare request parameters for DB search route")
+                .unmarshal().json(JsonLibrary.Jackson, Explanation.class)
+                .process(e -> e.getIn().setBody(
+                        Collections.singletonMap("_id", new ObjectId(e.getIn().getBody(Explanation.class).id))))
 
+                .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
+                .inOut(GET_TRAVEL)
 
-                    InputStream is = exchange.getIn().getBody(InputStream.class);
-                    exchange.getIn().setBody(new ObjectMapper().readValue(is , HashMap.class));
-
-
-                    System.out.println("I put : " + h);
-
-                })
-                .process(exchange -> {
-                    System.out.println("I send : " + exchange.getIn().getBody().getClass());
-                })
-                .convertBodyTo(DBObject.class   )
-                .to(SEARCH_TRAVEL_DATABASE_EP)
-                .log(" [ " + SEARCH_TRAVEL + "]" + "send the travel given")
-                .process(e -> {
-                    System.out.println("I receive from Db : " + e.getIn().getBody());
-                    System.out.println("type : " + e.getIn().getBody().getClass());
-                });
-//        ;
+                .log("[ " + EXPLANATION_PROVIDER + "]" + "UTILISER LE OOOOOOOUUUUUUUTTTTTTT qui est un MongoDBObject (une map++)")
+        ;
 
 //
 //        from(EXPLANATION_ANSWER)

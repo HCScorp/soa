@@ -51,11 +51,13 @@ public class SearchTravel extends RouteBuilder {
                 .routeId("get-travel")
                 .routeDescription("Get travel in database")
 
-                .log("[" + GET_TRAVEL + "] Converting HashMap to DBObject")
+                .log("[" + GET_TRAVEL + "] Converting HashMap to DBObject to request DB")
                 .convertBodyTo(DBObject.class)
 
+                .log("[" + GET_TRAVEL + "] Sending request to DB")
                 .inOut(SEARCH_TRAVEL_DATABASE_EP)
 
+                .log("[" + GET_TRAVEL + "] Processing response (check for null)")
                 .process(e -> {
                     if (e.getIn().getBody() == null) {
                         e.getIn().setBody(Collections.emptyMap());
