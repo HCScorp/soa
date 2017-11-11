@@ -24,7 +24,6 @@ public class Flight {
     private String destination;
     private LocalDate date;
     private LocalTime time;
-    private int secondOfDay;
     private Double price;
     private JourneyType journeyType;
     private Duration duration;
@@ -44,7 +43,6 @@ public class Flight {
         this.destination = destination;
         this.date = date;
         this.time = time;
-        this.secondOfDay = time.toSecondOfDay();
         this.price = price;
         this.journeyType = journeyType;
         this.duration = duration;
@@ -57,10 +55,9 @@ public class Flight {
         this.destination = bson.getString("destination");
         this.date = LocalDate.parse(bson.getString("date"));
         this.time = LocalTime.parse(bson.getString("time"));
-        this.secondOfDay = bson.getInteger("secondOfDay");
         this.price = bson.getDouble("price");
         this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
-        this.duration = Duration.ofMinutes(bson.getLong("duration"));
+        this.duration = Duration.ofMinutes(bson.getInteger("duration"));
         this.category = Category.valueOf(bson.getString("category"));
         this.airline = bson.getString("airline");
     }
@@ -71,10 +68,9 @@ public class Flight {
                 .append("destination", destination)
                 .append("date", date.toString())
                 .append("time", time.toString())
-                .append("secondOfDay", time.toSecondOfDay())
                 .append("price", price)
                 .append("journeyType", journeyType.toString())
-                .append("duration", duration.toMinutes())
+                .append("duration", new Long(duration.toMinutes()).intValue())
                 .append("category", category.toString())
                 .append("airline", airline);
     }
@@ -99,11 +95,7 @@ public class Flight {
     public LocalTime getTime() {
         return time;
     }
-
-    public int getSecondOfDay() {
-        return secondOfDay;
-    }
-
+    
     public Double getPrice() {
         return price;
     }
