@@ -54,7 +54,7 @@ public class SearchTravel extends RouteBuilder {
                 .log("[" + GET_TRAVEL + "] Converting HashMap to DBObject")
                 .convertBodyTo(DBObject.class)
 
-                .to(SEARCH_TRAVEL_DATABASE_EP)
+                .inOut(SEARCH_TRAVEL_DATABASE_EP)
 
                 .process(e -> {
                     if (e.getIn().getBody() == null) {
