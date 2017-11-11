@@ -62,7 +62,7 @@ public class Endpoints {
     public static final String EXPLANATION_ANSWER = "activemq:explanation-answer";
 
     public static final String EXPLANATION_REFUSED = "activemq:explanation-refused";
-    public static final String EXPLANATION_REFUSED_EP = "activemq:explanation-refused-ep";
+    public static final String EXPLANATION_ACCEPTED = "activemq:explanation-accepted";
 
 
     // Travel
