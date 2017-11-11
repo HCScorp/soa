@@ -34,9 +34,13 @@ public class ExplanationProvider extends RouteBuilder {
         // But into a Db
 
         from(EXPLANATION_PROVIDER)
+                .routeId("explanation-provider")
+
                 .log("Explanation provider ")
                 .unmarshal().json(JsonLibrary.Jackson)
                 .process(exchange -> {
+
+
                     System.out.println(exchange.getIn().getBody());
                     Map map = exchange.getIn().getBody(Map.class);
                     System.out.println("map = " + map);
@@ -46,17 +50,14 @@ public class ExplanationProvider extends RouteBuilder {
                     exchange.getIn().setBody(h);
                     exchange.getIn().setHeader("explain", map.get("explanation"));
 
-                    exchange.setProperty("explain", map.get("explanation"));
                     System.out.println("I put : " + h);
+
                 })
-                .convertBodyTo(DBObject.class)
                 .to(SEARCH_TRAVEL_DATABASE_EP)
+                .log(" [ " + SEARCH_TRAVEL + "]" + "send the travel given")
                 .process(e -> {
-//                    System.out.println("received by other : " + e.getIn().getBody());
-//                    Map map = e.getIn().getBody(Map.class);
-//                   // map.put("explain", e.getIn().getHeader("explain"));
-//                    System.out.println(e.getProperties());
-//                    System.out.println(e.getIn().getHeaders());
+                    System.out.println("I receive from Db : " + e.getIn().getBody());
+                    System.out.println("type : " + e.getIn().getBody().getClass());
 
                 });
 //        ;
