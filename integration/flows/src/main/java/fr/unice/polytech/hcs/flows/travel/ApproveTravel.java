@@ -92,7 +92,7 @@ public class ApproveTravel extends RouteBuilder {
                 .to(UPDATE_TRAVEL)
 
                 .log("[" + ACCEPT_REFUND + "] Refund accepted")
-                //.to(Endpoints.REFUND_SENDING)
+                .to(Endpoints.REFUND_SENDING)
 
                 .process(e -> {
                     Map<String, Object> response = new HashMap<>();

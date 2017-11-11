@@ -32,24 +32,32 @@ public class ExplanationProvider extends RouteBuilder {
         ;
         // we suppose that the manager contact directly the user to send him a explanation for his voyage.
         // But into a Db
+
         from(EXPLANATION_PROVIDER)
                 .log("Explanation provider ")
                 .unmarshal().json(JsonLibrary.Jackson)
                 .process(exchange -> {
                     System.out.println(exchange.getIn().getBody());
                     Map map = exchange.getIn().getBody(Map.class);
-
+                    System.out.println("map = " + map);
                     HashMap<String, Object> h = new HashMap<>();
                     h.put("travelId", map.get("id"));
+
                     exchange.getIn().setBody(h);
+                    exchange.getIn().setHeader("explain", map.get("explanation"));
+
+                    exchange.setProperty("explain", map.get("explanation"));
                     System.out.println("I put : " + h);
                 })
                 .convertBodyTo(DBObject.class)
                 .to(SEARCH_TRAVEL_DATABASE_EP)
                 .process(e -> {
-                    System.out.println("received by other : " + e.getIn().getBody());
-                    Map map = e.getIn().getBody(Map.class);
-                    e.getIn().setBody(new ObjectMapper().convertValue(e.getIn().getBody(), HashMap.class));
+//                    System.out.println("received by other : " + e.getIn().getBody());
+//                    Map map = e.getIn().getBody(Map.class);
+//                   // map.put("explain", e.getIn().getHeader("explain"));
+//                    System.out.println(e.getProperties());
+//                    System.out.println(e.getIn().getHeaders());
+
                 });
 //        ;
 
