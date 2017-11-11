@@ -21,8 +21,9 @@ public class RefundArchiver extends RouteBuilder {
 
                 .process(exchange -> {
                     System.out.println("exchange ! " + exchange.getIn().getBody());
-                    Travel travel =  (Travel) exchange.getIn().getBody();
+                    Travel travel =  exchange.getIn().getBody(Travel.class);
                     System.out.println("travel : " + travel);
+
                     exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
                     exchange.getIn().setBody(new ObjectMapper().convertValue(travel, Map.class));
                 })

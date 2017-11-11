@@ -9,6 +9,7 @@ import org.apache.camel.model.dataformat.JsonDataFormat;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +23,10 @@ public class ExplanationProvider extends RouteBuilder {
 
         restConfiguration()
                 .component("servlet")
-                .bindingMode(RestBindingMode.json)
         ;
 
         rest("/send")
                 .post("/explain")
-                .type(Explanation.class)
                 .to(EXPLANATION_PROVIDER)
         ;
         // we suppose that the manager contact directly the user to send him a explanation for his voyage.
@@ -39,26 +38,33 @@ public class ExplanationProvider extends RouteBuilder {
                 .log("Explanation provider ")
                 .unmarshal().json(JsonLibrary.Jackson)
                 .process(exchange -> {
-
-
                     System.out.println(exchange.getIn().getBody());
                     Map map = exchange.getIn().getBody(Map.class);
                     System.out.println("map = " + map);
                     HashMap<String, Object> h = new HashMap<>();
                     h.put("travelId", map.get("id"));
 
-                    exchange.getIn().setBody(h);
-                    exchange.getIn().setHeader("explain", map.get("explanation"));
+                    // exchange.getIn().setHeader("explain", map.get("explanation"));
+                    Map travel_db = new ObjectMapper().convertValue(h, Map.class);
+                    exchange.getIn().setBody(travel_db);
+
+
+                    InputStream is = exchange.getIn().getBody(InputStream.class);
+                    exchange.getIn().setBody(new ObjectMapper().readValue(is , HashMap.class));
+
 
                     System.out.println("I put : " + h);
 
                 })
+                .process(exchange -> {
+                    System.out.println("I send : " + exchange.getIn().getBody().getClass());
+                })
+                .convertBodyTo(DBObject.class   )
                 .to(SEARCH_TRAVEL_DATABASE_EP)
                 .log(" [ " + SEARCH_TRAVEL + "]" + "send the travel given")
                 .process(e -> {
                     System.out.println("I receive from Db : " + e.getIn().getBody());
                     System.out.println("type : " + e.getIn().getBody().getClass());
-
                 });
 //        ;
 
