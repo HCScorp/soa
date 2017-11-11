@@ -82,6 +82,7 @@ public class Flight {
 
     public static JSONObject convertToWebResult(Document flightBson) {
         flightBson.remove("_id");
+        flightBson.remove("_secondOfDay");
         return new JSONObject(flightBson.toJson());
     }
 
