@@ -1,0 +1,26 @@
+[{
+  "cars": [],
+  "hotels": [],
+  "flights": [
+    {
+      "origin": "Nice",
+      "destination": "Paris",
+      "date": "2017-8-14",
+      "price": "89",
+      "journeyType": "DIRECT",
+      "duration": 92,
+      "category": "ECO",
+      "airline": "Air France"
+    },
+    {
+      "origin": "Nice",
+      "destination": "Paris",
+      "date": "2017-8-14",
+      "price": "63",
+      "journeyType": "DIRECT",
+      "duration": 105,
+      "category": "ECO",
+      "airline": "EasyJet"
+    }
+  ]
+}]

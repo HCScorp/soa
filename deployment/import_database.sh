@@ -8,3 +8,6 @@ docker-compose exec database /bin/bash -c "mongoimport --db flight --collection 
 
 echo "# Import hotels"
 docker-compose exec database /bin/bash -c "mongoimport --db hotel --collection hotels --jsonArray --file /import/hotels.json"
+
+echo "# Import Approver"
+docker-compose exec database /bin/bash -c "mongoimport --db btrs --collection btr --jsonArray --file /import/approver.json"
