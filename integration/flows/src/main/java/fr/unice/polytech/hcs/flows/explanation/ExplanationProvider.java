@@ -1,10 +1,17 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.DBObject;
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonDataFormat;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
 
@@ -18,8 +25,8 @@ public class ExplanationProvider extends RouteBuilder {
                 .bindingMode(RestBindingMode.json)
         ;
 
-        rest("/explanation")
-                .post("/send")
+        rest("/send")
+                .post("/explain")
                 .type(Explanation.class)
                 .to(EXPLANATION_PROVIDER)
         ;
@@ -27,25 +34,24 @@ public class ExplanationProvider extends RouteBuilder {
         // But into a Db
         from(EXPLANATION_PROVIDER)
                 .log("Explanation provider ")
+                .unmarshal().json(JsonLibrary.Jackson)
                 .process(exchange -> {
-                    Explanation explanation = exchange.getIn().getBody(Explanation.class);
+                    System.out.println(exchange.getIn().getBody());
+                    Map map = exchange.getIn().getBody(Map.class);
+
                     HashMap<String, Object> h = new HashMap<>();
-                    h.put("travelId", explanation.id);
+                    h.put("travelId", map.get("id"));
                     exchange.getIn().setBody(h);
-                    System.out.println("I put : " + h + "in my body :)");
+                    System.out.println("I put : " + h);
                 })
-                .log("body : ${body}")
-                .to(GET_TRAVEL)
-                .process(exchange -> {
-                    System.out.println("I receive : " + exchange.getIn().getBody().toString());
-                })
-
-        .log("We send a mail to the manager")
-        .end();
-
-
-
-
+                .convertBodyTo(DBObject.class)
+                .to(SEARCH_TRAVEL_DATABASE_EP)
+                .process(e -> {
+                    System.out.println("received by other : " + e.getIn().getBody());
+                    Map map = e.getIn().getBody(Map.class);
+                    e.getIn().setBody(new ObjectMapper().convertValue(e.getIn().getBody(), HashMap.class));
+                });
+//        ;
 
 //
 //        from(EXPLANATION_ANSWER)

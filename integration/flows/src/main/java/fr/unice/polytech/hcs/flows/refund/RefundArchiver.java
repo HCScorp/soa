@@ -15,8 +15,8 @@ public class RefundArchiver extends RouteBuilder {
         from(REFUND_SENDING)
                 .routeDescription("where to send your refund piece")
                 .routeId("refund-piece-route")
+                .unmarshal().json(JsonLibrary.Jackson)
                 .process(exchange -> {
-
                     Travel travel = exchange.getIn().getBody(Travel.class);
                     exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
                 })

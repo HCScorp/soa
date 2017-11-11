@@ -51,9 +51,7 @@ public class Endpoints {
 
     // Archiver route
     public static final String REFUND_SENDING = "activemq:refund-piece";
-    public static final String REFUND_PIECE_OUTPUT_DIR = "file:/servicemix/camel/output";
 
-    public static final String REFUND_SENDING_EP = "";
 
     public static final String EXPENSE_EMAIL = "file:/servicemix/camel/input/email";
     public static final String EXPENSE_DATABASE = "mongodb:myDb?database=expense&collection=expenses&operation=insert";
