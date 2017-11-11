@@ -91,6 +91,8 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + ACCEPT_REFUND + "] Save travel")
                 .to(UPDATE_TRAVEL)
 
+                .log("OUT : ${body}")
+
                 .log("[" + ACCEPT_REFUND + "] Refund accepted")
                 .to(Endpoints.REFUND_SENDING)
 
@@ -160,6 +162,10 @@ public class ApproveTravel extends RouteBuilder {
                 })
 
                 .to(Endpoints.SAVE_TRAVEL_DATABASE_EP)
+                .process(e -> {
+                    Travel travel = e.getIn().getHeader("travel", Travel.class);
+                    e.getIn().setBody(travel);
+                })
         ;
     }
 
