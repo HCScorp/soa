@@ -42,19 +42,7 @@ public class ApproveTravel extends RouteBuilder {
                 .inOut(Endpoints.SEARCH_TRAVEL)
 
                 .log("[" + APPROVE_TRAVEL + "] Sum expenses")
-                .process(e -> {
-                    Travel travel = new ObjectMapper().readValue(e.getIn().getBody(byte[].class), Travel.class);
-
-                    // compute sum of expenses
-                    int sum = travel.documents.stream().mapToInt(expense -> expense.price).sum();
-
-                    // create approval object
-                    Approval approval = new Approval();
-                    approval.travel = travel;
-                    approval.sum = sum;
-
-                    e.getIn().setBody(approval);
-                })
+                .process(sumExpensesTravel)
 
                 .log("[" + APPROVE_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
@@ -162,6 +150,20 @@ public class ApproveTravel extends RouteBuilder {
                 })
         ;
     }
+
+    private static Processor sumExpensesTravel = (exchange -> {
+        Travel travel = new ObjectMapper().readValue(exchange.getIn().getBody(byte[].class), Travel.class);
+
+        // compute sum of expenses
+        int sum = travel.documents.stream().mapToInt(expense -> expense.price).sum();
+
+        // create approval object
+        Approval approval = new Approval();
+        approval.travel = travel;
+        approval.sum = sum;
+
+        exchange.getIn().setBody(approval);
+    });
 
     private static Processor checkAutomaticRefund = (exchange -> {
         Approval approval = exchange.getIn().getBody(Approval.class);
