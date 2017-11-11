@@ -1,6 +1,7 @@
 package approver.data;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +13,7 @@ public class Hotel {
     private String city;
     private String zipCode;
     private String address;
-    private int nightPrice;
+    private Double nightPrice;
     private List<LocalDate> fullBookedDays;
 
     public Hotel() {
@@ -21,7 +22,7 @@ public class Hotel {
 
     public Hotel(String name, String city,
                  String zipCode, String address,
-                 int nightPrice, List<LocalDate> fullBookedDays) {
+                 Double nightPrice, List<LocalDate> fullBookedDays) {
         this.name = name;
         this.city = city;
         this.zipCode = zipCode;
@@ -32,7 +33,7 @@ public class Hotel {
 
     public Hotel(Document bson) {
         this.name = bson.getString("name");
-        this.nightPrice = bson.getInteger("nightPrice");
+        this.nightPrice = bson.getDouble("nightPrice");
         this.fullBookedDays = ((List<Document>) bson.get("fullBookedDays")).stream()
                 .map(d -> d.getString("date"))
                 .map(LocalDate::parse)
@@ -41,6 +42,24 @@ public class Hotel {
         this.city = bson.getString("city");
         this.zipCode = bson.getString("zipCode");
         this.address = bson.getString("address");
+    }
+
+    public Document toBson() {
+        return new Document()
+                .append("name", name)
+                .append("nightPrice", nightPrice)
+                .append("fullBookedDays", fullBookedDays.stream()
+                        .map(LocalDate::toString)
+                        .map(d -> new Document("date", d))
+                        .collect(Collectors.toList()))
+                .append("city", city)
+                .append("zipCode", zipCode).append("address", address);
+    }
+
+    public static JSONObject convertToWebResult(Document hotelBson) {
+        hotelBson.remove("fullBookedDays");
+        hotelBson.remove("_id");
+        return new JSONObject(hotelBson.toJson());
     }
 
     public String getName() {
@@ -59,24 +78,12 @@ public class Hotel {
         return address;
     }
 
-    public int getNightPrice() {
+    public Double getNightPrice() {
         return nightPrice;
     }
 
     public List<LocalDate> getFullBookedDays() {
         return fullBookedDays;
-    }
-
-    public Document toBson() {
-        return new Document()
-                .append("name", name)
-                .append("nightPrice", nightPrice)
-                .append("fullBookedDays", fullBookedDays.stream()
-                        .map(LocalDate::toString)
-                        .map(d -> new Document("date", d))
-                        .collect(Collectors.toList()))
-                .append("city", city)
-                .append("zipCode", zipCode).append("address", address);
     }
 
     @Override
@@ -86,20 +93,22 @@ public class Hotel {
 
         Hotel hotel = (Hotel) o;
 
-        if (nightPrice != hotel.nightPrice) return false;
-        if (!name.equals(hotel.name)) return false;
-        if (!city.equals(hotel.city)) return false;
-        if (!zipCode.equals(hotel.zipCode)) return false;
-        return address.equals(hotel.address);
+        if (name != null ? !name.equals(hotel.name) : hotel.name != null) return false;
+        if (city != null ? !city.equals(hotel.city) : hotel.city != null) return false;
+        if (zipCode != null ? !zipCode.equals(hotel.zipCode) : hotel.zipCode != null) return false;
+        if (address != null ? !address.equals(hotel.address) : hotel.address != null) return false;
+        if (nightPrice != null ? !nightPrice.equals(hotel.nightPrice) : hotel.nightPrice != null) return false;
+        return fullBookedDays != null ? fullBookedDays.equals(hotel.fullBookedDays) : hotel.fullBookedDays == null;
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + city.hashCode();
-        result = 31 * result + zipCode.hashCode();
-        result = 31 * result + address.hashCode();
-        result = 31 * result + nightPrice;
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (nightPrice != null ? nightPrice.hashCode() : 0);
+        result = 31 * result + (fullBookedDays != null ? fullBookedDays.hashCode() : 0);
         return result;
     }
 }
