@@ -17,10 +17,6 @@ public class ExpenseRegistration extends RouteBuilder {
         from(EXPENSE_EMAIL)
                 .routeId(routeId)
                 .doTry()
-                    .process(exchange -> {
-                        InputStream is = exchange.getIn().getBody(InputStream.class);
-                        exchange.getIn().setBody(new ObjectMapper().readValue(is , ExpenseReport.class));
-                    })
                     .inOut(OCR_IN)
                 .doCatch(Exception.class)
                     .log(enclosure + " something went wrong")
