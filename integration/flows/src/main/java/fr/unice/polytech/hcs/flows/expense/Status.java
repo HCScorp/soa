@@ -1,19 +1,19 @@
 package fr.unice.polytech.hcs.flows.expense;
 
-public enum Status {
+public interface Status {
     // BT = business travel
 
     // Pre BT
-    WAITING,    // Waiting for a manager to approve this BT
-    APPROVED,   // BT approved, not yet started
-    DENIED,     // BT refused, end of story.
+    String WAITING = "WAITING";     // Waiting for a manager to approve this BT
+    String APPROVED = "APPROVED";   // BT approved, not yet started
+    String DENIED = "DENIED";       // BT refused, end of story.
 
     // During BT
-    ONGOING,    // BT started and still ongoing
-    DONE,       // BT ended, waiting for a refund approval
+    String ONGOING = "ONGOING"; // BT started and still ongoing
+    String DONE = "DONE";       // BT ended, waiting for a refund approval
 
     // Post BT
-    WAITING_FOR_EXPLANATION,    // Manager waiting for an explanation to decide whether or not refund the BT
-    REFUND_ACCEPTED,            // BT refund acceptRefund
-    REFUND_REFUSED              // BT refund refused
+    String WAITING_FOR_EXPLANATION = "WAITING_FOR_EXPLANATION"; // Manager waiting for an explanation to decide whether or not refund the BT
+    String REFUND_ACCEPTED = "REFUND_ACCEPTED";                 // BT refund acceptRefund
+    String REFUND_REFUSED = "REFUND_REFUSED";                   // BT refund refused
 }
