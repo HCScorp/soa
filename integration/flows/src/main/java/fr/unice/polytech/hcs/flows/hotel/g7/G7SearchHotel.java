@@ -28,7 +28,7 @@ public class G7SearchHotel extends RouteBuilder {
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .doTry()
+//                .doTry()
                     .log("["+routeUri+"] Creating specific request from generic request")
                     .process(e -> e.getIn().setBody(genericReqConverter.convert((HotelSearchRequest) e.getIn().getBody())))
 
@@ -48,10 +48,10 @@ public class G7SearchHotel extends RouteBuilder {
 
                     .log("["+routeUri+"] Converting to generic response")
                     .process(e -> e.getIn().setBody(specificResConverter.convert((Map<String, Map<String, Map>>) e.getIn().getBody())))
-                .doCatch(Exception.class)
-                    .log("[" + routeUri + "] Something went wrong, setting response to null (${exception.message})")
-                    .process(e -> e.getIn().setBody(null))
-                .end()
+//                .doCatch(Exception.class)
+//                    .log("[" + routeUri + "] Something went wrong, setting response to null (${exception.message})")
+//                    .process(e -> e.getIn().setBody(null))
+//                .end()
         ;
     }
 

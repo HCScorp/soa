@@ -18,7 +18,7 @@ public class SearchHotel extends SplittatorRoute<HotelSearchRequest, HotelSearch
                 SEARCH_HOTEL_MQ,
                 Arrays.asList(HCS_SEARCH_HOTEL_MQ, G7_SEARCH_HOTEL_MQ),
                 2,
-                10000,
+                30000,
                 "search-hotel-input",
                 "Execute a generic hotel search request");
     }

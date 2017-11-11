@@ -2,6 +2,7 @@ package fr.unice.polytech.hcs.flows.splitator;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
@@ -59,11 +60,8 @@ public abstract class SplittatorRoute<In extends Serializable,
                 .component("servlet")
         ;
 
-        rest(restEndpoint)
-                .bindingMode(RestBindingMode.json)
+        rest(restEndpoint).consumes("application/json").produces("application/json")
                 .post()
-                .type(inClass)
-                .outType(outClass)
                 .to(unmarshalUri)
         ;
 
@@ -74,7 +72,10 @@ public abstract class SplittatorRoute<In extends Serializable,
                 .log("[" + unmarshalUri + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + unmarshalUri + "] Received generic request")
+                .log("[" + unmarshalUri + "] Received generic request JSON, parsing to pojo..")
+                .unmarshal().json(JsonLibrary.Jackson, inClass)
+                .log("[" + multicastUri + "] OUT: ${body}")
+
                 .log("[" + unmarshalUri + "] Sending generic request to message handler queue")
                 .to(multicastUri)
         ;
@@ -94,7 +95,8 @@ public abstract class SplittatorRoute<In extends Serializable,
                         e.getIn().setBody(outClass.getConstructor().newInstance());
                     }
                 })
-                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+//                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .marshal().json(JsonLibrary.Jackson)
                 .log("[" + multicastUri + "] OUT: ${body}")
         ;
     }

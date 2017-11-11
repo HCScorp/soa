@@ -23,7 +23,7 @@ public class ApproveTravel extends RouteBuilder {
                 .component("servlet")
         ;
 
-        rest("/travel")
+        rest("/travel").consumes("application/json").produces("application/json")
                 .get("/{travelId}/done")
                 .to(APPROVE_TRAVEL)
         ;

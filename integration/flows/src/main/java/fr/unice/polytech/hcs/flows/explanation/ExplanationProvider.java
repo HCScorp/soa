@@ -13,9 +13,11 @@ public class ExplanationProvider extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        restConfiguration()
+                .component("servlet")
+        ;
+
         rest("/explanation")
-                .bindingMode(RestBindingMode.json)
-                .type(Explanation.class)
                 .post()
                 .to(EXPLANATION_PROVIDER)
         ;
@@ -28,6 +30,7 @@ public class ExplanationProvider extends RouteBuilder {
                 .removeHeaders("CamelHttp*")
 
                 .log("[" + EXPLANATION_PROVIDER + "] Prepare request parameters for DB search route")
+                .unmarshal().json(JsonLibrary.Jackson, Explanation.class)
                 .process(e -> e.getIn().setBody(
                         Collections.singletonMap("_id", new ObjectId(e.getIn().getBody(Explanation.class).id))))
 
