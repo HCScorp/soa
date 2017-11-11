@@ -1,6 +1,8 @@
 package fr.unice.polytech.hcs.flows.travel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.DBObject;
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
@@ -38,8 +40,8 @@ public class SearchTravel extends RouteBuilder {
                 .log("[" + SEARCH_TRAVEL + "] Unmarshalling to Travel")
                 .process(e -> {
                     Map map = e.getIn().getBody(Map.class);
-                    map.remove("_id");
-                    e.getIn().setBody(map);
+                    Travel travel = new ObjectMapper().convertValue(map, Travel.class);
+                    e.getIn().setBody(new ObjectMapper().convertValue(travel, Map.class));
                 })
 
                 .marshal().json(JsonLibrary.Jackson)

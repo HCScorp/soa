@@ -18,18 +18,18 @@ public class Expense implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Expense document = (Expense) o;
+        Expense expense = (Expense) o;
 
-        if (price != document.price) return false;
-        if (category != null ? !category.equals(document.category) : document.category != null) return false;
-        return evidence != null ? evidence.equals(document.evidence) : document.evidence == null;
+        if (category != null ? !category.equals(expense.category) : expense.category != null) return false;
+        if (evidence != null ? !evidence.equals(expense.evidence) : expense.evidence != null) return false;
+        return price != null ? price.equals(expense.price) : expense.price == null;
     }
 
     @Override
     public int hashCode() {
         int result = category != null ? category.hashCode() : 0;
         result = 31 * result + (evidence != null ? evidence.hashCode() : 0);
-        result = 31 * result + price;
+        result = 31 * result + (price != null ? price.hashCode() : 0);
         return result;
     }
 
