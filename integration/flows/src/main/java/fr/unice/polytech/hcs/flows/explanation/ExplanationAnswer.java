@@ -2,9 +2,12 @@ package fr.unice.polytech.hcs.flows.explanation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ExplanationAnswer  {
-    @JsonProperty public String id;
-    @JsonProperty public int code;
+import java.io.Serializable;
+
+public class ExplanationAnswer implements Serializable {
+
+    @JsonProperty public String travelId;
+    @JsonProperty public boolean acceptRefund;
 
     @Override
     public boolean equals(Object o) {
@@ -13,14 +16,14 @@ public class ExplanationAnswer  {
 
         ExplanationAnswer that = (ExplanationAnswer) o;
 
-        if (code != that.code) return false;
-        return id != null ? id.equals(that.id) : that.id == null;
+        if (acceptRefund != that.acceptRefund) return false;
+        return travelId != null ? travelId.equals(that.travelId) : that.travelId == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + code;
+        int result = travelId != null ? travelId.hashCode() : 0;
+        result = 31 * result + (acceptRefund ? 1 : 0);
         return result;
     }
 }

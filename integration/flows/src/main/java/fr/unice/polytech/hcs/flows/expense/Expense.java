@@ -8,7 +8,8 @@ import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Expense implements Serializable{
+public class Expense implements Serializable {
+
     @JsonProperty public String category;
     @JsonProperty public String evidence;
     @JsonProperty public Integer price;

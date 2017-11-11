@@ -1,6 +1,7 @@
 package fr.unice.polytech.hcs.flows.travel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.Exchange;
@@ -24,11 +25,11 @@ public class ApproveTravel extends RouteBuilder {
         ;
 
         rest("/travel").consumes("application/json").produces("application/json")
-                .get("/{travelId}/done")
-                .to(APPROVE_TRAVEL)
+                .put("/{travelId}")
+                .to(END_TRAVEL)
         ;
 
-        from(APPROVE_TRAVEL)
+        from(END_TRAVEL)
                 .routeId("approve-travel")
                 .routeDescription("End a travel and check refund")
 
@@ -61,10 +62,10 @@ public class ApproveTravel extends RouteBuilder {
 
                 .choice()
                     .when(simple("${header.autoRefund} == true"))
-                        .log("[" + APPROVE_TRAVEL + "] Automatic refund")
+                        .log("[" + END_TRAVEL + "] Automatic refund")
                         .inOut(ACCEPT_REFUND)
                     .otherwise()
-                        .log("[" + APPROVE_TRAVEL + "] Manual refund")
+                        .log("[" + END_TRAVEL + "] Manual refund")
                         .inOut(MANUAL_REFUND)
                 .end()
 
@@ -76,24 +77,18 @@ public class ApproveTravel extends RouteBuilder {
                 .routeDescription("Automatic refund")
 
                 .log("[" + ACCEPT_REFUND + "] Update travel status to Done")
-                .process(e -> {
-                    Travel travel = e.getIn().getBody(Travel.class);
-                    travel.status = "Done";
-                    e.getIn().setBody(travel);
-                })
+                .process(e -> e.getIn().getBody(Travel.class).status = Status.REFUND_ACCEPTED)
 
                 .log("[" + ACCEPT_REFUND + "] Save travel")
                 //.to(UPDATE_TRAVEL)
 
                 .log("[" + ACCEPT_REFUND + "] Refund accepted")
-                .to(Endpoints.REFUND_SENDING)
+                .to(REFUND_SENDING)
 
                 .process(e -> {
                     Map<String, Object> response = new HashMap<>();
-                    response.put("status", "Done");
+                    response.put("status", "ok");
                     response.put("message", "Refund accepted.");
-
-                    e.getIn().setBody(response);
                 })
         ;
 
@@ -104,7 +99,7 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + ACCEPT_REFUND + "] Update travel status to Done")
                 .process(e -> {
                     Travel travel = e.getIn().getBody(Travel.class);
-                    travel.status = "";
+                    travel.status = Status.DONE;
                     e.getIn().setBody(travel);
                 })
 
@@ -113,7 +108,7 @@ public class ApproveTravel extends RouteBuilder {
 
                 .process(e -> {
                     Map<String, Object> response = new HashMap<>();
-                    response.put("status", "Pending");
+                    response.put("status", "pending");
                     response.put("message", "You need to justify your budget overrun.");
 
                     e.getIn().setBody(response);

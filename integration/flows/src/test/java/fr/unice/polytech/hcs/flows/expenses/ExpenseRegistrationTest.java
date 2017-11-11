@@ -8,6 +8,7 @@ import com.mongodb.WriteResult;
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.ExpenseRegistration;
+import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.JndiRegistry;
@@ -38,7 +39,7 @@ public class ExpenseRegistrationTest  extends CamelTestSupport {
 
     private final String specificResultJson = "{\n" +
             "    \"travelId\": 100,\n" +
-            "    \"status\": \"done\",\n" +
+            "    \"status\": \"DONE\",\n" +
             "    \"documents\": [{\n" +
             "        \"category\": \"restaurant\",\n" +
             "        \"evidence\": \"restaurant.jpg\",\n" +
@@ -84,8 +85,8 @@ public class ExpenseRegistrationTest  extends CamelTestSupport {
 
     public void initVariables() throws Exception {
         Travel travel = new Travel();
-        travel.travelId = 100;
-        travel.status = "done";
+        travel.travelId = "100";
+        travel.status = Status.DONE;
         travel.documents = new ArrayList<>();
 
         Expense expense = new Expense();

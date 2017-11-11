@@ -22,11 +22,11 @@ public class RefundArchiver extends RouteBuilder {
                 .process(exchange -> {
                     Travel travel =  exchange.getIn().getBody(Travel.class);
 
-                    exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
+                    exchange.getIn().setHeader("id", travel.travelId);
                     exchange.getIn().setBody(new ObjectMapper().convertValue(travel, Map.class));
                 })
                 .marshal().json(JsonLibrary.Jackson)
                 .toD("ftp://ftp-server:21/${header.id}?username=test&password=test")
-                .log("file sended to the ftp server !");
+                .log("file sent to the ftp server !");
     }
 }
