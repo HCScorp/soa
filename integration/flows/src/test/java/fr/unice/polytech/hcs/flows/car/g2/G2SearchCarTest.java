@@ -46,10 +46,10 @@ public class G2SearchCarTest {} // extends SpecificSearchTest {
 //        csr.dateFrom = "2017-12-21";
 //        csr.dateTo = "2017-12-25";
 //
-//        this.genericRequest = csr;
+//        this.request = csr;
 //
 //        InputStream stream = new ByteArrayInputStream(csResJson.getBytes(StandardCharsets.UTF_8.name()));
-//        this.genericResponse = G2SearchCar.mapToCsRes(stream);
+//        this.response = G2SearchCar.mapToCsRes(stream);
 //
 //        this.specificResultJson = csResJson;
 //    }

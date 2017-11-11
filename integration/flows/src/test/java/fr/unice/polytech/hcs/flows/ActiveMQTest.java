@@ -19,8 +19,6 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -66,6 +64,7 @@ public abstract class ActiveMQTest extends CamelTestSupport {
                 this.includeRoutes(new G2SearchCar());
                 this.includeRoutes(new SearchCar());
                 this.includeRoutes(new ExplanationProvider());
+                this.includeRoutes(new SearchFlight());
                 // TODO
             }
         };
