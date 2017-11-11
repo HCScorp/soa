@@ -35,7 +35,7 @@ public class ExpenseRegistrationTest  extends CamelTestSupport {
     private Fongo fongo;
 
     private final String specificResultJson = "{\n" +
-            "    \"travelId\": 100,\n" +
+            "    \"travelId\": \"100\",\n" +
             "    \"status\": \"DONE\",\n" +
             "    \"documents\": [{\n" +
             "        \"category\": \"restaurant\",\n" +

@@ -8,9 +8,10 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Travel implements Serializable {
+
     @JsonProperty public String travelId;
     @JsonProperty public List<Expense> documents;
-    @JsonProperty public Status status;
+    @JsonProperty public String status;
 
     @Override
     public boolean equals(Object o) {
@@ -21,7 +22,7 @@ public class Travel implements Serializable {
 
         if (travelId != null ? !travelId.equals(travel.travelId) : travel.travelId != null) return false;
         if (documents != null ? !documents.equals(travel.documents) : travel.documents != null) return false;
-        return status == travel.status;
+        return status != null ? status.equals(travel.status) : travel.status == null;
     }
 
     @Override
@@ -30,5 +31,14 @@ public class Travel implements Serializable {
         result = 31 * result + (documents != null ? documents.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Travel{" +
+                "travelId='" + travelId + '\'' +
+                ", documents=" + documents +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

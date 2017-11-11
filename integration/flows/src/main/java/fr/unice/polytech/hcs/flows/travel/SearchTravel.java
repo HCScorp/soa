@@ -32,12 +32,7 @@ public class SearchTravel extends RouteBuilder {
                 .removeHeaders("CamelHttp*")
 
                 .log("[" + SEARCH_TRAVEL + "] Translating JSON to Travel Request")
-                .process(e -> {
-                    TravelRequest travelRequest = new TravelRequest();
-                    travelRequest.travelId = e.getIn().getHeader("travelId", Integer.class);
-
-                    e.getIn().setBody(travelRequest);
-                })
+                .process(e -> e.getIn().setBody(new TravelRequest(e.getIn().getHeader("travelId", String.class))))
 
                 .inOut(GET_TRAVEL)
 
@@ -67,21 +62,16 @@ public class SearchTravel extends RouteBuilder {
                 .routeId("get-travel-db-object")
                 .routeDescription("Get travel in database")
 
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] Translating Travel Request to DBObject")
+                .log("[" + GET_TRAVEL_DB_OBJECT + "] Translating TravelRequest to Map")
+                .log("[" + GET_TRAVEL_DB_OBJECT + "] IN: ${body}")
                 .process(e -> {
                     TravelRequest travelRequest = e.getIn().getBody(TravelRequest.class);
                     e.getIn().setBody(new ObjectMapper().convertValue(travelRequest, Map.class));
                 })
+                .log("[" + GET_TRAVEL_DB_OBJECT + "] OUT: ${body}")
 
                 .log("[" + GET_TRAVEL_DB_OBJECT + "] Sending request to DB")
                 .inOut(SEARCH_TRAVEL_DATABASE_EP)
-
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] Processing response (check for null)")
-                .process(e -> {
-                    if (e.getIn().getBody() == null) {
-                        e.getIn().setBody(Collections.emptyMap());
-                    }
-                })
         ;
 
     }

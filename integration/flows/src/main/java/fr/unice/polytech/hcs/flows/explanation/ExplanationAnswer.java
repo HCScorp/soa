@@ -26,4 +26,12 @@ public class ExplanationAnswer implements Serializable {
         result = 31 * result + (acceptRefund ? 1 : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "ExplanationAnswer{" +
+                "travelId='" + travelId + '\'' +
+                ", acceptRefund=" + acceptRefund +
+                '}';
+    }
 }

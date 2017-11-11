@@ -3,6 +3,7 @@ package fr.unice.polytech.hcs.flows.explanation;
 import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
+import fr.unice.polytech.hcs.flows.travel.TravelRequest;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -77,20 +78,19 @@ public class ExplanationProvider extends RouteBuilder {
                 .log("[" + EXPLANATION_ANSWER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + EXPLANATION_ANSWER + "] Unmarshal explanation answer from JSON to POJO")
+                .log("[" + EXPLANATION_ANSWER + "] Unmarshal explanation answer from JSON to POJO: ${body}")
                 .unmarshal().json(JsonLibrary.Jackson, ExplanationAnswer.class)
 
                 .log("[" + EXPLANATION_ANSWER + "] Prepare request parameters for DB search travel")
                 .process(e -> {
                     ExplanationAnswer explanationAnswer = e.getIn().getBody(ExplanationAnswer.class);
-                    e.getIn().setBody(
-                            Collections.singletonMap("_id", new ObjectId(explanationAnswer.travelId)));
+                    e.getIn().setBody(new TravelRequest(explanationAnswer.travelId));
                     e.getIn().setHeader("acceptRefund", explanationAnswer.acceptRefund);
                 })
 
                 .log("[" + EXPLANATION_ANSWER + "] Get Travel object from DB")
                 .inOut(GET_TRAVEL_DB_OBJECT)
-                .log("[" + EXPLANATION_ANSWER + "] Received DB response")
+                .log("[" + EXPLANATION_ANSWER + "] Received DB response: ${body}")
 
                 .log("[" + EXPLANATION_ANSWER + "] Taking a decision to refund or not..")
                 .choice()
@@ -102,12 +102,12 @@ public class ExplanationProvider extends RouteBuilder {
                     .process(e -> e.getIn().getBody(Map.class).put("status", Status.REFUND_REFUSED))
                 .end()
 
-                .log("[" + EXPLANATION_REFUSED + "] Updating Travel in DB")
-                .to(UPDATE_TRAVEL) // TODO db object ?
+                .log("[" + EXPLANATION_ANSWER + "] Updating Travel in DB")
+                .to(SAVE_TRAVEL_DATABASE_EP)
 
-                .log("[" + EXPLANATION_REFUSED + "] Preparing response for client")
+                .log("[" + EXPLANATION_ANSWER + "] Preparing response for client")
                 .process(e -> {
-                    e.getIn().setBody(null);
+                    //e.getIn().setBody(null);
                     e.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 200);
                 })
         ;
