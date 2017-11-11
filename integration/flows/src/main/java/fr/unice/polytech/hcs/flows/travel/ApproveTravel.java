@@ -43,15 +43,15 @@ public class ApproveTravel extends RouteBuilder {
                     e.getIn().setBody(travelRequest);
                 })
 
-                .log("[" + APPROVE_TRAVEL + "] Load travel")
-                .inOut(Endpoints.GET_TRAVEL)
+                .log("[" + END_TRAVEL + "] Load travel")
+                .inOut(GET_TRAVEL)
 
-                .log("[" + APPROVE_TRAVEL + "] Sum expenses")
+                .log("[" + END_TRAVEL + "] Sum expenses")
                 .process(sumExpensesTravel)
 
                 .log("OUT : ${body}")
 
-                .log("[" + APPROVE_TRAVEL + "] Check automatic refund")
+                .log("[" + END_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
 
                 .log("[" + ACCEPT_REFUND + "] Extract travel")
@@ -167,7 +167,7 @@ public class ApproveTravel extends RouteBuilder {
     private static Processor checkAutomaticRefund = (exchange -> {
         Approval approval = exchange.getIn().getBody(Approval.class);
 
-        // default refuse automatic refund
+        // default refuse automatic refund TODO
         manualRefund(exchange);
 
         if (approval.sum < 200) {
