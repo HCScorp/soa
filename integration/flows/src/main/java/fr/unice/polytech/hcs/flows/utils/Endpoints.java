@@ -78,6 +78,8 @@ public class Endpoints {
     public static final String MANUAL_REFUND = "direct:manual-refund";
     public static final String UPDATE_TRAVEL = "direct:update-travel";
 
+    public static final String OCR_IN = "direct:ocr-in";
+    public static final String OCR_OUT = "direct:ocr-out";
 }
 
 

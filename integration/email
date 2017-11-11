@@ -1,6 +1,5 @@
 {
     "travelId": "easdf",
-    "status": "done",
     "documents": [{
         "category": "restaurant",
         "evidence": "restaurant.jpg",
