@@ -21,20 +21,27 @@ public class ExplanationProvider extends RouteBuilder {
         rest("/explanation")
                 .post("/send")
                 .type(Explanation.class)
-                .to(SEARCH_TRAVEL)
+                .to(EXPLANATION_PROVIDER)
         ;
         // we suppose that the manager contact directly the user to send him a explanation for his voyage.
         // But into a Db
         from(EXPLANATION_PROVIDER)
+                .log("Explanation provider ")
                 .process(exchange -> {
                     Explanation explanation = exchange.getIn().getBody(Explanation.class);
-                    HashMap<String, Integer> h = new HashMap<>();
+                    HashMap<String, Object> h = new HashMap<>();
                     h.put("travelId", explanation.id);
                     exchange.getIn().setBody(h);
+                    System.out.println("I put : " + h + "in my body :)");
                 })
-                .inOut(GET_TRAVEL)
+                .log("body : ${body}")
+                .to(GET_TRAVEL)
+                .process(exchange -> {
+                    System.out.println("I receive : " + exchange.getIn().getBody().toString());
+                })
 
-        .log("We send a mail to the manager");
+        .log("We send a mail to the manager")
+        .end();
 
 
 
