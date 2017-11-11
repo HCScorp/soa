@@ -24,9 +24,11 @@ public class ExpenseRegistration extends RouteBuilder {
 
         from(OCR_OUT)
                 .doTry()
+                    .process(e -> e.getIn().setBody(new ExpenseReportDB((ExpenseReport)e.getIn().getBody())))
                     .inOut(EXPENSE_DATABASE)
                 .doCatch(Exception.class)
                     .log(enclosure + " something went wrong")
+                    .log("${exception.message}")
                     .log("${exception.stacktrace}");
 
 
