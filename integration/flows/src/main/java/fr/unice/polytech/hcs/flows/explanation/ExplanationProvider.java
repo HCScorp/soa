@@ -1,16 +1,14 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.expense.Expense;
+import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
-import fr.unice.polytech.hcs.flows.utils.Endpoints;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.apache.camel.model.rest.RestBindingMode;
 import org.bson.types.ObjectId;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,159 +23,91 @@ public class ExplanationProvider extends RouteBuilder {
         ;
 
         rest("/explanation")
-                .post()
-                .to(EXPLANATION_PROVIDER)
+                .post().to(EXPLANATION_PROVIDER)
+                .put().to(EXPLANATION_ANSWER)
         ;
 
 
         // Explanation for why did you use so much money dude.
         from(EXPLANATION_PROVIDER)
                 .routeId("explanation-provider")
-                .log("[" + EXPLANATION_PROVIDER + "] Received explanation: ${body}")
+
+                .log("[" + EXPLANATION_PROVIDER + "] Received explanation")
 
                 .log("[" + EXPLANATION_PROVIDER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + EXPLANATION_PROVIDER + "] Prepare request parameters for DB search route")
-
-                //User send a Explanation POJO to excuse .
+                .log("[" + EXPLANATION_PROVIDER + "] Unmarshal explanation from JSON to POJO")
                 .unmarshal().json(JsonLibrary.Jackson, Explanation.class)
 
+                .log("[" + EXPLANATION_PROVIDER + "] Prepare request parameters for DB search route")
                 .process(e -> {
-
-                    //We we'll use directly a explanation object.
                     Explanation explanation = e.getIn().getBody(Explanation.class);
 
-                    // We need the travel ID from mongo DB to catch the travel that the user speak about.
+                    // Set search criterion (object id from mongodb)
                     e.getIn().setBody(
                             Collections.singletonMap("_id", new ObjectId(explanation.id)));
 
-                    // The explanation that we'll use later to accept or not.
+                    // Save the explanation for the manager to be able to review it
                     e.getIn().setHeader("explanation", explanation.explanation);
-
                 })
 
                 .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
                 .inOut(GET_TRAVEL)
-                .removeHeader("CamelHttp*")
-                .log("[ " + EXPLANATION_PROVIDER + "]" + "UTILISER LE OOOOOOOUUUUUUUTTTTTTT qui est un MongoDBObject (une map++)")
 
+                .log("[" + EXPLANATION_PROVIDER + "] Received DB response, parsing to map")
                 .process(exchange -> {
-
-                    // Cast to a MAP because the POJO is quiet complexe.
                     Map body = exchange.getIn().getBody(Map.class);
                     body.put("explanation", exchange.getIn().getHeader("explanation"));
-
                     exchange.getIn().setBody(body);
-                    System.out.println("send : " + body);
                 })
-                .log("[ " + EXPLANATION_PROVIDER + "]" + "Object updated  !")
 
+                .log("[" + EXPLANATION_PROVIDER + "] Sending new updated object to DB")
                 .to(SAVE_TRAVEL_DATABASE_EP)
-
         ;
 
-//
 
-        restConfiguration()
-                .component("servlet")
-        ;
-
-        rest("/explanation")
-                .post("/answer")
-                .to(EXPLANATION_ANSWER)
-
-        ;
         from(EXPLANATION_ANSWER)
                 .routeId("explanation-answer")
                 .routeDescription("answer to an explanation.")
+
                 .log("[" + EXPLANATION_ANSWER + "] Received answer")
 
                 .log("[" + EXPLANATION_ANSWER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + EXPLANATION_ANSWER + "] Prepare request parameters for DB search travel")
+                .log("[" + EXPLANATION_ANSWER + "] Unmarshal explanation answer from JSON to POJO")
                 .unmarshal().json(JsonLibrary.Jackson, ExplanationAnswer.class)
+
+                .log("[" + EXPLANATION_ANSWER + "] Prepare request parameters for DB search travel")
                 .process(e -> {
                     ExplanationAnswer explanationAnswer = e.getIn().getBody(ExplanationAnswer.class);
                     e.getIn().setBody(
-                            Collections.singletonMap("_id", new ObjectId(explanationAnswer.id)));
-                    e.getIn().setHeader("code", Integer.toString(explanationAnswer.code));
+                            Collections.singletonMap("_id", new ObjectId(explanationAnswer.travelId)));
+                    e.getIn().setHeader("acceptRefund", explanationAnswer.acceptRefund);
                 })
 
-                .log("[" + EXPLANATION_ANSWER + "]" + "request to the database send.")
+                .log("[" + EXPLANATION_ANSWER + "] Get Travel object from DB")
                 .inOut(GET_TRAVEL)
-                .log("[" + EXPLANATION_ANSWER + "]" + "Value retrieve from Db !")
+                .log("[" + EXPLANATION_ANSWER + "] Received DB response")
 
-                .process(exchange -> {
-                    Map body = exchange.getIn().getBody(Map.class);
-                    exchange.getIn().setHeader("explanation", body.get("explanation"));
-
-                })
-                .log("[" + EXPLANATION_ANSWER + "]" + "Make a choice.")
-
+                .log("[" + EXPLANATION_ANSWER + "] Taking a decision to refund or not..")
                 .choice()
-                .process(exchange -> {
-                    Map body = exchange.getIn().getBody(Map.class);
-                    Travel travel = new Travel();
-                    travel.documents = (List<Expense>) body.get("documents");
-                    travel.status = (String) body.get("status");
-                    travel.travelId = (Integer) body.get("travelId");
-                    exchange.getIn().setBody(travel);
-                })
-                .when(simple("${header.code} == 1"))
-                .log("ACCEPT : refundement : ${header.explanation} is correct and accepted, well done :D")
-                .to(EXPLANATION_ACCEPTED)
+                .when(simple("${header.acceptRefund} == true"))
+                    .log("[" + EXPLANATION_ANSWER + "] Refund accepted by manager")
+                    .process(e -> e.getIn().getBody(Map.class).put("status", Status.REFUND_ACCEPTED))
                 .otherwise()
-                .log("ERROR refundement : ${header.explanation} is not correct for your manager ;-) ")
-                .to(EXPLANATION_REFUSED)
+                    .log("[" + EXPLANATION_ANSWER + "] Refund refused by manager")
+                    .process(e -> e.getIn().getBody(Map.class).put("status", Status.REFUND_REFUSED))
                 .end()
-                .marshal().json(JsonLibrary.Jackson);
 
-
-        from(EXPLANATION_REFUSED)
-                .routeId("explanation-refused")
-                .routeDescription("reject explanation")
-
-                .log("[" + EXPLANATION_REFUSED + "] Reject explanation")
-                .process(e -> {
-                    Travel travel = e.getIn().getBody(Travel.class);
-                    travel.status = "Rejected";
-                    e.getIn().setBody(travel);
-                })
-
-                .log("[" + EXPLANATION_REFUSED + "] ")
-                .to(UPDATE_TRAVEL)
-                .process(e -> {
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("status", "Reject");
-                    response.put("message", "Refund Reject.");
-
-                    e.getIn().setBody(response);
-                })
-        ;
-
-
-        from(EXPLANATION_ACCEPTED)
-                .routeId("explanation-accepted")
-                .routeDescription("Accept a explanation")
-
-                .log("[" + EXPLANATION_ACCEPTED + "] Accept explanation")
-                .process(e -> {
-                    Travel travel = e.getIn().getBody(Travel.class);
-                    travel.status = "Done";
-                    e.getIn().setBody(travel);
-                })
-
-                .log("[" + EXPLANATION_ACCEPTED + "] : update travel with new status")
+                .log("[" + EXPLANATION_REFUSED + "] Updating Travel in DB")
                 .to(UPDATE_TRAVEL)
 
+                .log("[" + EXPLANATION_REFUSED + "] Preparing response for client")
                 .process(e -> {
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("status", "Done");
-                    response.put("message", "Refund accepted.");
-
-                    e.getIn().setBody(response);
+                    e.getIn().setBody(null);
+                    e.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 200);
                 })
         ;
     }

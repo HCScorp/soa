@@ -61,8 +61,8 @@ public class Endpoints {
 
     public static final String EXPLANATION_ANSWER = "activemq:explanation-answer";
 
-    public static final String EXPLANATION_REFUSED = "activemq:explanation-refused";
-    public static final String EXPLANATION_ACCEPTED = "activemq:explanation-accepted";
+    public static final String EXPLANATION_REFUSED = "direct:explanation-refused";
+    public static final String EXPLANATION_ACCEPTED = "direct:explanation-acceptRefund";
 
 
     // Travel
@@ -71,7 +71,7 @@ public class Endpoints {
     public static final String SEARCH_TRAVEL_DATABASE_EP = "mongodb:myDb?database=expense&collection=expenses&operation=findOneByQuery";
     public static final String SAVE_TRAVEL_DATABASE_EP = "mongodb:myDb?database=expense&collection=expenses&operation=save";
 
-    public static final String APPROVE_TRAVEL = "activemq:approve-travel";
+    public static final String END_TRAVEL = "activemq:end-travel";
     public static final String ACCEPT_REFUND = "direct:automatic-refund";
     public static final String MANUAL_REFUND = "direct:manual-refund";
     public static final String UPDATE_TRAVEL = "direct:update-travel";

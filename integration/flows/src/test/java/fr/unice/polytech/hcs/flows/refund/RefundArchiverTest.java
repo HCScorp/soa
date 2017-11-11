@@ -3,6 +3,7 @@ package fr.unice.polytech.hcs.flows.refund;
 
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.expense.Expense;
+import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Test;
@@ -41,8 +42,8 @@ public class RefundArchiverTest extends ActiveMQTest {
         expenseArrayList.add(expense);
         expenseArrayList.add(expense1);
         borabora.documents = expenseArrayList;
-        borabora.status = "cocotier-vietnam";
-        borabora.travelId = 10;
+        borabora.status = Status.REFUND_ACCEPTED;
+        borabora.travelId = "10";
         // how can I mock a dynamick URI in camel, that's the question.....
         // template.sendBody(REFUND_SENDING, borabora);
 
