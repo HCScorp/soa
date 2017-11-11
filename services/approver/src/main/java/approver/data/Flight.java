@@ -57,7 +57,7 @@ public class Flight {
         this.time = LocalTime.parse(bson.getString("time"));
         this.price = bson.getDouble("price");
         this.journeyType = JourneyType.valueOf(bson.getString("journeyType"));
-        this.duration = Duration.ofMinutes(bson.getLong("duration"));
+        this.duration = Duration.ofMinutes(bson.getInteger("duration"));
         this.category = Category.valueOf(bson.getString("category"));
         this.airline = bson.getString("airline");
     }
@@ -70,7 +70,7 @@ public class Flight {
                 .append("time", time.toString())
                 .append("price", price)
                 .append("journeyType", journeyType.toString())
-                .append("duration", duration.toMinutes())
+                .append("duration", new Long(duration.toMinutes()).intValue())
                 .append("category", category.toString())
                 .append("airline", airline);
     }
