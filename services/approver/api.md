@@ -38,25 +38,27 @@ Output:
   "hotels": [],
   "flights": [
 	{
-	  "origin": "Nice",
-    "destination": "Paris",
-	  "date": "2017-8-14",
-	  "price": "89",
-	  "journeyType": "DIRECT",
-	  "duration": 92,
-	  "category": "ECO",
-    "airline": "Air France"
-	},
-	{
-	  "origin": "Nice",
-    "destination": "Paris",
-	  "date": "2017-8-14",
-	  "price": "63",
-	  "journeyType": "DIRECT",
-	  "duration": 105,
-	  "category": "ECO",
-    "airline": "EasyJet"
-	}
+          "origin": "Nice",
+          "destination": "Paris",
+          "date": "2017-08-14",
+          "time": "12:30:00",
+          "price": 89.0,
+          "journeyType": "DIRECT",
+          "duration": 92,
+          "category": "ECO",
+          "airline": "Air France"
+        },
+        {
+          "origin": "Nice",
+          "destination": "Paris",
+          "date": "2017-08-14",
+          "time": "08:45:00",
+          "price": 63.0,
+          "journeyType": "DIRECT",
+          "duration": 105,
+          "category": "ECO",
+          "airline": "EasyJet"
+        }
   ]
 }
 ```
@@ -71,25 +73,27 @@ Input:
   "hotels": [],
   "flights": [
 	{
-	  "origin": "Nice",
-    "destination": "Paris",
-	  "date": "2017-8-14",
-	  "price": "89",
-	  "journeyType": "DIRECT",
-	  "duration": 92,
-	  "category": "ECO",
-    "airline": "Air France"
-	},
-	{
-	  "origin": "Nice",
-    "destination": "Paris",
-	  "date": "2017-8-14",
-	  "price": "63",
-	  "journeyType": "DIRECT",
-	  "duration": 105,
-	  "category": "ECO",
-    "airline": "EasyJet"
-	}
+          "origin": "Nice",
+          "destination": "Paris",
+          "date": "2017-08-14",
+          "time": "12:30:00",
+          "price": 89.0,
+          "journeyType": "DIRECT",
+          "duration": 92,
+          "category": "ECO",
+          "airline": "Air France"
+        },
+        {
+          "origin": "Nice",
+          "destination": "Paris",
+          "date": "2017-08-14",
+          "time": "08:45:00",
+          "price": 63.0,
+          "journeyType": "DIRECT",
+          "duration": 105,
+          "category": "ECO",
+          "airline": "EasyJet"
+        }
   ]
 }
 ```

@@ -20,6 +20,7 @@ services:
       - hotel:hcs-hotel
       - hotel-ext:g7-hotel
       - database:db
+      - approver:approver
 
     environment:
       - FTP_PASS=cesarius
@@ -31,6 +32,8 @@ services:
     build: ../services/approver
     ports:
       - "9090:8080"
+    links:
+      - database
 
   car:
     image: hcsoa/car

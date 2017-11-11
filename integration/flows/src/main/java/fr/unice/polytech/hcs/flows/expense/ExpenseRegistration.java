@@ -17,10 +17,14 @@ public class ExpenseRegistration extends RouteBuilder {
         String enclosure = "[ " + routeId + " ]";
         from(EXPENSE_EMAIL)
                 .routeId(routeId)
-                .process(exchange -> {
-                    InputStream is = exchange.getIn().getBody(InputStream.class);
-                    exchange.getIn().setBody(new ObjectMapper().readValue(is , Travel.class));
-                })
-                .inOut(EXPENSE_DATABASE);
+                .doTry()
+                    .process(exchange -> {
+                        InputStream is = exchange.getIn().getBody(InputStream.class);
+                        exchange.getIn().setBody(new ObjectMapper().readValue(is , Travel.class));
+                    })
+                    .inOut(EXPENSE_DATABASE)
+                .doCatch(Exception.class)
+                    .log(enclosure + " something went wrong");
+
     }
 }

@@ -74,6 +74,12 @@ public class Endpoints {
     public static final String SEARCH_TRAVEL = "activemq:search-travel";
     public static final String GET_TRAVEL = "direct:get-travel";
     public static final String SEARCH_TRAVEL_DATABASE_EP = "mongodb:myDb?database=expense&collection=expenses&operation=findOneByQuery";
+
+    // Approver
+    public static final String APPROVER_EP_GET = "direct:btr_get";
+    public static final String APPROVER_EP_POST = "direct:btr_post";
+    public static final String APPROVER_EP_PUT = "direct:btr_put";
+    public static final String APPROVER_REST_EP = "http:approver:8080/approver-service-rest/btr/";
 }
 
 
