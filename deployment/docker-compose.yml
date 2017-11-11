@@ -22,11 +22,18 @@ services:
       - database:db
       - ftp-server
 
+    environment:
+      - FTP_PASS=cesarius
+      - FTP_USER=collus
+      - FTP_ADRESS=ftp
+
   approver:
     image: hcsoa/approver
     build: ../services/approver
     ports:
       - "9090:8080"
+    links:
+      - database
 
   car:
     image: hcsoa/car
