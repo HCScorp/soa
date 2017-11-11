@@ -22,17 +22,12 @@ public class ExplanationProviderTest extends ActiveMQTest {
         return EXPLANATION_CHECKER + "|" + EXPLANATION_REFUSED  + "|" + EXPLANATION_REFUSED_EP;
     }
 
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new ExplanationProvider();
-    }
-
-    @Before
-    public void initExplanation() throws Exception {
-        explanation = new Explanation();
-        explanation.id = 10;
-        explanation.explanation = "j'ai peur du noir. du coup je dors pas.";
-    }
+//    @Before
+//    public void initExplanation() throws Exception {
+//        explanation = new Explanation();
+//        explanation.id = 10;
+//        explanation.explanation = "j'ai peur du noir. du coup je dors pas.";
+//    }
 
     @Test
     public void TestExplanationProviderChecker() throws InterruptedException {
