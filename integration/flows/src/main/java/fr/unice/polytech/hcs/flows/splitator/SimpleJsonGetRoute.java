@@ -45,7 +45,7 @@ public abstract class SimpleJsonGetRoute<In extends Serializable, Out extends Se
                 .routeId(routeId)
                 .routeDescription(routeDescription)
 
-                .doTry()
+//                .doTry()
                     .log(l("Creating specific request from generic request"))
                     .log(l("IN: ${body}"))
                     .process(e -> e.getIn().setBody(genericRecConverter.apply((In) e.getIn().getBody())))
@@ -68,10 +68,10 @@ public abstract class SimpleJsonGetRoute<In extends Serializable, Out extends Se
                     .log(l("Unmarshalling response && converting to generic response"))
                     .process(e -> e.getIn().setBody(specificResConverter.apply((InputStream) e.getIn().getBody())))
                     .log(l("OUT: ${body}"))
-                .doCatch(Exception.class)
-                    .log(l("Something went wrong, setting response to null (${exception.message})"))
-                    .process(e -> e.getIn().setBody(null))
-                .end()
+//                .doCatch(Exception.class)
+//                    .log(l("Something went wrong, setting response to null (${exception.message})"))
+//                    .process(e -> e.getIn().setBody(null))
+//                .end()
         ;
     }
 

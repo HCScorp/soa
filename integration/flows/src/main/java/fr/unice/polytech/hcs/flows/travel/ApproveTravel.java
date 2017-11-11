@@ -23,7 +23,7 @@ public class ApproveTravel extends RouteBuilder {
                 .component("servlet")
         ;
 
-        rest("/travel")
+        rest("/travel").consumes("application/json").produces("application/json")
                 .get("/{travelId}/done")
                 .to(APPROVE_TRAVEL)
         ;
@@ -59,6 +59,12 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + APPROVE_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
 
+                .log("[" + ACCEPT_REFUND + "] Extract travel")
+                .process(e -> {
+                    Approval approval = e.getIn().getBody(Approval.class);
+                    e.getIn().setBody(approval.travel);
+                })
+
                 .choice()
                     .when(simple("${header.autoRefund} == true"))
                         .log("[" + APPROVE_TRAVEL + "] Automatic refund")
@@ -74,12 +80,6 @@ public class ApproveTravel extends RouteBuilder {
         from(ACCEPT_REFUND)
                 .routeId("automatic-refund")
                 .routeDescription("Automatic refund")
-
-                .log("[" + ACCEPT_REFUND + "] Extract travel")
-                .process(e -> {
-                    Approval approval = e.getIn().getBody(Approval.class);
-                    e.getIn().setBody(approval.travel);
-                })
 
                 .log("[" + ACCEPT_REFUND + "] Update travel status to Done")
                 .process(e -> {
@@ -108,12 +108,6 @@ public class ApproveTravel extends RouteBuilder {
         from(MANUAL_REFUND)
                 .routeId("manual-refund")
                 .routeDescription("Manual refund")
-
-                .log("[" + ACCEPT_REFUND + "] Extract travel")
-                .process(e -> {
-                    Approval approval = e.getIn().getBody(Approval.class);
-                    e.getIn().setBody(approval.travel);
-                })
 
                 .log("[" + ACCEPT_REFUND + "] Update travel status to Done")
                 .process(e -> {
@@ -175,7 +169,7 @@ public class ApproveTravel extends RouteBuilder {
         // default refuse automatic refund
         manualRefund(exchange);
 
-        if (approval.sum < 200) {
+        if (approval.sum < 20) {
             automaticRefund(exchange);
         }
     });

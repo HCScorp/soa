@@ -5,6 +5,7 @@ import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.camel.model.rest.RestBindingMode;
 import org.bson.types.ObjectId;
 
 import java.util.Collections;
@@ -30,7 +31,7 @@ public class ExplanationProvider extends RouteBuilder {
         // Explanation for why did you use so much money dude.
         from(EXPLANATION_PROVIDER)
                 .routeId("explanation-provider")
-                .log("[" + EXPLANATION_PROVIDER + "] Received explanation")
+                .log("[" + EXPLANATION_PROVIDER + "] Received explanation: ${body}")
 
                 .log("[" + EXPLANATION_PROVIDER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")

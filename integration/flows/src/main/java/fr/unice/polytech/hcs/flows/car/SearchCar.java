@@ -18,7 +18,7 @@ public class SearchCar extends SplittatorRoute<CarSearchRequest, CarSearchRespon
                 SEARCH_CAR_MQ,
                 Arrays.asList(HCS_SEARCH_CAR_MQ, G2_SEARCH_CAR_MQ),
                 2,
-                10000,
+                30000,
                 "search-car-input",
                 "Execute a generic car search request");
     }
