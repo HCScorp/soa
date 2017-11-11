@@ -6,7 +6,7 @@ import static fr.unice.polytech.hcs.flows.utils.Endpoints.ERROR_MQ;
 
 public class ErrorHandler extends RouteBuilder {
 
-    private static final int REDELIVERIES = 16;
+    private static final int REDELIVERIES = 100;
     private static final long REDELIVERY_DELAY = 500;
 
     @Override
