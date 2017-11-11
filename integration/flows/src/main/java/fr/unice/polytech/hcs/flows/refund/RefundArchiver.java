@@ -20,15 +20,13 @@ public class RefundArchiver extends RouteBuilder {
                 .routeId("refund-piece-route")
 
                 .process(exchange -> {
-                    System.out.println("exchange ! " + exchange.getIn().getBody());
                     Travel travel =  exchange.getIn().getBody(Travel.class);
-                    System.out.println("travel : " + travel);
 
                     exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
                     exchange.getIn().setBody(new ObjectMapper().convertValue(travel, Map.class));
                 })
                 .marshal().json(JsonLibrary.Jackson)
-                .toD("ftp://ftp-server:21/${header.id}?username=test&password=test&passiveMode=true")
+                .toD("ftp://ftp-server:21/${header.id}?username=test&password=test")
                 .log("file sended to the ftp server !");
     }
 }
