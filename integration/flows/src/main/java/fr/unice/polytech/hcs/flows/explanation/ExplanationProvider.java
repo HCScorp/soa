@@ -58,9 +58,10 @@ public class ExplanationProvider extends RouteBuilder {
                 })
 
                 .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
+
                 .inOut(GET_TRAVEL)
                 .removeHeader("CamelHttp*")
-                .log("[ " + EXPLANATION_PROVIDER + "]" + "UTILISER LE OOOOOOOUUUUUUUTTTTTTT qui est un MongoDBObject (une map++)")
+                .log("[ " + EXPLANATION_PROVIDER + "]" + " We receive the data from the database.")
 
                 .process(exchange -> {
 
@@ -77,7 +78,7 @@ public class ExplanationProvider extends RouteBuilder {
 
         ;
 
-//
+        // Route for answering to an explanation request. actor : manager. receiver : user.
 
         restConfiguration()
                 .component("servlet")
@@ -89,6 +90,7 @@ public class ExplanationProvider extends RouteBuilder {
 
         ;
         from(EXPLANATION_ANSWER)
+                // Initial stuff
                 .routeId("explanation-answer")
                 .routeDescription("answer to an explanation.")
                 .log("[" + EXPLANATION_ANSWER + "] Received answer")
@@ -96,8 +98,14 @@ public class ExplanationProvider extends RouteBuilder {
                 .log("[" + EXPLANATION_ANSWER + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
+
                 .log("[" + EXPLANATION_ANSWER + "] Prepare request parameters for DB search travel")
+                
+                //Unmarshal to a ExplanationRequest pojo : ID travel + code answer.
                 .unmarshal().json(JsonLibrary.Jackson, ExplanationAnswer.class)
+
+                // Process the content of a ExplanationAnswer in order to : catch the travel code
+                // Save the answered code.
                 .process(e -> {
                     ExplanationAnswer explanationAnswer = e.getIn().getBody(ExplanationAnswer.class);
                     e.getIn().setBody(
@@ -106,9 +114,11 @@ public class ExplanationProvider extends RouteBuilder {
                 })
 
                 .log("[" + EXPLANATION_ANSWER + "]" + "request to the database send.")
+                //take the result from the DB request.
                 .inOut(GET_TRAVEL)
-                .log("[" + EXPLANATION_ANSWER + "]" + "Value retrieve from Db !")
 
+                .log("[" + EXPLANATION_ANSWER + "]" + "Value retrieve from Db !")
+                // Get the content of the travel that the manager have accepted or rejected.
                 .process(exchange -> {
                     Map body = exchange.getIn().getBody(Map.class);
                     exchange.getIn().setHeader("explanation", body.get("explanation"));
@@ -116,24 +126,40 @@ public class ExplanationProvider extends RouteBuilder {
                 })
                 .log("[" + EXPLANATION_ANSWER + "]" + "Make a choice.")
 
-                .choice()
+                // Format the body to the travel we caught before.
                 .process(exchange -> {
+                    // the proper body of teh request.
                     Map body = exchange.getIn().getBody(Map.class);
                     Travel travel = new Travel();
+
+                    //fill the pojo
                     travel.documents = (List<Expense>) body.get("documents");
                     travel.status = (String) body.get("status");
                     travel.travelId = (Integer) body.get("travelId");
+
+                    // change the contente of the body.
                     exchange.getIn().setBody(travel);
                 })
+                // Make a choice between it's accepted or rejected.
+                .choice()
+
+                // code == 1 ==> accepted.
                 .when(simple("${header.code} == 1"))
-                .log("ACCEPT : refundement : ${header.explanation} is correct and accepted, well done :D")
-                .to(EXPLANATION_ACCEPTED)
+                    .log("ACCEPT : refundement : ${header.explanation} is correct and accepted, well done :D")
+                    .inOut(EXPLANATION_ACCEPTED)
+
+                // Otherwise ...
                 .otherwise()
-                .log("ERROR refundement : ${header.explanation} is not correct for your manager ;-) ")
-                .to(EXPLANATION_REFUSED)
+                    .log("ERROR refundement : ${header.explanation} is not correct for your manager ;-) ")
+                    .inOut(EXPLANATION_REFUSED)
+
                 .end()
+                // Format the ended message for user.
                 .marshal().json(JsonLibrary.Jackson);
 
+
+        // Route to notify to user that the explanation he make have been Rejected by the manager.
+        // Update de value in the DB + notification to the manager that the proper work has been done.
 
         from(EXPLANATION_REFUSED)
                 .routeId("explanation-refused")
@@ -157,6 +183,8 @@ public class ExplanationProvider extends RouteBuilder {
                 })
         ;
 
+        // Route to notify to user that the explanation he make have been Accepted by the manager.
+        // Update de value in the DB + notification to the manager that the proper work has been done.
 
         from(EXPLANATION_ACCEPTED)
                 .routeId("explanation-accepted")
