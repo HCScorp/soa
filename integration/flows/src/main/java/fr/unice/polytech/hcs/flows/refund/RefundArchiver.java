@@ -6,7 +6,9 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -24,13 +26,22 @@ public class RefundArchiver extends RouteBuilder {
 
                 .process(exchange -> {
                     System.out.println("exchange ! " + exchange.getIn().getBody());
-                    Travel travel =  (Travel) exchange.getIn().getBody();
+                    Travel travel =  exchange.getIn().getBody(Travel.class);
                     System.out.println("travel : " + travel);
+
                     exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+                    oos.writeObject(travel);
+                    oos.flush();
+                    oos.close();
+
+                    InputStream inputStream = new ByteArrayInputStream(baos.toByteArray());
+                    exchange.getIn().setBody(inputStream);
 
                 })
-                .marshal().json(JsonLibrary.Jackson)
-                .toD("ftp://ftp-server:11021/${header.id}?username=test&password=test&passiveMode=true")
+                .toD("ftp://fttp:11021/${header.id}?username=test&password=test&passiveMode=true")
                 .log("file sended to the ftp server !");
     }
 }

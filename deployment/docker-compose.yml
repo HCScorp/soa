@@ -20,6 +20,7 @@ services:
       - hotel:hcs-hotel
       - hotel-ext:g7-hotel
       - database:db
+      - ftp-server:fttp
 
     environment:
       - FTP_PASS=cesarius
@@ -95,6 +96,7 @@ services:
     image: onekilo79/ftpd_test
     ports:
       - "11021:21"
+      - "30000-30009:30000-30009"
     environment:
       - FTP_PASS=cesarius
       - FTP_USER=collus

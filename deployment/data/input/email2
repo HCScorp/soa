@@ -1,0 +1,9 @@
+{
+    "travelId": 101,
+    "status": "done",
+    "documents": [{
+        "category": "fiesta",
+        "evidence": "fiesta.jpg",
+        "price": 250
+    }]
+}
