@@ -36,28 +36,22 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + SEARCH_TRAVEL + "] Remove shitty headers (thx camel)")
                 .removeHeaders("CamelHttp*")
 
-                .log("[" + SEARCH_TRAVEL + "] Put header id into body")
-                .process(e -> e.getIn().setBody(Collections.singletonMap("travelId", e.getIn().getHeader("travelId", Integer.class))))
-
-                .log("[" + END_TRAVEL + "] Load travel")
-                .inOut(SEARCH_TRAVEL)
-
-                .log("[" + END_TRAVEL + "] Sum expenses")
+                .log("[" + SEARCH_TRAVEL + "] Convert to Travel Request")
                 .process(e -> {
-                    Travel travel = new ObjectMapper().readValue(e.getIn().getBody(byte[].class), Travel.class);
-
-                    // compute sum of expenses
-                    int sum = travel.documents.stream().mapToInt(expense -> expense.price).sum();
-
-                    // create approval object
-                    Approval approval = new Approval();
-                    approval.travel = travel;
-                    approval.sum = sum;
-
-                    e.getIn().setBody(approval);
+                    TravelRequest travelRequest = new TravelRequest();
+                    travelRequest.travelId = e.getIn().getHeader("travelId", Integer.class);
+                    e.getIn().setBody(travelRequest);
                 })
 
-                .log("[" + END_TRAVEL + "] Check automatic refund")
+                .log("[" + APPROVE_TRAVEL + "] Load travel")
+                .inOut(Endpoints.GET_TRAVEL)
+
+                .log("[" + APPROVE_TRAVEL + "] Sum expenses")
+                .process(sumExpensesTravel)
+
+                .log("OUT : ${body}")
+
+                .log("[" + APPROVE_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
 
                 .log("[" + ACCEPT_REFUND + "] Extract travel")
@@ -86,7 +80,7 @@ public class ApproveTravel extends RouteBuilder {
                 .process(e -> e.getIn().getBody(Travel.class).status = Status.REFUND_ACCEPTED)
 
                 .log("[" + ACCEPT_REFUND + "] Save travel")
-                .to(UPDATE_TRAVEL)
+                //.to(UPDATE_TRAVEL)
 
                 .log("[" + ACCEPT_REFUND + "] Refund accepted")
                 .to(REFUND_SENDING)
@@ -110,7 +104,7 @@ public class ApproveTravel extends RouteBuilder {
                 })
 
                 .log("[" + ACCEPT_REFUND + "] Save travel")
-                .to(UPDATE_TRAVEL)
+                //.to(UPDATE_TRAVEL)
 
                 .process(e -> {
                     Map<String, Object> response = new HashMap<>();
@@ -135,7 +129,7 @@ public class ApproveTravel extends RouteBuilder {
                 })
 
                 .log("[" + UPDATE_TRAVEL + "] Load database travel")
-                .inOut(GET_TRAVEL)
+                .inOut(GET_TRAVEL_DB_OBJECT)
 
                 .process(e -> {
                     Map db = e.getIn().getBody(Map.class);
@@ -156,13 +150,27 @@ public class ApproveTravel extends RouteBuilder {
         ;
     }
 
+    private static Processor sumExpensesTravel = (exchange -> {
+        Travel travel = exchange.getIn().getBody(Travel.class);
+
+        // compute sum of expenses
+        int sum = travel.documents.stream().mapToInt(expense -> expense.price).sum();
+
+        // create approval object
+        Approval approval = new Approval();
+        approval.travel = travel;
+        approval.sum = sum;
+
+        exchange.getIn().setBody(approval);
+    });
+
     private static Processor checkAutomaticRefund = (exchange -> {
         Approval approval = exchange.getIn().getBody(Approval.class);
 
         // default refuse automatic refund
         manualRefund(exchange);
 
-        if (approval.sum < 20) {
+        if (approval.sum < 200) {
             automaticRefund(exchange);
         }
     });

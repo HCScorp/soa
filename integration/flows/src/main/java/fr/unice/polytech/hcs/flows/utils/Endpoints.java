@@ -68,6 +68,7 @@ public class Endpoints {
     // Travel
     public static final String SEARCH_TRAVEL = "activemq:search-travel";
     public static final String GET_TRAVEL = "direct:get-travel";
+    public static final String GET_TRAVEL_DB_OBJECT = "direct:get-travel-db-object";
     public static final String SEARCH_TRAVEL_DATABASE_EP = "mongodb:myDb?database=expense&collection=expenses&operation=findOneByQuery";
     public static final String SAVE_TRAVEL_DATABASE_EP = "mongodb:myDb?database=expense&collection=expenses&operation=save";
 

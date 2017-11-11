@@ -53,7 +53,7 @@ public class ExplanationProvider extends RouteBuilder {
                 })
 
                 .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
-                .inOut(GET_TRAVEL)
+                .inOut(GET_TRAVEL_DB_OBJECT)
 
                 .log("[" + EXPLANATION_PROVIDER + "] Received DB response, parsing to map")
                 .process(exchange -> {
@@ -68,6 +68,7 @@ public class ExplanationProvider extends RouteBuilder {
 
 
         from(EXPLANATION_ANSWER)
+                // Initial stuff
                 .routeId("explanation-answer")
                 .routeDescription("answer to an explanation.")
 
@@ -88,7 +89,7 @@ public class ExplanationProvider extends RouteBuilder {
                 })
 
                 .log("[" + EXPLANATION_ANSWER + "] Get Travel object from DB")
-                .inOut(GET_TRAVEL)
+                .inOut(GET_TRAVEL_DB_OBJECT)
                 .log("[" + EXPLANATION_ANSWER + "] Received DB response")
 
                 .log("[" + EXPLANATION_ANSWER + "] Taking a decision to refund or not..")
@@ -102,7 +103,7 @@ public class ExplanationProvider extends RouteBuilder {
                 .end()
 
                 .log("[" + EXPLANATION_REFUSED + "] Updating Travel in DB")
-                .to(UPDATE_TRAVEL)
+                .to(UPDATE_TRAVEL) // TODO db object ?
 
                 .log("[" + EXPLANATION_REFUSED + "] Preparing response for client")
                 .process(e -> {
