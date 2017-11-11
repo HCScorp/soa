@@ -37,11 +37,7 @@ public class ApproveTravel extends RouteBuilder {
                 .removeHeaders("CamelHttp*")
 
                 .log("[" + SEARCH_TRAVEL + "] Convert to Travel Request")
-                .process(e -> {
-                    TravelRequest travelRequest = new TravelRequest();
-                    travelRequest.travelId = e.getIn().getHeader("travelId", Integer.class);
-                    e.getIn().setBody(travelRequest);
-                })
+                .process(e -> e.getIn().setBody(new TravelRequest(e.getIn().getHeader("travelId", String.class))))
 
                 .log("[" + END_TRAVEL + "] Load travel")
                 .inOut(GET_TRAVEL)
@@ -117,7 +113,7 @@ public class ApproveTravel extends RouteBuilder {
 
         from(UPDATE_TRAVEL)
                 .routeId("update-travel")
-                .routeDescription("Update travel in database")
+                .routeDescription("Update travel in database from Travel object")
 
                 .log("[" + UPDATE_TRAVEL + "] Backup new travel")
                 .process(e -> e.getIn().setHeader("travel", e.getIn().getBody()))
@@ -142,7 +138,7 @@ public class ApproveTravel extends RouteBuilder {
                     e.getIn().setBody(travel_db);
                 })
 
-                .to(Endpoints.SAVE_TRAVEL_DATABASE_EP)
+                .to(SAVE_TRAVEL_DATABASE_EP)
                 .process(e -> {
                     Travel travel = e.getIn().getHeader("travel", Travel.class);
                     e.getIn().setBody(travel);

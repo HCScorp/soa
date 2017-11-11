@@ -26,4 +26,12 @@ public class Explanation implements Serializable {
         result = 31 * result + (id != null ? id.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Explanation{" +
+                "explanation='" + explanation + '\'' +
+                ", id='" + id + '\'' +
+                '}';
+    }
 }

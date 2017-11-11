@@ -10,7 +10,13 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TravelRequest implements Serializable {
 
-    @JsonProperty public int travelId;
+    @JsonProperty public String travelId;
+
+    public TravelRequest(){}
+
+    public TravelRequest(String travelId) {
+        this.travelId = travelId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -19,18 +25,18 @@ public class TravelRequest implements Serializable {
 
         TravelRequest that = (TravelRequest) o;
 
-        return travelId == that.travelId;
+        return travelId != null ? travelId.equals(that.travelId) : that.travelId == null;
     }
 
     @Override
     public int hashCode() {
-        return travelId;
+        return travelId != null ? travelId.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "TravelRequest{" +
-                "travelId=" + travelId +
+                "travelId='" + travelId + '\'' +
                 '}';
     }
 }
