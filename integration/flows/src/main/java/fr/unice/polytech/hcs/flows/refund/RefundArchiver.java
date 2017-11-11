@@ -5,9 +5,6 @@ import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.REFUND_SENDING;
@@ -27,10 +24,10 @@ public class RefundArchiver extends RouteBuilder {
                     Travel travel =  (Travel) exchange.getIn().getBody();
                     System.out.println("travel : " + travel);
                     exchange.getIn().setHeader("id", Integer.toString(travel.travelId));
-
+                    exchange.getIn().setBody(new ObjectMapper().convertValue(travel, Map.class));
                 })
                 .marshal().json(JsonLibrary.Jackson)
-                .toD("ftp://ftp-server:11021/${header.id}?username=test&password=test&passiveMode=true")
+                .toD("ftp://ftp-server:21/${header.id}?username=test&password=test&passiveMode=true")
                 .log("file sended to the ftp server !");
     }
 }

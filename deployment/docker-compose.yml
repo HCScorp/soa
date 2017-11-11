@@ -20,11 +20,7 @@ services:
       - hotel:hcs-hotel
       - hotel-ext:g7-hotel
       - database:db
-
-    environment:
-      - FTP_PASS=cesarius
-      - FTP_USER=collus
-      - FTP_ADRESS=ftp
+      - ftp-server
 
   approver:
     image: hcsoa/approver
@@ -91,13 +87,12 @@ services:
     image: hcsoa/flight-ext
     ports:
       - "9097:8080"
+
   ftp-server:
     image: onekilo79/ftpd_test
     ports:
       - "11021:21"
-    environment:
-      - FTP_PASS=cesarius
-      - FTP_USER=collus
+      - "30000-30009:30000-30009"
 
   database:
     image: mongo:3.4.9
