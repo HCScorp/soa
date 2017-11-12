@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.EXPENSE_DATABASE;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.EXPENSE_EMAIL;
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.SAVE_TRAVEL_DATABASE_EP;
 
 public class ExpenseRegistrationTest  extends CamelTestSupport {
 
@@ -48,7 +49,7 @@ public class ExpenseRegistrationTest  extends CamelTestSupport {
 
     public ExpenseRegistrationTest() {
         this.mockedEndpoint = "mock://" + EXPENSE_EMAIL;
-        this.target = EXPENSE_DATABASE;
+        this.target = SAVE_TRAVEL_DATABASE_EP;
         this.routeBuilder = new ExpenseRegistration();
     }
 
