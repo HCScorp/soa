@@ -1,16 +1,23 @@
 [
   {
     "company": "Tesla location",
-    "city": "Nice",
+    "city": "Paris",
     "model": "S P100D",
     "price": 35.0,
     "numberPlate": "888-999"
   },
   {
     "company": "Mercedes location",
-    "city": "Nice",
+    "city": "Paris",
     "model": "Class A",
     "price": 40.0,
     "numberPlate": "555-444"
+  },
+  {
+    "company": "Jambon location",
+    "city": "Paris",
+    "model": "B12",
+    "price": 38.0,
+    "numberPlate": "111-333"
   }
 ]
