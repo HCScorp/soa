@@ -46,15 +46,20 @@ public class ExplanationProvider extends RouteBuilder {
                     Explanation explanation = e.getIn().getBody(Explanation.class);
 
                     // Set search criterion (object id from mongodb)
-                    e.getIn().setBody(
-                            Collections.singletonMap("_id", new ObjectId(explanation.id)));
-
+                    TravelRequest travelRequest   = new TravelRequest();
+                    travelRequest.travelId = explanation.id;
+                    e.getIn().setBody(travelRequest);
                     // Save the explanation for the manager to be able to review it
                     e.getIn().setHeader("explanation", explanation.explanation);
                 })
 
                 .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
                 .inOut(GET_TRAVEL_DB_OBJECT)
+                .choice().when(simple("${body} == null"))
+                .process(e -> e.getIn().setBody(null))
+                .to(NOT_FOUND)
+                .stop()
+                .end()
 
                 .log("[" + EXPLANATION_PROVIDER + "] Received DB response, parsing to map")
                 .process(exchange -> {
@@ -90,6 +95,11 @@ public class ExplanationProvider extends RouteBuilder {
 
                 .log("[" + EXPLANATION_ANSWER + "] Get Travel object from DB")
                 .inOut(GET_TRAVEL_DB_OBJECT)
+                .choice().when(simple("${body} == null"))
+                .process(e -> e.getIn().setBody(null))
+                .to(NOT_FOUND)
+                .stop()
+                .end()
                 .log("[" + EXPLANATION_ANSWER + "] Received DB response: ${body}")
 
                 .log("[" + EXPLANATION_ANSWER + "] Taking a decision to refund or not..")

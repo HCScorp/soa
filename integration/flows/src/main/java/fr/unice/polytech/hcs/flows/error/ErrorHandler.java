@@ -20,13 +20,13 @@ public class ErrorHandler extends RouteBuilder {
                         .redeliveryDelay(REDELIVERY_DELAY)
         );
 
-        from(Endpoints.BAD_REQUEST)
-                .routeId("bad-request")
-                .routeDescription("Bad request")
+        from(Endpoints.NOT_FOUND)
+                .routeId("not-found")
+                .routeDescription("Not Found")
 
-                .log("Bad request")
+                .log("Not Found")
                 .process(e -> e.getIn().setBody(null))
-                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(400))
+                .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(404))
         ;
     }
 }

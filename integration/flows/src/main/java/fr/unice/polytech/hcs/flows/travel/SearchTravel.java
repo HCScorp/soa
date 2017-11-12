@@ -35,6 +35,12 @@ public class SearchTravel extends RouteBuilder {
 
                 .inOut(GET_TRAVEL)
 
+                .choice().when(simple("${body} == null"))
+                    .process(e -> e.getIn().setBody(null))
+                    .to(NOT_FOUND)
+                    .stop()
+                .end()
+
                 .log("[" + SEARCH_TRAVEL + "] Marshalling to JSON")
                 .process(e -> {
                     Travel travel = e.getIn().getBody(Travel.class);

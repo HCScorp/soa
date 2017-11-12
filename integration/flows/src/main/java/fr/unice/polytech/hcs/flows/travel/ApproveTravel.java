@@ -43,7 +43,7 @@ public class ApproveTravel extends RouteBuilder {
 
                 .choice().when(simple("${body} == null"))
                     .process(e -> e.getIn().setBody(null))
-                    .to(BAD_REQUEST)
+                    .to(NOT_FOUND)
                     .stop()
                 .end()
 
