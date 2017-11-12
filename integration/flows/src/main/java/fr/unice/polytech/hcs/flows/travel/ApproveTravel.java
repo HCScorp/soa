@@ -2,6 +2,7 @@ package fr.unice.polytech.hcs.flows.travel;
 
 import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
+import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -78,7 +79,7 @@ public class ApproveTravel extends RouteBuilder {
                 .routeId("automatic-refund")
                 .routeDescription("Automatic refund")
 
-                .log("[" + ACCEPT_REFUND + "] Update travel status to Done")
+                .log("[" + ACCEPT_REFUND + "] Update travel status to Accepted")
                 .process(e -> e.getIn().getBody(Travel.class).status = Status.REFUND_ACCEPTED)
 
                 .log("[" + ACCEPT_REFUND + "] Save travel")
@@ -100,12 +101,8 @@ public class ApproveTravel extends RouteBuilder {
                 .routeId("manual-refund")
                 .routeDescription("Manual refund")
 
-                .log("[" + MANUAL_REFUND + "] Update travel status to Done")
-                .process(e -> {
-                    Travel travel = e.getIn().getBody(Travel.class);
-                    travel.status = Status.DONE;
-                    e.getIn().setBody(travel);
-                })
+                .log("[" + MANUAL_REFUND + "] Update travel status to Waiting")
+                .process(e -> e.getIn().getBody(Travel.class).status = Status.WAITING_FOR_EXPLANATION)
 
                 .log("[" + MANUAL_REFUND + "] Save travel")
                 .to(UPDATE_TRAVEL)
@@ -114,6 +111,25 @@ public class ApproveTravel extends RouteBuilder {
                     Map<String, Object> response = new HashMap<>();
                     response.put("status", "pending");
                     response.put("message", "You need to justify your budget overrun.");
+
+                    e.getIn().setBody(response);
+                })
+        ;
+
+        from(Endpoints.REFUSE_REFUND)
+                .routeId("refuse-refund")
+                .routeDescription("Refuse refund")
+
+                .log("[" + REFUSE_REFUND + "] Update travel status to REFUSED")
+                .process(e -> e.getIn().getBody(Travel.class).status = Status.REFUND_REFUSED)
+
+                .log("[" + REFUSE_REFUND + "] Save travel")
+                .to(UPDATE_TRAVEL)
+
+                .process(e -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("status", "refused");
+                    response.put("message", "Refund refused.");
 
                     e.getIn().setBody(response);
                 })

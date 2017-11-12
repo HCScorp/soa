@@ -1,16 +1,10 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import fr.unice.polytech.hcs.flows.expense.Expense;
-import fr.unice.polytech.hcs.flows.expense.Status;
-import fr.unice.polytech.hcs.flows.expense.Travel;
 import fr.unice.polytech.hcs.flows.travel.TravelRequest;
-import org.apache.camel.Exchange;
+import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.bson.types.ObjectId;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
@@ -93,33 +87,26 @@ public class ExplanationProvider extends RouteBuilder {
                     e.getIn().setHeader("acceptRefund", explanationAnswer.acceptRefund);
                 })
 
-                .log("[" + EXPLANATION_ANSWER + "] Get Travel object from DB")
-                .inOut(GET_TRAVEL_DB_OBJECT)
+                .log("[" + EXPLANATION_ANSWER + "] Load travel")
+                .inOut(GET_TRAVEL)
+
                 .choice().when(simple("${body} == null"))
-                .process(e -> e.getIn().setBody(null))
-                .to(NOT_FOUND)
-                .stop()
+                    .process(e -> e.getIn().setBody(null))
+                    .to(NOT_FOUND)
+                    .stop()
                 .end()
-                .log("[" + EXPLANATION_ANSWER + "] Received DB response: ${body}")
 
                 .log("[" + EXPLANATION_ANSWER + "] Taking a decision to refund or not..")
                 .choice()
                 .when(simple("${header.acceptRefund} == true"))
                     .log("[" + EXPLANATION_ANSWER + "] Refund accepted by manager")
-                    .process(e -> e.getIn().getBody(Map.class).put("status", Status.REFUND_ACCEPTED))
+                    .inOut(Endpoints.ACCEPT_REFUND)
                 .otherwise()
                     .log("[" + EXPLANATION_ANSWER + "] Refund refused by manager")
-                    .process(e -> e.getIn().getBody(Map.class).put("status", Status.REFUND_REFUSED))
+                    .inOut(Endpoints.REFUSE_REFUND)
                 .end()
 
-                .log("[" + EXPLANATION_ANSWER + "] Updating Travel in DB")
-                .to(SAVE_TRAVEL_DATABASE_EP)
-
-                .log("[" + EXPLANATION_ANSWER + "] Preparing response for client")
-                .process(e -> {
-                    //e.getIn().setBody(null);
-                    e.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 200);
-                })
+                .marshal().json(JsonLibrary.Jackson)
         ;
     }
 }
