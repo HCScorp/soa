@@ -169,7 +169,7 @@ public class ApproveTravel extends RouteBuilder {
         // default refuse automatic refund TODO
         manualRefund(exchange);
 
-        if (approval.destination.equalsIgnoreCase("Nice") && approval.sum < 200) {
+        if (approval.destination.equalsIgnoreCase("Nice") && approval.sum < 2000) {
             automaticRefund(exchange);
         }
     });

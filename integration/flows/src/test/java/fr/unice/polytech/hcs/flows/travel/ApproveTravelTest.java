@@ -122,7 +122,7 @@ public class ApproveTravelTest extends ActiveMQTest
     Expense expense = new Expense();
     expense.category = "restaurant";
     expense.evidence = "restaurant.jpg";
-    expense.price = 200.6;
+    expense.price = 2000.6;
 
     travel.documents.add(expense);
 
