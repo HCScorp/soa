@@ -81,7 +81,7 @@ public class Endpoints {
     public static final String OCR_IN = "direct:ocr-in";
     public static final String OCR_OUT = "direct:ocr-out";
 
-    public static final String BAD_REQUEST = "direct:bad-request";
+    public static final String NOT_FOUND = "direct:not-found";
     public static final String GET_DESTINATION = "direct:get-destination";
 }
 
