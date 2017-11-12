@@ -6,7 +6,7 @@ services:
     image: hcsoa/bus
     build: ../integration
     volumes:
-      - ./data/deploy:/servicemix/deploy # DEBUG
+#      - ./data/deploy:/servicemix/deploy # DEBUG
       - ./data/input:/servicemix/camel/input
       - ./data/output:/servicemix/camel/output
     ports:
