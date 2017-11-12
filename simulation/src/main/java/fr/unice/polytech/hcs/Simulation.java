@@ -16,8 +16,8 @@ public abstract class Simulation implements Runnable {
 
     private static final Logger log = LogManager.getLogger("Simulation");
 
-    private static final long MIN_SLEEP = 1000;
-    private static final long MAX_SLEEP = 5000;
+    private static final long MIN_SLEEP = 4000;
+    private static final long MAX_SLEEP = 8000;
 
     private List<Flight> flights = new ArrayList<>();
     private List<Hotel> hotels = new ArrayList<>();

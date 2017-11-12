@@ -65,6 +65,7 @@ public class Rand {
     // Other
     public static final List<Expense> expOthers = Arrays.asList(
             new Expense("Resto", "byte_array_representing_image", 18.2),
+            new Expense("Casino", "byte_array_representing_image", 148668.2),
             new Expense("Metro", "byte_array_representing_image", 5.1)
     );
 
