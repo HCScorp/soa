@@ -50,6 +50,9 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + END_TRAVEL + "] Sum expenses")
                 .process(sumExpensesTravel)
 
+                .log("[" + END_TRAVEL + "] Get travel destination")
+                .inOut(GET_DESTINATION)
+
                 .log("[" + END_TRAVEL + "] Check automatic refund")
                 .process(checkAutomaticRefund)
 
@@ -116,6 +119,18 @@ public class ApproveTravel extends RouteBuilder {
                 })
         ;
 
+        from(GET_DESTINATION)
+                .routeId("get-destination")
+                .routeDescription("Get destination travel")
+
+                .log("[" + GET_DESTINATION + "] Get travel destination")
+                .process(e -> {
+                    Approval approval = e.getIn().getBody(Approval.class);
+
+                    // mock get destination
+                    approval.destination = "Nice";
+                })
+        ;
     }
 
     private static Processor sumExpensesTravel = (exchange -> {
@@ -138,7 +153,7 @@ public class ApproveTravel extends RouteBuilder {
         // default refuse automatic refund TODO
         manualRefund(exchange);
 
-        if (approval.sum < 200) {
+        if (approval.destination.equalsIgnoreCase("Nice") && approval.sum < 200) {
             automaticRefund(exchange);
         }
     });
