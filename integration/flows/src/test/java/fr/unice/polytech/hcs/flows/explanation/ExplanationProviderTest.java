@@ -1,37 +1,20 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fakemongo.Fongo;
-import com.mongodb.*;
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.expense.Expense;
-import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
-import fr.unice.polytech.hcs.flows.refund.RefundArchiver;
-import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.impl.JndiRegistry;
-
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
-//
-
-
+import java.util.Collections;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
+
+//
 
 public class ExplanationProviderTest extends ActiveMQTest {
 
@@ -60,7 +43,7 @@ public class ExplanationProviderTest extends ActiveMQTest {
         Expense ex = new Expense();
         ex.category = "trololo";
         ex.evidence = "bouteille_de_vin.jpg";
-        ex.price = 1200;
+        ex.price = 1200.5;
         borabora.documents = Collections.singletonList(ex);
     }
 
