@@ -1,9 +1,0 @@
-{
-    "travelId": 1001,
-    "status": "done",
-    "documents": [{
-        "category": "restaurant-43",
-        "evidence": "alcoool",
-        "price": 250
-    }]
-}
