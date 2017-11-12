@@ -18,6 +18,9 @@ public class ApproverService {
     private static final JSONObject INVALID_ID = new JSONObject().put("error", "invalid id formatting");
     private static final JSONObject UNKNOWN_ACTION = new JSONObject().put("error", "unknown action");
 
+    private static final String APPROVE = "APPROVE";
+    private static final String DENY = "DENY";
+
     private final BTRHandler btrHandler;
 
     public ApproverService() {
@@ -53,7 +56,7 @@ public class ApproverService {
 
         try {
             BusinessTravelRequest btr = btrHandler.getBTR(id);
-            return Response.ok().entity(btr.toBSON().toJson()).build();
+            return Response.ok().entity(btr.toJson()).build();
         } catch (BTRNotFound e) {
             JSONObject error = new JSONObject().put("error", e.toString());
             return Response.status(404).entity(error.toString()).build();
@@ -67,7 +70,7 @@ public class ApproverService {
             return Response.status(404).entity(INVALID_ID.toString()).build();
         }
 
-        if (!("APPROVE".equalsIgnoreCase(action) || "DENY".equalsIgnoreCase(action))) {
+        if (!(APPROVE.equalsIgnoreCase(action) || DENY.equalsIgnoreCase(action))) {
             return Response.status(400).entity(UNKNOWN_ACTION.toString()).build();
         }
 
@@ -76,9 +79,9 @@ public class ApproverService {
         try {
             BusinessTravelRequest.Status status = BusinessTravelRequest.Status.WAITING;
 
-            if ("APPROVE".equalsIgnoreCase(action)) {
+            if (APPROVE.equalsIgnoreCase(action)) {
                 status = BusinessTravelRequest.Status.APPROVED;
-            } else if ("DENY".equalsIgnoreCase(action)) {
+            } else if (DENY.equalsIgnoreCase(action)) {
                 status = BusinessTravelRequest.Status.DENIED;
             }
 

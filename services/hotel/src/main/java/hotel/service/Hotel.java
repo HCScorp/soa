@@ -97,8 +97,7 @@ public class Hotel {
         if (city != null ? !city.equals(hotel.city) : hotel.city != null) return false;
         if (zipCode != null ? !zipCode.equals(hotel.zipCode) : hotel.zipCode != null) return false;
         if (address != null ? !address.equals(hotel.address) : hotel.address != null) return false;
-        if (nightPrice != null ? !nightPrice.equals(hotel.nightPrice) : hotel.nightPrice != null) return false;
-        return fullBookedDays != null ? fullBookedDays.equals(hotel.fullBookedDays) : hotel.fullBookedDays == null;
+        return (nightPrice != null ? nightPrice.equals(hotel.nightPrice) : hotel.nightPrice == null);
     }
 
     @Override
@@ -108,7 +107,6 @@ public class Hotel {
         result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (nightPrice != null ? nightPrice.hashCode() : 0);
-        result = 31 * result + (fullBookedDays != null ? fullBookedDays.hashCode() : 0);
         return result;
     }
 }

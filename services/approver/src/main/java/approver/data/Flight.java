@@ -75,11 +75,6 @@ public class Flight {
                 .append("airline", airline);
     }
 
-    public static JSONObject convertToWebResult(Document flightBson) {
-        flightBson.remove("_id");
-        return new JSONObject(flightBson.toJson());
-    }
-
     public String getOrigin() {
         return origin;
     }
