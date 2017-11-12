@@ -1,7 +1,7 @@
 #!/bin/sh
 
 FEATURES="camel-mongodb camel-jacksonxml camel-ftp camel-http camel-saxon camel-spring-ws camel-servlet camel-jackson camel-csv "
-DELTA=10
+DELTA=30
 
 echo "Customizing ServiceMix at image build time"
 
