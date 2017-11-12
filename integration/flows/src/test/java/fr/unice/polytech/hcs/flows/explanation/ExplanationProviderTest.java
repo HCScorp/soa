@@ -61,8 +61,6 @@ public class ExplanationProviderTest extends ActiveMQTest {
 
     @Override
     protected JndiRegistry createRegistry() throws Exception {
-        System.out.println("createRegistry start ! ");
-
         fongo = new Fongo("database");
         mockDB = fongo.getDB("expense");
 
@@ -132,29 +130,24 @@ public class ExplanationProviderTest extends ActiveMQTest {
 
     @Test
     public void TestExplanationProviderChecker() throws InterruptedException, JSONException {
+        // Testing on the camel context
         assertNotNull(context.hasEndpoint(targetSave));
         assertNotNull(context.hasEndpoint(mockEndpoint));
         isAvailableAndMocked(GET_TRAVEL_DB_OBJECT);
-
+        // First condition : send the message to the database.
         getMockEndpoint(mockEndpoint).expectedMessageCount(1);
 
         JSONObject jsonObject = new JSONObject();
-        System.out.println("ID mong o  === " + idMongo);
         jsonObject.put("id", idMongo);
         jsonObject.put("explanation", "I Love Camel, only for smocking. ");
 
-
+        // verify
         mock(GET_TRAVEL_DB_OBJECT).expectedMessageCount(1);
 
-        Map w = (Map) template.requestBody(EXPLANATION_PROVIDER, jsonObject.toString());
-        System.out.println("Reveice from request : " + w);
-
+        template.requestBody(EXPLANATION_PROVIDER, jsonObject.toString());
         assertMockEndpointsSatisfied(1, TimeUnit.SECONDS);
-
+        // Verify that the object has been updated in the Db.
         DBObject basic = mockDB.getCollection("expenses").findOne();
-        System.out.println("basic : " + basic.get("explanation"));
-
-
         assertEquals(basic.get("explanation"), jsonObject.get("explanation"));
 
     }
