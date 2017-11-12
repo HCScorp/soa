@@ -1,17 +1,21 @@
 package fr.unice.polytech.hcs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import fr.unice.polytech.hcs.pojo.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 public class Telegram {
 
     private static final String BUS_URL = "http://localhost:8181/camel/rest";
-    private static final String APPROVER_URL = "http://localhost:8080/approver-service-rest/btr";
+    private static final String APPROVER_URL = "http://localhost:9090/approver-service-rest/btr";
 
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public static String on(String s) {
         return BUS_URL + s;
@@ -36,11 +40,11 @@ public class Telegram {
     }
 
     public static String sendBtr(BusinessTravelRequest btr) throws UnirestException {
-        HttpResponse<JsonNode> response =
+        HttpResponse<BtrResponse> response =
                 Unirest.post(APPROVER_URL)
                         .body(btr)
-                        .asJson();
-        return response.getBody().getObject().getString("_id");
+                        .asObject(BtrResponse.class);
+        return response.getBody()._id;
     }
 
     public static BusinessTravelRequest getBtr(String btrId) throws UnirestException {
@@ -56,5 +60,9 @@ public class Telegram {
                 .routeParam("id", btrId)
                 .queryString("status", "APPROVED")
                 .asJson();
+    }
+
+    public static void sendExpenseReport(ExpenseReport e) throws IOException {
+        mapper.writeValue(new File("/email/" + e.travelId + ".json"), e);
     }
 }

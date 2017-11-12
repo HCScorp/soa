@@ -9,7 +9,6 @@ command -v docker-compose > /dev/null 2>&1 || { echo >&2 "It would be better to 
 build() { # $1: directory, $2: image_name
   cd services/$1
   docker build -t $2 .
-  if [ "$PUSH" = "true" ]; then docker push $2; fi
   cd ../..
 }
 
@@ -25,6 +24,7 @@ build_docker_images() {
       build flight    hcsoa/flight
       build hotel     hcsoa/hotel
       build mail      hcsoa/mail
+      docker build -t hcsoa/simulation simulation
   fi
 }
 
@@ -43,5 +43,6 @@ if [[ "$PUSH" == "true" && $? == 0 ]]; then
       docker push hcsoa/flight
       docker push hcsoa/hotel
       docker push hcsoa/mail
+      docker push hcsoa/simulation
   fi
 fi

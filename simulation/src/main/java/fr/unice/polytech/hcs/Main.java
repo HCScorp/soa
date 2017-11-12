@@ -10,9 +10,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 public class Main {
-    private static final Logger logger = LogManager.getLogger("Main");
+    private static final Logger log = LogManager.getLogger("Main");
 
-    public static void main(String[] args) throws IOException, UnirestException {
+    public static void main(String[] args) throws IOException, UnirestException, InterruptedException {
         configureUnirest();
 
         // TODO multiple simulation
@@ -38,13 +38,23 @@ public class Main {
                     approveBtr();
                     pause();
 
-                } catch (UnirestException | InterruptedException e) {
+                    sendExpenses(
+                            Rand.expFlight(), Rand.expFlight(),
+                            Rand.expHotel(),
+                            Rand.expCar(),
+                            Rand.expOther(), Rand.expOther()
+                    );
+                    pause();
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
 
-        new Thread(s).start();
+        Thread t = new Thread(s);
+        t.start();
+        t.join();
 
         /*
 
@@ -63,7 +73,6 @@ public class Main {
           + l'employee doit envoyer une explanation pour son travel
           + le manager approuve ou refuse sa demande de remboursement
         Une fois le refund approuvé, la procédure d’archivage est lancé
-
          */
         Unirest.shutdown();
     }

@@ -1,4 +1,4 @@
-package fr.unice.polytech.hcs;
+package fr.unice.polytech.hcs.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
