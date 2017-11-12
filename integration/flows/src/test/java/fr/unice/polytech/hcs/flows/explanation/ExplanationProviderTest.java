@@ -152,4 +152,30 @@ public class ExplanationProviderTest extends ActiveMQTest {
 
     }
 
+
+    @Test
+    public void TestExplanationAnswerAcceptTest() throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("travelId", idMongo);
+        jsonObject.put("acceptRefund", true);
+        template.requestBody(EXPLANATION_ANSWER, jsonObject.toString());
+
+        DBObject basic = mockDB.getCollection("expenses").findOne();
+        assertEquals(basic.get("status"), Status.REFUND_ACCEPTED);
+    }
+
+    @Test
+    public void TestExplanationAnswerRefused() throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("travelId", idMongo);
+        jsonObject.put("acceptRefund", false);
+        template.requestBody(EXPLANATION_ANSWER, jsonObject.toString());
+
+        DBObject basic = mockDB.getCollection("expenses").findOne();
+        assertEquals(basic.get("status"), Status.REFUND_REFUSED);
+    }
+
+
 }
