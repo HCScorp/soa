@@ -16,8 +16,8 @@ public abstract class Simulation implements Runnable {
 
     private static final Logger log = LogManager.getLogger("Simulation");
 
-    private static final long MIN_SLEEP = 2000;
-    private static final long MAX_SLEEP = 4000;
+    private static final long MIN_SLEEP = 1000;
+    private static final long MAX_SLEEP = 5000;
 
     private List<Flight> flights = new ArrayList<>();
     private List<Hotel> hotels = new ArrayList<>();
@@ -61,17 +61,17 @@ public abstract class Simulation implements Runnable {
     protected void sendBtr() throws UnirestException {
         log.info("Sending BTR to approval");
         btrId = Telegram.sendBtr(new BusinessTravelRequest(flights, hotels, cars));
-        log.info("Received BTR id from approver: " + btrId);
+        log.info("Received BTR id: " + btrId);
     }
 
     protected void getBtr() throws UnirestException {
-        log.info("Requesting BTR from approver");
+        log.info("Manager is requesting BTR");
         BusinessTravelRequest btr = Telegram.getBtr(btrId);
         log.info("Get BTR from approver: " + btr);
     }
 
     protected void approveBtr() throws UnirestException {
-        log.info("Approving BTR " + btrId);
+        log.info("Manager is approving BTR " + btrId);
         Telegram.approveBtr(btrId);
     }
 
@@ -82,4 +82,35 @@ public abstract class Simulation implements Runnable {
         log.info("Sending expense report " + expReport);
         Telegram.sendExpenseReport(expReport);
     }
-}
+
+    protected void monitorTravel() throws UnirestException {
+        log.info("Manager is monitoring the business travel");
+        Travel t = Telegram.getTravel(btrId);
+        log.info("Manager consulted " + t);
+    }
+
+    protected RefundStatus endTravel() throws UnirestException {
+        log.info("Ending travel");
+        RefundStatus status =  Telegram.endTravel(btrId);
+        log.info("Refund status: " + status);
+        return status;
+    }
+
+    protected void sendExplanation() throws UnirestException {
+        Explanation e = new Explanation("no reason", btrId);
+        log.info("Sending explanation: " + e);
+        Telegram.sendExplanation(e);
+    }
+
+    protected void approveRefund() throws UnirestException {
+        log.info("Manager is approving refund " + btrId);
+        ExplanationAnswer e = new ExplanationAnswer(btrId, true);
+        Telegram.sendExplanationAnswer(e);
+    }
+
+    protected void denyRefund() throws UnirestException {
+        log.info("Manager is denying refund " + btrId);
+        ExplanationAnswer e = new ExplanationAnswer(btrId, false);
+        Telegram.sendExplanationAnswer(e);
+    }
+ }

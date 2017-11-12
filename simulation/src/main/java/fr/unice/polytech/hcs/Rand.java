@@ -1,9 +1,6 @@
 package fr.unice.polytech.hcs;
 
-import fr.unice.polytech.hcs.pojo.CarSearchRequest;
-import fr.unice.polytech.hcs.pojo.Expense;
-import fr.unice.polytech.hcs.pojo.FlightSearchRequest;
-import fr.unice.polytech.hcs.pojo.HotelSearchRequest;
+import fr.unice.polytech.hcs.pojo.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +45,7 @@ public class Rand {
     // Flight
     public static final List<Expense> expFlights = Arrays.asList(
             new Expense("Flight", "byte_array_representing_image", 95.5),
-            new Expense("Flight", "byte_array_representing_image", 120.8),
+            new Expense("Flight", "byte_array_representing_image", 3450.99),
             new Expense("Flight", "byte_array_representing_image", 88.4),
             new Expense("Flight", "byte_array_representing_image", 145.3)
     );

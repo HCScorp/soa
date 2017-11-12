@@ -47,14 +47,4 @@ public class BusinessTravelRequest implements Serializable {
         result = 31 * result + (cars != null ? cars.hashCode() : 0);
         return result;
     }
-
-    @Override
-    public String toString() {
-        return "BusinessTravelRequest{" +
-                "status='" + status + '\'' +
-                ", flights=" + flights +
-                ", hotels=" + hotels +
-                ", cars=" + cars +
-                '}';
-    }
 }

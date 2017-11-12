@@ -4,10 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import fr.unice.polytech.hcs.pojo.RefundStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Main {
     private static final Logger log = LogManager.getLogger("Main");
@@ -15,11 +19,19 @@ public class Main {
     public static void main(String[] args) throws IOException, UnirestException, InterruptedException {
         configureUnirest();
 
-        // TODO multiple simulation
+        log.info("Calm before the STORM");
+        Thread.sleep(5000);
+
+        log.info("Waiting for the bus to be up and running..");
+        Telegram.waitForBus();
+        log.info("Bus ready, starting simulation..");
+
         Simulation s = new Simulation() {
             @Override
             public void run() {
                 try {
+                    pause();
+
                     searchFlights(Rand.fsrGo(), Rand.fsrBack());
                     pause();
 
@@ -46,35 +58,53 @@ public class Main {
                     );
                     pause();
 
+                    monitorTravel();
+                    pause();
+
+                    RefundStatus status = endTravel();
+                    pause();
+
+                    // If refund ok, the goodbye
+                    if("ok".equalsIgnoreCase(status.status)) {
+                        return;
+                    }
+
+                    sendExplanation();
+                    pause();
+
+                    if (new Random().nextBoolean()) {
+                        approveRefund();
+                    } else {
+                        denyRefund();
+                    }
+
+                    monitorTravel();
+                    pause();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
 
-        Thread t = new Thread(s);
-        t.start();
-        t.join();
+        for(int i = 0; i < 4; i++) {
+            batch(4, s);
+        }
 
-        /*
-
-        // DONE
-        L’employé fait sa recherche
-        L’employé fait sa BTR et l'envoi au ws approver
-        on récupère l'id de la BTR
-        le manager accepte ou refuse via l'id du btr
-        L’employé envoie ses factures une ou plusieurs a la fois
-
-        // TODO
-        Le manager peut voir l’avancé de son voyage (son statut, facture, etc.)
-        L’employé déclare la fin de son voyage via un Web Service ce qui lance la demande de remboursement.
-        Le système l’approuve automatiquement
-        ou délègue l’approuval du refund au manager (on simule une notification par email)
-          + l'employee doit envoyer une explanation pour son travel
-          + le manager approuve ou refuse sa demande de remboursement
-        Une fois le refund approuvé, la procédure d’archivage est lancé
-         */
         Unirest.shutdown();
+    }
+
+    private static void batch(int bSize, Simulation s) throws InterruptedException {
+        List<Thread> threads = new ArrayList<>();
+        for(int i = 0; i < bSize; i++) {
+            Thread t = new Thread(s);
+            t.start();
+            threads.add(t);
+        }
+
+        for(Thread t : threads) {
+            t.join();
+        }
     }
 
     private static void configureUnirest() {
