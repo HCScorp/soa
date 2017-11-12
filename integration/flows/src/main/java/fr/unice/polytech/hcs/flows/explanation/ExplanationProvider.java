@@ -43,9 +43,7 @@ public class ExplanationProvider extends RouteBuilder {
 
                 .log("[" + EXPLANATION_PROVIDER + "] Prepare request parameters for DB search route")
                 .process(e -> {
-                    System.out.println("I receive no translate  : " + e.getIn().getBody());
                     Explanation explanation = e.getIn().getBody(Explanation.class);
-                    System.out.println("I receive no translate  : " + explanation);
 
                     // Set search criterion (object id from mongodb)
                     TravelRequest travelRequest   = new TravelRequest();
@@ -90,11 +88,7 @@ public class ExplanationProvider extends RouteBuilder {
 
                 .log("[" + EXPLANATION_ANSWER + "] Prepare request parameters for DB search travel")
                 .process(e -> {
-                    System.out.println("I receive no translate  : " + e.getIn().getBody());
-
                     ExplanationAnswer explanationAnswer = e.getIn().getBody(ExplanationAnswer.class);
-
-                    System.out.println("I receive : " + explanationAnswer);
                     e.getIn().setBody(new TravelRequest(explanationAnswer.travelId));
                     e.getIn().setHeader("acceptRefund", explanationAnswer.acceptRefund);
                 })

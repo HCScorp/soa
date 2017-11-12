@@ -1,6 +1,5 @@
 {
-    "travelId": 100,
-    "status": "done",
+    "travelId": "507f191e810c19729de860ea",
     "documents": [{
         "category": "restaurant",
         "evidence": "restaurant.jpg",
