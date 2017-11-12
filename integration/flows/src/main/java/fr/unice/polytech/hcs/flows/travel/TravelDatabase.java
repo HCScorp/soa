@@ -12,20 +12,27 @@ public class TravelDatabase extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        from(GET_TRAVEL_DB_OBJECT)
-                .routeId("get-travel-db-object")
-                .routeDescription("Get travel in database")
+        from(GET_TRAVEL)
+                .routeId("get-travel")
+                .routeDescription("Get travel object")
 
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] Translating TravelRequest to Map")
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] IN: ${body}")
+                .log("[" + GET_TRAVEL + "] Translating TravelRequest to Map")
+                .log("[" + GET_TRAVEL + "] IN: ${body}")
                 .process(e -> {
                     TravelRequest travelRequest = e.getIn().getBody(TravelRequest.class);
                     e.getIn().setBody(new ObjectMapper().convertValue(travelRequest, Map.class));
                 })
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] OUT: ${body}")
+                .log("[" + GET_TRAVEL + "] OUT: ${body}")
 
-                .log("[" + GET_TRAVEL_DB_OBJECT + "] Sending request to DB")
+                .log("[" + GET_TRAVEL + "] Sending request to DB")
                 .inOut(SEARCH_TRAVEL_DATABASE_EP)
+
+                .log("[" + SEARCH_TRAVEL + "] Unmarshalling to Travel")
+                .process(e -> {
+                    Map map = e.getIn().getBody(Map.class);
+                    Travel travel = new ObjectMapper().convertValue(map, Travel.class);
+                    e.getIn().setBody(travel);
+                })
         ;
 
         from(UPDATE_TRAVEL)
