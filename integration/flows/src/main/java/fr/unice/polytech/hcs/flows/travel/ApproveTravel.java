@@ -153,7 +153,7 @@ public class ApproveTravel extends RouteBuilder {
         Travel travel = exchange.getIn().getBody(Travel.class);
 
         // compute sum of expenses
-        int sum = travel.documents.stream().mapToInt(expense -> expense.price).sum();
+        Double sum = travel.documents.stream().mapToDouble(expense -> expense.price).sum();
 
         // create approval object
         Approval approval = new Approval();

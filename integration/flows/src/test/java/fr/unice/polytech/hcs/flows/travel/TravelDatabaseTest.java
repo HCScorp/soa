@@ -5,6 +5,8 @@ import com.mongodb.*;
 import fr.unice.polytech.hcs.flows.expense.Status;
 import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.json.JSONException;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
@@ -58,5 +60,14 @@ public class TravelDatabaseTest extends CamelTestSupport {
         idMongo = objectMongo.get("_id").toString();
 
         return jndi;
+    }
+
+
+
+    @Test
+    public void TestExplanationProviderChecker() throws InterruptedException, JSONException {
+        // Testing on the camel context
+
+
     }
 }
