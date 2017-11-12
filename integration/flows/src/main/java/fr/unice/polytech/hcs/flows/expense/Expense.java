@@ -12,7 +12,7 @@ public class Expense implements Serializable {
 
     @JsonProperty public String category;
     @JsonProperty public String evidence;
-    @JsonProperty public Integer price;
+    @JsonProperty public Double price;
 
     @Override
     public boolean equals(Object o) {

@@ -51,7 +51,7 @@ public class ApproveTravelTest extends ActiveMQTest
         Expense expense = new Expense();
         expense.category = "restaurant";
         expense.evidence = "restaurant.jpg";
-        expense.price = 25;
+        expense.price = 25.6;
         travel.documents.add(expense);
 
         mockedEpResults.put(GET_TRAVEL, travel);
@@ -83,7 +83,7 @@ public class ApproveTravelTest extends ActiveMQTest
         Expense expense = new Expense();
         expense.category = "restaurant";
         expense.evidence = "restaurant.jpg";
-        expense.price = 25;
+        expense.price = 25.6;
 
         travel.documents.add(expense);
 
@@ -122,7 +122,7 @@ public class ApproveTravelTest extends ActiveMQTest
     Expense expense = new Expense();
     expense.category = "restaurant";
     expense.evidence = "restaurant.jpg";
-    expense.price = 200;
+    expense.price = 200.6;
 
     travel.documents.add(expense);
 
