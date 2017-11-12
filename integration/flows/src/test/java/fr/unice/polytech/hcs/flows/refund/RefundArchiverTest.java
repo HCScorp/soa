@@ -44,9 +44,6 @@ public class RefundArchiverTest extends ActiveMQTest {
         borabora.documents = expenseArrayList;
         borabora.status = Status.REFUND_ACCEPTED;
         borabora.travelId = "10";
-        // how can I mock a dynamick URI in camel, that's the question.....
-        // template.sendBody(REFUND_SENDING, borabora);
-
     }
 
 }

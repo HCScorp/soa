@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,8 +39,8 @@ public class ApproverStepDefinition {
     }
 
     @Given("^a flight from (.*) to (.*) for today at (\\d+)€$")
-    public void givenAFlight(String origin, String destination, int price) {
-        flight = new Flight(origin, destination, LocalDate.now(), price,
+    public void givenAFlight(String origin, String destination, double price) {
+        flight = new Flight(origin, destination, LocalDate.now(), LocalTime.now(), price,
                 Flight.JourneyType.DIRECT, Duration.ofMinutes(90), Flight.Category.BUSINESS, "Mur Airline");
     }
 

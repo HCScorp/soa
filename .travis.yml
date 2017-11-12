@@ -1,5 +1,5 @@
 env:
-  - DOCKER_COMPOSE_VERSION=1.16.1 PUSH=true
+  - DOCKER_COMPOSE_VERSION=1.16.1
 
 services:
   - docker
@@ -18,4 +18,6 @@ before_install:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
-  - ./build.sh
+  - mvn clean package
+  - docker-compose -f deployment/docker-compose.yml build
+  - docker-compose -f deployment/docker-compose.yml push
