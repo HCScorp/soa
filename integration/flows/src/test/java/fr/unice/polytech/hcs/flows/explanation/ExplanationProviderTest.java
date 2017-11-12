@@ -138,7 +138,7 @@ public class ExplanationProviderTest extends ActiveMQTest {
         getMockEndpoint(mockEndpoint).expectedMessageCount(1);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", idMongo);
+        jsonObject.put("travelId", idMongo);
         jsonObject.put("explanation", "I Love Camel, only for smocking. ");
 
         // verify

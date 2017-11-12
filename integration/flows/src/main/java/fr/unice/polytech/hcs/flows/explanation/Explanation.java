@@ -1,13 +1,15 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Explanation implements Serializable {
 
     @JsonProperty public String explanation;
-    @JsonProperty public String id;
+    @JsonProperty public String travelId;
 
     @Override
     public boolean equals(Object o) {
@@ -17,13 +19,13 @@ public class Explanation implements Serializable {
         Explanation that = (Explanation) o;
 
         if (explanation != null ? !explanation.equals(that.explanation) : that.explanation != null) return false;
-        return id != null ? id.equals(that.id) : that.id == null;
+        return travelId != null ? travelId.equals(that.travelId) : that.travelId == null;
     }
 
     @Override
     public int hashCode() {
         int result = explanation != null ? explanation.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (travelId != null ? travelId.hashCode() : 0);
         return result;
     }
 
@@ -31,7 +33,7 @@ public class Explanation implements Serializable {
     public String toString() {
         return "Explanation{" +
                 "explanation='" + explanation + '\'' +
-                ", id='" + id + '\'' +
+                ", travelId='" + travelId + '\'' +
                 '}';
     }
 }
