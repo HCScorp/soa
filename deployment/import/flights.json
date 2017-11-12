@@ -8,16 +8,38 @@
     "journeyType": "DIRECT",
     "duration": 92,
     "category": "ECO",
-    "airline": "Air France"
+    "airline": "EasyJet"
   },
   {
     "origin": "Nice",
     "destination": "Paris",
     "date": "2017-08-14",
+    "time": "20:15:00",
+    "price": 98.9,
+    "journeyType": "DIRECT",
+    "duration": 102,
+    "category": "ECO",
+    "airline": "Air France"
+  },
+  {
+    "origin": "Paris",
+    "destination": "Nice",
+    "date": "2017-08-14",
     "time": "08:45:00",
     "price": 63.0,
     "journeyType": "DIRECT",
     "duration": 105,
+    "category": "ECO",
+    "airline": "EasyJet"
+  },
+  {
+    "origin": "Paris",
+    "destination": "Nice",
+    "date": "2017-05-14",
+    "time": "13:30:00",
+    "price": 150.8,
+    "journeyType": "DIRECT",
+    "duration": 150,
     "category": "ECO",
     "airline": "EasyJet"
   }

@@ -1,7 +1,7 @@
 [
   {
     "name": "Le Méridien",
-    "city": "Nice",
+    "city": "Paris",
     "zipCode": "06046",
     "address": "1, promenade des Anglais",
     "nightPrice": 200.0,
@@ -9,10 +9,26 @@
   },
   {
     "name": "Négresco",
-    "city": "Nice",
+    "city": "Paris",
     "zipCode": "06000",
     "address": "37, promenade des Anglais",
     "nightPrice": 300.0,
+    "fullBookedDays": []
+  },
+  {
+    "name": "Roulott",
+    "city": "Paris",
+    "zipCode": "93000",
+    "address": "36, rue de la Goustipaille",
+    "nightPrice": 155.5,
+    "fullBookedDays": []
+  },
+  {
+    "name": "Pirimade",
+    "city": "Paris",
+    "zipCode": "91000",
+    "address": "12, boulevard Carno",
+    "nightPrice": 299.9,
     "fullBookedDays": []
   }
 ]
