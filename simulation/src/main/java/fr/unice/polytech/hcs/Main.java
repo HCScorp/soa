@@ -82,7 +82,7 @@ public class Main {
                     pause();
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Something went wrong, but do not worry, the light will save us.");
                 }
             }
         };
