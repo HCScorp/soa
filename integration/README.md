@@ -24,7 +24,7 @@ Send a POST request with the proper Json in the request's body
 
 ```json
 {
-  "id" : "id_travelID_in_MongoDB",
+  "travelId" : "id_travelID_in_MongoDB",
   "explanation" : "A bear took me as it own son."
 }
 ```
@@ -45,7 +45,7 @@ Send a POST request with the proper Json wrote in the request.
 
 ```json
 {
-  "id" : "id_travelID_in_MongoDB",
+  "travelId" : "id_travelID_in_MongoDB",
   "acceptRefund" : true
 }
 ```

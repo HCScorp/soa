@@ -14,6 +14,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.JndiRegistry;
 
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.logging.log4j.core.util.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,8 +23,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -74,7 +79,8 @@ public class ExplanationProviderTest extends ActiveMQTest {
     @Override
     public String isMockEndpointsAndSkip() {
 
-        return GET_TRAVEL + "|" + ACCEPT_REFUND + "|" + REFUSE_REFUND;
+        return GET_TRAVEL + "|" + ACCEPT_REFUND
+                + "|" + REFUSE_REFUND + "|" + UPDATE_TRAVEL;
     }
 
 
@@ -85,6 +91,7 @@ public class ExplanationProviderTest extends ActiveMQTest {
         getMockEndpoint(mockEndpoint).whenAnyExchangeReceived((Exchange exc) -> {
             exc.getIn().setBody(borabora);
         });
+
     }
 
 //
@@ -112,7 +119,19 @@ public class ExplanationProviderTest extends ActiveMQTest {
 //
 //    }
 
+    @Test
+    public void TestExplanationProviderChecker() throws InterruptedException, JSONException {
+        assertNotNull(context.hasEndpoint(EXPLANATION_PROVIDER));
+        assertNotNull(context.hasEndpoint(UPDATE_TRAVEL));
+        assertNotNull(context.hasEndpoint(GET_TRAVEL));
 
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("travelId", "123");
+        jsonObject.put("explanation", "j'aime les autruches");
+
+        String a = template.requestBody(EXPLANATION_PROVIDER, jsonObject.toString(), String.class );
+        System.out.println(a);
+    }
 
     @Test
     public void TestExplanationAnswerAcceptTest() throws JSONException, InterruptedException {
@@ -121,25 +140,36 @@ public class ExplanationProviderTest extends ActiveMQTest {
         assertNotNull(context.hasEndpoint(REFUSE_REFUND));
 
         mock(GET_TRAVEL).expectedMessageCount(1);
+        mock(ACCEPT_REFUND).expectedMessageCount(1);
+        mock(REFUSE_REFUND).expectedMessageCount(0);
+
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("travelId", "123");
         jsonObject.put("acceptRefund", true);
         template.requestBody(EXPLANATION_ANSWER, jsonObject.toString());
-        assertMockEndpointsSatisfied();
 
+        assertMockEndpointsSatisfied();
     }
 
     @Test
-    public void TestExplanationAnswerRefused() throws JSONException {
+    public void TestExplanationAnswerRefused() throws JSONException, InterruptedException {
 
-//        JSONObject jsonObject = new JSONObject();
-//        // jsonObject.put("travelId", idMongo);
-//        jsonObject.put("acceptRefund", false);
-//        template.requestBody(EXPLANATION_ANSWER, jsonObject.toString());
-//
-//        DBObject basic = mockDB.getCollection("expenses").findOne();
-//        assertEquals(basic.get("status"), Status.REFUND_REFUSED);
+        assertNotNull(context.hasEndpoint(EXPLANATION_ANSWER));
+        assertNotNull(context.hasEndpoint(ACCEPT_REFUND));
+        assertNotNull(context.hasEndpoint(REFUSE_REFUND));
+
+        mock(GET_TRAVEL).expectedMessageCount(1);
+        mock(ACCEPT_REFUND).expectedMessageCount(0);
+        mock(REFUSE_REFUND).expectedMessageCount(1);
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("travelId", "123");
+        jsonObject.put("acceptRefund", false);
+        template.requestBody(EXPLANATION_ANSWER, jsonObject.toString());
+
+        assertMockEndpointsSatisfied();
     }
 
 
