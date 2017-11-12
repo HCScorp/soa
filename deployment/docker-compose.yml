@@ -21,11 +21,7 @@ services:
       - hotel-ext:g7-hotel
       - database:db
       - ftp-server
-
-    environment:
-      - FTP_PASS=cesarius
-      - FTP_USER=collus
-      - FTP_ADRESS=ftp
+      - approver
 
   approver:
     image: hcsoa/approver
