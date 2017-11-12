@@ -5,7 +5,6 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.*;
 import fr.unice.polytech.hcs.flows.ActiveMQTest;
 import fr.unice.polytech.hcs.flows.expense.Expense;
-import fr.unice.polytech.hcs.flows.expense.ExpenseRegistration;
 import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import fr.unice.polytech.hcs.flows.refund.RefundArchiver;
@@ -13,7 +12,10 @@ import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.JndiRegistry;
+
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,12 +23,15 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+//
+
+
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
-import static org.apache.camel.builder.Builder.constant;
 
 public class ExplanationProviderTest extends ActiveMQTest {
 
@@ -34,95 +39,123 @@ public class ExplanationProviderTest extends ActiveMQTest {
     private MongoClient mockClient;
     private DB mockDB;
     private Fongo fongo;
-    private Travel borabora;
+    private BasicDBObject borabora;
     private DBCollection dbCollection;
 
     private final RouteBuilder routeBuilder;
     private String idMongo;
     private String targetSave;
     private String targetGet;
+    private String mockEndpoint;
 
-    public ExplanationProviderTest(){
-        System.out.println("create !");
-        targetGet = GET_TRAVEL_DB_OBJECT;
-        targetSave = Endpoints.SAVE_TRAVEL_DATABASE_EP;
+    public ExplanationProviderTest() {
+
+        mockEndpoint = "mock://" + GET_TRAVEL_DB_OBJECT;
+
+        targetSave = SAVE_TRAVEL_DATABASE_EP;
+
         routeBuilder = new ExplanationProvider();
     }
 
+    // Create the registry in order to mock the mongoDB database.
 
     @Override
     protected JndiRegistry createRegistry() throws Exception {
         System.out.println("createRegistry start ! ");
 
         fongo = new Fongo("database");
-
         mockDB = fongo.getDB("expense");
 
-        mockClient = PowerMockito.mock(MongoClient.class);
 
+        mockClient = PowerMockito.mock(MongoClient.class);
         PowerMockito.when(mockClient.getDB(Mockito.anyString()))
                 .thenReturn(mockDB);
-
+        // Mock the call of the mongoDB databse.
         PowerMockito.whenNew(MongoClient.class).withAnyArguments().thenReturn(mockClient);
-
         JndiRegistry jndi = super.createRegistry();
 
+        // myDb is the adresse of our mongodb database in the system.
         jndi.bind("myDb", mockClient);
 
-        Expense expense = new Expense();
-        expense.price = 10;
-        expense.evidence = "ici.jpg";
-        expense.category = "buisiness";
-        List<Expense> expenses = new ArrayList<>();
-        expenses.add(expense);
+        HashMap<String, String> ex = new HashMap<>();
+        ex.put("price", "blabla");
+        ex.put("evidence", "bottle");
+        ex.put("category", "lol");
 
         BasicDBObject basicDBObject = new BasicDBObject();
+
         basicDBObject.append("travelId", "123");
-        basicDBObject.append("status", Status.ONGOING);
-        basicDBObject.append("documents", expenses);
+        basicDBObject.append("status", Status.WAITING);
+        basicDBObject.append("documents", Collections.singletonList(ex));
 
-        mockDB.createCollection("expenses", basicDBObject);
+        borabora = basicDBObject;
+        // create the collection in order to feed it.
+        mockDB.createCollection("expenses", new BasicDBObject());
         mockDB.getCollection("expenses").insert(basicDBObject);
-        DBObject objectMongo = mockDB.getCollection("expenses").find(basicDBObject).one();
 
-        idMongo = (String) objectMongo.get("_id");
+        // Catch th Mongo ID.
+        DBObject objectMongo = mockDB.getCollection("expenses").find(basicDBObject).one();
+        idMongo = objectMongo.get("_id").toString();
+
+
         return jndi;
     }
 
 
-    public void initVariables() throws Exception {
-        this.borabora = new Travel();
-        borabora.status = Status.ONGOING;
-        borabora.travelId = "123";
-        Expense expense = new Expense();
-        expense.price = 10;
-        expense.evidence = "ici.jpg";
-        expense.category = "buisiness";
-
-        borabora.documents = Collections.singletonList(expense);
+    @Before
+    public void initTravel(){
 
     }
 
 
-        @Override
+    @Override
     protected RouteBuilder createRouteBuilder() throws Exception {
-        return new ExplanationProvider();
+        return routeBuilder;
     }
+
+
+    @Override
+    public String isMockEndpointsAndSkip() {
+        return GET_TRAVEL_DB_OBJECT;
+    }
+
 
     @Before
-    public void init() throws Exception {
-        initVariables();
+    public void initMocks() {
         resetMocks();
+
+        getMockEndpoint(mockEndpoint).whenAnyExchangeReceived((Exchange exc) -> {
+            exc.getIn().setBody(borabora);
+        });
     }
 
 
     @Test
-    public void TestExplanationProviderChecker() throws InterruptedException {
-        assertNotNull(context.hasEndpoint(EXPLANATION_PROVIDER));
-        assertNotNull(context.hasEndpoint(targetGet));
+    public void TestExplanationProviderChecker() throws InterruptedException, JSONException {
         assertNotNull(context.hasEndpoint(targetSave));
+        assertNotNull(context.hasEndpoint(mockEndpoint));
+        isAvailableAndMocked(GET_TRAVEL_DB_OBJECT);
+
+        getMockEndpoint(mockEndpoint).expectedMessageCount(1);
 
         JSONObject jsonObject = new JSONObject();
+        System.out.println("ID mong o  === " + idMongo);
+        jsonObject.put("id", idMongo);
+        jsonObject.put("explanation", "I Love Camel, only for smocking. ");
+
+
+        mock(GET_TRAVEL_DB_OBJECT).expectedMessageCount(1);
+
+        Map w = (Map) template.requestBody(EXPLANATION_PROVIDER, jsonObject.toString());
+        System.out.println("Reveice from request : " + w);
+
+        assertMockEndpointsSatisfied(1, TimeUnit.SECONDS);
+
+        DBObject basic = mockDB.getCollection("expenses").findOne();
+        System.out.println("basic : " + basic.get("explanation"));
+
+
+        assertEquals(basic.get("explanation"), jsonObject.get("explanation"));
 
     }
 
