@@ -1,10 +1,12 @@
 package fr.unice.polytech.hcs.flows.explanation;
 
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import fr.unice.polytech.hcs.flows.travel.TravelRequest;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.*;
@@ -39,31 +41,43 @@ public class ExplanationProvider extends RouteBuilder {
                 .process(e -> {
                     Explanation explanation = e.getIn().getBody(Explanation.class);
 
-                    // Set search criterion (object id from mongodb)
+                    // Set search criterion (object travelId from mongodb)
                     TravelRequest travelRequest   = new TravelRequest();
-                    travelRequest.travelId = explanation.id;
+                    travelRequest.travelId = explanation.travelId;
                     e.getIn().setBody(travelRequest);
                     // Save the explanation for the manager to be able to review it
                     e.getIn().setHeader("explanation", explanation.explanation);
                 })
 
-                .log("[" + EXPLANATION_PROVIDER + "] Send to DB search route")
-                .inOut(GET_TRAVEL_DB_OBJECT)
+                .log("[" + EXPLANATION_ANSWER + "] Load travel")
+                .inOut(GET_TRAVEL)
+
                 .choice().when(simple("${body} == null"))
-                .process(e -> e.getIn().setBody(null))
-                .to(NOT_FOUND)
-                .stop()
+                    .process(e -> e.getIn().setBody(null))
+                    .to(NOT_FOUND)
+                    .stop()
                 .end()
 
-                .log("[" + EXPLANATION_PROVIDER + "] Received DB response, parsing to map")
+                .log("[" + EXPLANATION_PROVIDER + "] Add explanation into Travel")
                 .process(exchange -> {
-                    Map body = exchange.getIn().getBody(Map.class);
-                    body.put("explanation", exchange.getIn().getHeader("explanation"));
-                    exchange.getIn().setBody(body);
+                    Travel travel = exchange.getIn().getBody(Travel.class);
+                    travel.explanation = exchange.getIn().getHeader("explanation", String.class);
+                    exchange.getIn().setBody(travel);
                 })
 
-                .log("[" + EXPLANATION_PROVIDER + "] Sending new updated object to DB")
-                .to(SAVE_TRAVEL_DATABASE_EP)
+                .log("[" + EXPLANATION_PROVIDER + "] Update travel in database")
+                .to(UPDATE_TRAVEL)
+
+                .log("[" + EXPLANATION_PROVIDER + "] Create response message")
+                .process(e -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("status", "ok");
+                    response.put("message", "Explanation added.");
+
+                    e.getIn().setBody(response);
+                })
+
+                .marshal().json(JsonLibrary.Jackson)
         ;
 
 

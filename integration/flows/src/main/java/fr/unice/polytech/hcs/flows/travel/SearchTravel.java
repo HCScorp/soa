@@ -2,6 +2,7 @@ package fr.unice.polytech.hcs.flows.travel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.expense.Travel;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
@@ -46,6 +47,8 @@ public class SearchTravel extends RouteBuilder {
                     Travel travel = e.getIn().getBody(Travel.class);
                     e.getIn().setBody(new ObjectMapper().convertValue(travel, Map.class));
                 })
+
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .marshal().json(JsonLibrary.Jackson)
         ;
 
