@@ -39,6 +39,8 @@ public class ApproveTravel extends RouteBuilder {
                 .log("[" + END_TRAVEL + "] Load travel")
                 .inOut(GET_TRAVEL)
 
+                .log("[" + END_TRAVEL + "] OUT : ${body}")
+
                 .choice().when(simple("${body} == null"))
                     .process(e -> e.getIn().setBody(null))
                     .to(BAD_REQUEST)

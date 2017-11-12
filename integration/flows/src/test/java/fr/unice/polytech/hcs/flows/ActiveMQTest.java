@@ -11,6 +11,7 @@ import fr.unice.polytech.hcs.flows.flight.hcs.HCSSearchFlight;
 import fr.unice.polytech.hcs.flows.hotel.SearchHotel;
 import fr.unice.polytech.hcs.flows.hotel.g7.G7SearchHotel;
 import fr.unice.polytech.hcs.flows.hotel.hcs.HCSSearchHotel;
+import fr.unice.polytech.hcs.flows.travel.ApproveTravel;
 import fr.unice.polytech.hcs.flows.utils.Endpoints;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.camel.builder.RouteBuilder;
@@ -65,6 +66,7 @@ public abstract class ActiveMQTest extends CamelTestSupport {
                 this.includeRoutes(new SearchCar());
                 this.includeRoutes(new ExplanationProvider());
                 this.includeRoutes(new SearchFlight());
+                this.includeRoutes(new ApproveTravel());
                 // TODO
             }
         };
