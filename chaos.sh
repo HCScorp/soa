@@ -10,7 +10,7 @@ dc(){ # $1: command, $2: service
 
 command -v docker-compose > /dev/null 2>&1 || { echo >&2 "It would be better to install 'docker-compose'."; }
 
-SERVICES=( approver car flight hotel mail car-ext hotel-ext flight-ext )
+SERVICES=( approver car flight hotel mail car-ext hotel-ext flight-ext database )
 SERVICES_SIZE=$(echo ${#SERVICES[@]})
 
 for i in 1 2 3
