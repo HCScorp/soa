@@ -87,8 +87,8 @@ public class ApproverServiceTest {
         btrHandler.insert(oracle);
 
         Response res = service.getBTR(oracle.getId().toHexString());
-        Document result = Document.parse(res.getEntity().toString());
-        BusinessTravelRequest btr = new BusinessTravelRequest(result);
+
+        BusinessTravelRequest btr = BusinessTravelRequest.fromExternalJson(res.getEntity().toString());
 
         assertEquals(oracle, btr);
     }

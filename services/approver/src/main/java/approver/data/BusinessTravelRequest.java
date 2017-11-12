@@ -2,6 +2,7 @@ package approver.data;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -118,7 +119,18 @@ public class BusinessTravelRequest {
     }
 
     public JSONObject toJson() {
-        return new JSONObject(toBSON().toJson());
+        return new JSONObject()
+                .put("status", status.toString())
+                .put("flights", new JSONArray(flights.stream()
+                        .map(f -> new JSONObject(f.toBson().toJson()))
+                        .collect(Collectors.toList())))
+                .put("hotels", new JSONArray(hotels.stream()
+                        .map(h -> new JSONObject(h.toBson().toJson()))
+                        .collect(Collectors.toList())))
+                .put("cars", new JSONArray(cars.stream()
+                        .map(c -> new JSONObject(c.toBson().toJson()))
+                        .collect(Collectors.toList())))
+                ;
     }
 
     @Override
@@ -128,14 +140,18 @@ public class BusinessTravelRequest {
 
         BusinessTravelRequest that = (BusinessTravelRequest) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        return status == that.status;
+        if (status != that.status) return false;
+        if (flights != null ? !flights.containsAll(that.flights) : that.flights != null) return false;
+        if (hotels != null ? !hotels.containsAll(that.hotels) : that.hotels != null) return false;
+        return cars != null ? cars.containsAll(that.cars) : that.cars == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        int result = status != null ? status.hashCode() : 0;
+        result = 31 * result + (flights != null ? flights.hashCode() : 0);
+        result = 31 * result + (hotels != null ? hotels.hashCode() : 0);
+        result = 31 * result + (cars != null ? cars.hashCode() : 0);
         return result;
     }
 }
