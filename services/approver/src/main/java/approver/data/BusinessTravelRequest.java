@@ -3,6 +3,7 @@ package approver.data;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
@@ -114,6 +115,10 @@ public class BusinessTravelRequest {
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    public JSONObject toJson() {
+        return new JSONObject(toBSON().toJson());
     }
 
     @Override

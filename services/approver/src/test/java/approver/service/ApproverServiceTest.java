@@ -50,10 +50,10 @@ public class ApproverServiceTest {
         BusinessTravelRequest btr = new BusinessTravelRequest();
 
         btr.setId(new ObjectId());
-        btr.getCars().add(new Car("Tesla", "Nuou-Yaurque", "Model XXL", "AL-666-HELL", 100.0, new ArrayList<>()));
+        btr.getCars().add(new Car("Tesla", "Nuou-Yaurque", "Model XXL", "AL-666-HELL", 100.5));
         btr.getFlights().add(new Flight("LAX", "NYC", LocalDate.now(), LocalTime.now(),
-                100.0, Flight.JourneyType.DIRECT, Duration.ofHours(1), Flight.Category.BUSINESS, "Air Mur"));
-        btr.getHotels().add(new Hotel("Hotel #1", "Nuou-Yaurque", "2", "z", 1.0, new ArrayList<>()));
+                100.5, Flight.JourneyType.DIRECT, Duration.ofHours(1), Flight.Category.BUSINESS, "Air Mur"));
+        btr.getHotels().add(new Hotel("Hotel #1", "Nuou-Yaurque", "2", "z", 25.5));
 
         return btr;
     }

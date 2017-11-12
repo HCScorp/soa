@@ -75,7 +75,7 @@ public class G7SearchHotel extends RouteBuilder {
 
 
     public static HotelSearchResponse mapToHsRes(Map<String, Map<String, Map>> xml) {
-        if(xml == null) {
+        if(xml == null || xml.get("Body").get("searchHotelResponse") == null) {
             return null;
         }
 
