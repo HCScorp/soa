@@ -1,12 +1,14 @@
 package fr.unice.polytech.hcs.flows.travel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fakemongo.Fongo;
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
 import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.Status;
 import fr.unice.polytech.hcs.flows.expense.Travel;
-import jdk.nashorn.internal.runtime.ECMAException;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -16,11 +18,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
-import java.lang.reflect.Array;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static fr.unice.polytech.hcs.flows.utils.Endpoints.SAVE_TRAVEL_DATABASE_EP;
 import static fr.unice.polytech.hcs.flows.utils.Endpoints.UPDATE_TRAVEL;
 
 public class TravelDatabaseTest extends CamelTestSupport {
@@ -49,13 +49,14 @@ public class TravelDatabaseTest extends CamelTestSupport {
         // myDb is the adresse of our mongodb database in the system.
         jndi.bind("myDb", mockClient);
 
-        HashMap<String, String> ex = new HashMap<>();
-        ex.put("price", "blabla");
+        HashMap<String, Object> ex = new HashMap<>();
+        ex.put("price", 25.2);
         ex.put("evidence", "bottle");
         ex.put("category", "lol");
 
         BasicDBObject basicDBObject = new BasicDBObject();
 
+        basicDBObject.append("_id", "123");
         basicDBObject.append("travelId", "123");
         basicDBObject.append("status", Status.WAITING);
         basicDBObject.append("documents", Collections.singletonList(ex));
@@ -95,8 +96,11 @@ public class TravelDatabaseTest extends CamelTestSupport {
         assertNotNull(mockDB.getCollection("expenses").findOne());
 
         template.requestBody(UPDATE_TRAVEL, vietnam);
+        
         DBObject dbObject = mockDB.getCollection("expenses").findOne();
-        System.out.println(" new dbObject == " + dbObject);
+        Travel out = new ObjectMapper().convertValue(dbObject, Travel.class);
+
+        assertEquals(vietnam, out);
     }
 
 
