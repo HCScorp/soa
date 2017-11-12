@@ -52,7 +52,7 @@
     </dependencies>
 
     <build>
-        <finalName>smartdecision</finalName>
+        <finalName>simulation</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -68,7 +68,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        fr.unice.polytech.hcs.simulation.Main
+                                        fr.unice.polytech.hcs.Main
                                     </mainClass>
                                 </manifest>
                             </archive>
