@@ -1,11 +1,19 @@
 package fr.unice.polytech.hcs.flows.travel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fakemongo.Fongo;
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import fr.unice.polytech.hcs.flows.expense.Expense;
 import fr.unice.polytech.hcs.flows.expense.Status;
+import fr.unice.polytech.hcs.flows.expense.Travel;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -13,21 +21,23 @@ import org.powermock.api.mockito.PowerMockito;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static fr.unice.polytech.hcs.flows.utils.Endpoints.UPDATE_TRAVEL;
+
 public class TravelDatabaseTest extends CamelTestSupport {
 
 
     private MongoClient mockClient;
     private DB mockDB;
     private Fongo fongo;
+
+
     private BasicDBObject borabora;
-    private DBCollection dbCollection;
-    private String idMongo;
+
 
     @Override
     protected JndiRegistry createRegistry() throws Exception {
         fongo = new Fongo("database");
         mockDB = fongo.getDB("expense");
-
 
         mockClient = PowerMockito.mock(MongoClient.class);
         PowerMockito.when(mockClient.getDB(Mockito.anyString()))
@@ -39,13 +49,14 @@ public class TravelDatabaseTest extends CamelTestSupport {
         // myDb is the adresse of our mongodb database in the system.
         jndi.bind("myDb", mockClient);
 
-        HashMap<String, String> ex = new HashMap<>();
-        ex.put("price", "blabla");
+        HashMap<String, Object> ex = new HashMap<>();
+        ex.put("price", 25.2);
         ex.put("evidence", "bottle");
         ex.put("category", "lol");
 
         BasicDBObject basicDBObject = new BasicDBObject();
 
+        basicDBObject.append("_id", "123");
         basicDBObject.append("travelId", "123");
         basicDBObject.append("status", Status.WAITING);
         basicDBObject.append("documents", Collections.singletonList(ex));
@@ -55,19 +66,43 @@ public class TravelDatabaseTest extends CamelTestSupport {
         mockDB.createCollection("expenses", new BasicDBObject());
         mockDB.getCollection("expenses").insert(basicDBObject);
 
-        // Catch th Mongo ID.
-        DBObject objectMongo = mockDB.getCollection("expenses").find(basicDBObject).one();
-        idMongo = objectMongo.get("_id").toString();
-
         return jndi;
     }
+    private Travel vietnam;
+    @Before
+    public void initVariable(){
+        vietnam =  new Travel();
+        vietnam.status = Status.WAITING;
+        vietnam.travelId = "123";
+        vietnam.explanation = "taux alcoolimie = 3gr";
 
+        Expense ex = new Expense();
+        ex.price = 12.0;
+        ex.evidence = "Bia Tiger";
+        ex.category = "alcool";
+
+        vietnam.documents = Collections.singletonList(ex);
+    }
+
+    @Override
+    public RouteBuilder createRouteBuilder() throws Exception{
+        return new TravelDatabase();
+    }
 
 
     @Test
-    public void TestExplanationProviderChecker() throws InterruptedException, JSONException {
-        // Testing on the camel context
+    public void TestTravelDatabaseUpdate() throws InterruptedException, JSONException {
+        assertNotNull(context.hasEndpoint(UPDATE_TRAVEL));
+        assertNotNull(mockDB.getCollection("expenses").findOne());
 
+        template.requestBody(UPDATE_TRAVEL, vietnam);
+        
+        DBObject dbObject = mockDB.getCollection("expenses").findOne();
+        Travel out = new ObjectMapper().convertValue(dbObject, Travel.class);
 
+        assertEquals(vietnam, out);
     }
+
+
+
 }

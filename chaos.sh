@@ -8,7 +8,7 @@ dc(){ # $1: command, $2: service
     docker-compose -f deployment/docker-compose.yml $1 $2
 }
 
-command -v docker-compose > /dev/null 2>&1 || { echo >&2 "It would be better to install 'docker-compose'."; }
+command -v docker-compose > /dev/null 2>&1 || { echo >&2 "I require 'mvn' but it's not installed. Aborting."; exit 1; }
 
 SERVICES=( approver car flight hotel mail car-ext hotel-ext flight-ext database )
 SERVICES_SIZE=$(echo ${#SERVICES[@]})

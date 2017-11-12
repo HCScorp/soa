@@ -52,19 +52,5 @@ public class SearchTravel extends RouteBuilder {
                 .marshal().json(JsonLibrary.Jackson)
         ;
 
-        from(GET_TRAVEL)
-                .routeId("get-travel")
-                .routeDescription("Get travel object")
-
-                .inOut(GET_TRAVEL_DB_OBJECT)
-
-                .log("[" + SEARCH_TRAVEL + "] Unmarshalling to Travel")
-                .process(e -> {
-                    Map map = e.getIn().getBody(Map.class);
-                    Travel travel = new ObjectMapper().convertValue(map, Travel.class);
-                    e.getIn().setBody(travel);
-                })
-        ;
-
     }
 }
