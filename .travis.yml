@@ -19,7 +19,7 @@ before_install:
 
 script:
   - mvn clean package
-  - docker build hcsoa/esb integration/esb
+  - docker build -t hcsoa/esb integration/esb
   - docker push hcsoa/esb
   - docker-compose -f deployment/docker-compose.yml build
   - docker-compose -f deployment/docker-compose.yml push
