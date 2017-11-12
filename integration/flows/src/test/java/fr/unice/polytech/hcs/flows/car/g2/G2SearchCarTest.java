@@ -21,12 +21,12 @@ public class G2SearchCarTest {} // extends SpecificSearchTest {
 //            "    {" +
 //            "        \"price\": 48," +
 //            "        \"name\": \"Mercedes\"," +
-//            "        \"id\": 0" +
+//            "        \"travelId\": 0" +
 //            "    }," +
 //            "    {" +
 //            "        \"price\": 41," +
 //            "        \"name\": \"Mega Loueur\"," +
-//            "        \"id\": 1" +
+//            "        \"travelId\": 1" +
 //            "    }" +
 //            "]";
 //

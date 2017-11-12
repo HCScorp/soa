@@ -3,7 +3,6 @@ package fr.unice.polytech.hcs.flows.travel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
-import org.bson.types.ObjectId;
 
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class TravelDatabase extends RouteBuilder {
                     Travel travel = e.getIn().getBody(Travel.class);
 
                     Map map = new ObjectMapper().convertValue(travel, Map.class);
-                    map.put("_id", new ObjectId(travel.travelId));
+                    map.put("_id", travel.travelId);
 
                     e.getIn().setBody(map);
                 })

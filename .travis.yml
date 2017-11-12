@@ -15,11 +15,13 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 script:
   - mvn clean package
-  - docker build hcsoa/esb integration/esb
-  - docker push hcsoa/esb
+  - docker build -t hcsoa/esb integration/esb
   - docker-compose -f deployment/docker-compose.yml build
+
+after_success:
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push hcsoa/esb
   - docker-compose -f deployment/docker-compose.yml push

@@ -5,8 +5,10 @@ import com.github.fakemongo.Fongo;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
-import fr.unice.polytech.hcs.flows.ActiveMQTest;
-import fr.unice.polytech.hcs.flows.expense.*;
+import fr.unice.polytech.hcs.flows.expense.Expense;
+import fr.unice.polytech.hcs.flows.expense.ExpenseRegistration;
+import fr.unice.polytech.hcs.flows.expense.ExpenseReport;
+import fr.unice.polytech.hcs.flows.expense.Travel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.JndiRegistry;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -40,7 +42,7 @@ public class ExpenseRegistrationTest  extends CamelTestSupport {
             "    \"documents\": [{\n" +
             "        \"category\": \"restaurant\",\n" +
             "        \"evidence\": \"restaurant.jpg\",\n" +
-            "        \"price\": 25\n" +
+            "        \"price\": 25.6\n" +
             "    }]\n" +
             "}";
 
@@ -88,7 +90,7 @@ public class ExpenseRegistrationTest  extends CamelTestSupport {
         Expense expense = new Expense();
         expense.category = "restaurant";
         expense.evidence = "restaurant.jpg";
-        expense.price = 25;
+        expense.price = 25.6;
 
         travel.documents.add(expense);
 

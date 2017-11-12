@@ -11,7 +11,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Approval implements Serializable {
     @JsonProperty public Travel travel;
-    @JsonProperty public Integer sum;
+    @JsonProperty public Double sum;
     @JsonProperty public String destination;
 
     @Override
